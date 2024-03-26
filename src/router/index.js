@@ -1,25 +1,33 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import PrimaryChat from "@/views/chat/PrimaryChat.vue";
-import UserLogin from "@/views/login/UserLogin.vue";
-import KnowledgePlace from "@/views/knowledge/KnowledgePlace.vue";
+import UserLogin from "@/views/login/index.vue";
+import Layout from "@/layout/index.vue";
 
 Vue.use(Router)
 export const constantRoutes = [
     {
         path: '/',
-        redirect: '/chat'
+        component: Layout,
+        redirect: '/chat',
+        children: [{
+            path: 'chat',
+            name: 'PrimaryChat',
+            component: () => import('@/views/chat/index.vue')
+        }]
     },
+
     {
-        path: '/chat',
-        name: 'PrimaryChat',
-        component: PrimaryChat
-    },
-    {
-        path: '/knowledge/:id',
-        name: 'KnowledgePlace',
-        component: KnowledgePlace,
-        props: true
+        path: '/knowledge',
+        component: Layout,
+        name: 'Knowledge',
+        children: [
+            {
+                path: '/:id',
+                name: 'KnowledgeChat',
+                component: () => import('@/views/knowledge/index.vue'),
+                props: true
+            }
+        ]
     },
     {
         path: '/login',

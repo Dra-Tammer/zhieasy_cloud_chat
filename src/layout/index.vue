@@ -9,6 +9,7 @@
       </div>
       <div class="right_item_container">
         <vs-avatar color="#26302a" text-color="rgb(246, 190, 16)"/>
+<!--        <vs-icon icon="logout"></vs-icon>-->
       </div>
     </div>
     <div class="sidebar_container">
@@ -62,6 +63,7 @@ export default {
   background-color: #ffffff;
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 
 .left_item_container {
@@ -86,7 +88,7 @@ export default {
 }
 
 .right_item_container {
-
+  margin-right: 20px;
 }
 
 .sidebar_container {
@@ -100,4 +102,5 @@ export default {
   grid-row: 2 / -1;
   grid-column: 2 / -1;
 }
+
 </style>
