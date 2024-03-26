@@ -1,24 +1,12 @@
-# zhieasy_cloud_chat
+# 计设前端项目
+## 项目启动
+> npm run dev
 
-## Project setup
-```
-npm install
-```
+## 命名规则：
+* 目录：短横线
+* 文件：小驼峰
+* 组件：大驼峰，多个单词
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+##### shape: 2593 * 1443
+##### side: 420 18%
+##### top: 72 6%
