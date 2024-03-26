@@ -1,86 +1,28 @@
 <template>
   <div class="side_bar">
     <div class="view_content">
-      <div class="primary_chat">
+      <div class="primary_chat" @click="switchToPrimaryChat">
         <vs-avatar text="AI" color="lightgreen"></vs-avatar>
-        new primary chat
+        New Primary Chat
         <vs-icon icon="ios_share" style="margin-left: 20px;margin-right:6px;color: gray"></vs-icon>
       </div>
       <vs-divider position="left">
         知识库
       </vs-divider>
       <div class="knowledge_base_chat">
-        <div class="knowledge_list_item">
+        <div class="knowledge_list_item" v-for="item in knowledgeList" :key="item.id" @click="switchKnowledge(item.id)">
           <div class="knowledge_list_item_top_container">
             <vs-icon icon="token" style="color: gray;"></vs-icon>
-            <div class="knowledge_base_title">个人知识库</div>
+            <div class="knowledge_base_title">{{ item.name }}</div>
           </div>
           <div class="knowledge_list_item_bottom_container">
-            <div class="knowledge_list_item_bottom_group_count">合作人数：3</div>
+            <div class="knowledge_list_item_bottom_group_count">合作人数：{{ item.groupCount }}</div>
             <div class="knowledge_list_item_bottom_button_container">
-              <vs-button line-position="top" line-origin="right" color="dark" type="line" style="width: 50%;">删除
+              <vs-button line-position="top" line-origin="right" color="dark" type="line" style="width: 50%;"
+                         @click.stop="deleteKnowledge(item.id)">删除
               </vs-button>
-              <vs-button line-position="top" line-origin="left" color="dark" type="line" style="width: 50%;">管理成员
-              </vs-button>
-            </div>
-          </div>
-        </div>
-        <div class="knowledge_list_item">
-          <div class="knowledge_list_item_top_container">
-            <vs-icon icon="token" style="color: gray;"></vs-icon>
-            <div class="knowledge_base_title">个人知识库</div>
-          </div>
-          <div class="knowledge_list_item_bottom_container">
-            <div class="knowledge_list_item_bottom_group_count">合作人数：3</div>
-            <div class="knowledge_list_item_bottom_button_container">
-              <vs-button line-position="top" line-origin="right" color="dark" type="line" style="width: 50%;">删除
-              </vs-button>
-              <vs-button line-position="top" line-origin="left" color="dark" type="line" style="width: 50%;">管理成员
-              </vs-button>
-            </div>
-          </div>
-        </div>
-        <div class="knowledge_list_item">
-          <div class="knowledge_list_item_top_container">
-            <vs-icon icon="token" style="color: gray;"></vs-icon>
-            <div class="knowledge_base_title">个人知识库</div>
-          </div>
-          <div class="knowledge_list_item_bottom_container">
-            <div class="knowledge_list_item_bottom_group_count">合作人数：3</div>
-            <div class="knowledge_list_item_bottom_button_container">
-              <vs-button line-position="top" line-origin="right" color="dark" type="line" style="width: 50%;">删除
-              </vs-button>
-              <vs-button line-position="top" line-origin="left" color="dark" type="line" style="width: 50%;">管理成员
-              </vs-button>
-            </div>
-          </div>
-        </div>
-        <div class="knowledge_list_item">
-          <div class="knowledge_list_item_top_container">
-            <vs-icon icon="token" style="color: gray;"></vs-icon>
-            <div class="knowledge_base_title">个人知识库</div>
-          </div>
-          <div class="knowledge_list_item_bottom_container">
-            <div class="knowledge_list_item_bottom_group_count">合作人数：3</div>
-            <div class="knowledge_list_item_bottom_button_container">
-              <vs-button line-position="top" line-origin="right" color="dark" type="line" style="width: 50%;">删除
-              </vs-button>
-              <vs-button line-position="top" line-origin="left" color="dark" type="line" style="width: 50%;">管理成员
-              </vs-button>
-            </div>
-          </div>
-        </div>
-        <div class="knowledge_list_item">
-          <div class="knowledge_list_item_top_container">
-            <vs-icon icon="token" style="color: gray;"></vs-icon>
-            <div class="knowledge_base_title">个人知识库</div>
-          </div>
-          <div class="knowledge_list_item_bottom_container">
-            <div class="knowledge_list_item_bottom_group_count">合作人数：3</div>
-            <div class="knowledge_list_item_bottom_button_container">
-              <vs-button line-position="top" line-origin="right" color="dark" type="line" style="width: 50%;">删除
-              </vs-button>
-              <vs-button line-position="top" line-origin="left" color="dark" type="line" style="width: 50%;">管理成员
+              <vs-button line-position="top" line-origin="left" color="dark" type="line" style="width: 50%;"
+                         @click.stop="manageGroup(item.id)">管理成员
               </vs-button>
             </div>
           </div>
@@ -100,11 +42,42 @@
 export default {
   name: 'SideBar',
   data() {
-    return {}
+    return {
+      knowledgeList: [
+        {id: '001', name: '个人知识库', groupCount: 30},
+        {id: '002', name: 'marks的知识库', groupCount: 310},
+        {id: '003', name: 'mike的知识库', groupCount: 230},
+        {id: '004', name: 'java知识库', groupCount: 330},
+        {id: '005', name: '公司人事知识库', groupCount: 30},
+        {id: '006', name: '公司财务知识库', groupCount: 40},
+      ]
+    }
   },
   methods: {
+    switchToPrimaryChat() {
+      if (this.$route.path !== '/chat') {
+        this.$router.push('/chat');
+      }
+    },
     addKnowledge() {
 
+    },
+    switchKnowledge(id) {
+      if (this.$route.path !== '/knowledge') {
+        this.$router.push({
+          path: '/knowledge',
+          query: {
+            id: id
+          }
+        })
+      }
+      console.log('路由跳转', id)
+    },
+    deleteKnowledge(id) {
+      console.log('删除某一个知识库', id)
+    },
+    manageGroup(id) {
+      console.log('管理知识库成员', id)
     }
   }
 }
@@ -145,6 +118,11 @@ export default {
   box-shadow: 0 0 0 1px #dcdfe6;
 }
 
+.primary_chat:hover {
+  box-shadow: 0 0 0 1px #f3f3f3;
+  background-color: #f3f3f3;
+}
+
 .active {
   background: rgba(107, 108, 111, .1490196078);
   box-shadow: 0 0 0 0;
@@ -169,6 +147,11 @@ export default {
   cursor: pointer;
   box-shadow: 0 0 0 1px #dcdfe6;
   margin-bottom: 16px;
+}
+
+.knowledge_list_item:hover {
+  box-shadow: 0 0 0 1px #f3f3f3;
+  background-color: #f3f3f3;
 }
 
 .knowledge_list_item_top_container {

@@ -22,10 +22,9 @@ export const constantRoutes = [
         name: 'Knowledge',
         children: [
             {
-                path: '/:id',
+                path: '/',
                 name: 'KnowledgeChat',
-                component: () => import('@/views/knowledge/index.vue'),
-                props: true
+                component: () => import('@/views/knowledge/index.vue')
             }
         ]
     },
@@ -43,10 +42,8 @@ const createRouter = () => new Router({
 const router = createRouter()
 
 router.beforeEach((to, from, next) => {
-    console.log("路由")
-    if (to.path === from.path) {
-        console.log(to.path, from.path)
-        console.log("重复跳转")
+    if (from.path === '/knowledge' && to.path === '/knowledge') next()
+    else if (to.path === from.path) {
         return false;
     } else {
         next();
