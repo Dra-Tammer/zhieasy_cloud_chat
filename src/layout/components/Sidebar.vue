@@ -63,15 +63,9 @@ export default {
 
     },
     switchKnowledge(id) {
-      if (this.$route.path !== '/knowledge') {
-        this.$router.push({
-          path: '/knowledge',
-          query: {
-            id: id
-          }
-        })
+      if (this.$route.path !== `/knowledge/${id}`) {
+        this.$router.push(`/knowledge/${id}`)
       }
-      console.log('路由跳转', id)
     },
     deleteKnowledge(id) {
       console.log('删除某一个知识库', id)
