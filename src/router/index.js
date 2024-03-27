@@ -17,13 +17,12 @@ export const constantRoutes = [
     },
 
     {
-        path: '/knowledge',
+        path: '/knowledge/:id',
         component: Layout,
         name: 'Knowledge',
         children: [
             {
-                path: '/',
-                name: 'KnowledgeChat',
+                path: '',
                 component: () => import('@/views/knowledge/index.vue')
             }
         ]
