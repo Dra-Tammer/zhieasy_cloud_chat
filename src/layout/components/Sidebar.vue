@@ -1,7 +1,7 @@
 <template>
   <div class="side_bar">
     <div class="view_content">
-      <div class="primary_chat" @click="switchToPrimaryChat">
+      <div class="primary_chat" :class="{active:$route.path === '/chat'}" @click="switchToPrimaryChat">
         <vs-avatar text="AI" color="lightgreen"></vs-avatar>
         New Primary Chat
         <vs-icon icon="ios_share" style="margin-left: 20px;margin-right:6px;color: gray"></vs-icon>
@@ -10,16 +10,18 @@
         知识库
       </vs-divider>
       <div class="knowledge_base_chat">
-        <div class="knowledge_list_item" v-for="item in knowledgeList" :key="item.id" @click="switchKnowledge(item.id)">
+        <div class="knowledge_list_item" :class="{active:$route.path === `/knowledge/${item.id}`}"
+             v-for="item in knowledgeList" :key="item.id" @click="switchKnowledge(item.id)">
           <div class="knowledge_list_item_top_container">
-            <vs-icon icon="token" style="color: gray;"></vs-icon>
+            <vs-icon icon="token" class="icon"
+                     :class="{icon_active:$route.path === `/knowledge/${item.id}`}"></vs-icon>
             <div class="knowledge_base_title">{{ item.name }}</div>
           </div>
           <div class="knowledge_list_item_bottom_container">
             <div class="knowledge_list_item_bottom_group_count">合作人数：{{ item.groupCount }}</div>
             <div class="knowledge_list_item_bottom_button_container">
               <vs-button line-position="top" line-origin="right" color="dark" type="line" style="width: 50%;"
-                         @click.stop="deleteKnowledge(item.id)">删除
+                         @click.stop="deleteKnowledge(item)">删除
               </vs-button>
               <vs-button line-position="top" line-origin="left" color="dark" type="line" style="width: 50%;"
                          @click.stop="manageGroup(item.id)">管理成员
@@ -53,6 +55,14 @@ export default {
       ]
     }
   },
+  watch: {
+    $route(to, from) {
+      console.log('luyoubianhua', to, from)
+    }
+  },
+  mounted() {
+    console.log(this.$route.path)
+  },
   methods: {
     switchToPrimaryChat() {
       if (this.$route.path !== '/chat') {
@@ -67,8 +77,23 @@ export default {
         this.$router.push(`/knowledge/${id}`)
       }
     },
-    deleteKnowledge(id) {
-      console.log('删除某一个知识库', id)
+    deleteKnowledge(item) {
+      this.$vs.dialog({
+        type: 'confirm',
+        color: 'danger',
+        title: `删除知识库${item.name}`,
+        text: '请明确删除知识库的后果，知识库中的文件要不会保留，知识库协作者们将不能再使用此知识库！',
+        accept: this.deleteKnowledgeAccept,
+        acceptText: '确定',
+        cancelText: '取消'
+      })
+    },
+    deleteKnowledgeAccept() {
+      this.$vs.notify({
+        color: 'danger',
+        title: '删除知识库',
+        text: '知识库删除成功'
+      })
     },
     manageGroup(id) {
       console.log('管理知识库成员', id)
@@ -112,14 +137,22 @@ export default {
   box-shadow: 0 0 0 1px #dcdfe6;
 }
 
-.primary_chat:hover {
+.primary_chat:hover:not(.active) {
   box-shadow: 0 0 0 1px #f3f3f3;
   background-color: #f3f3f3;
 }
 
 .active {
   background: rgba(107, 108, 111, .1490196078);
-  box-shadow: 0 0 0 0;
+  box-shadow: 0 0 0 1px rgba(107, 108, 111, .1490196078);
+}
+
+.icon {
+  color: gray;
+}
+
+.icon_active {
+  color: rgb(23, 201, 100);
 }
 
 .knowledge_base_chat {
@@ -143,10 +176,11 @@ export default {
   margin-bottom: 16px;
 }
 
-.knowledge_list_item:hover {
+.knowledge_list_item:hover:not(.active) {
   box-shadow: 0 0 0 1px #f3f3f3;
   background-color: #f3f3f3;
 }
+
 
 .knowledge_list_item_top_container {
   display: flex;

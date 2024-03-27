@@ -7,7 +7,14 @@
       <div class="navbar_title" @click="navigateToChat">ZhieasyCloudChat</div>
     </div>
     <div class="right_item_container">
-      <vs-avatar color="#26302a" text-color="rgb(246, 190, 16)"/>
+      <vs-dropdown>
+        <vs-avatar color="#26302a" text-color="rgb(246, 190, 16)"/>
+        <vs-dropdown-menu>
+          <vs-dropdown-item style="width: 60px;" @click="logout">
+            退出
+          </vs-dropdown-item>
+        </vs-dropdown-menu>
+      </vs-dropdown>
     </div>
   </div>
 </template>
@@ -24,6 +31,18 @@ export default {
       if (this.$route.path !== '/chat') {
         this.$router.push('/chat');
       }
+    },
+    logout() {
+      this.$vs.dialog({
+        color: 'success',
+        title: 'Logout',
+        text: '退出当前账号',
+        accept: this.acceptLogout,
+        acceptText: '确认'
+      })
+    },
+    acceptLogout() {
+      this.$router.push({path: '/login'})
     }
   }
 }
@@ -61,5 +80,4 @@ export default {
 .right_item_container {
   margin-right: 20px;
 }
-
 </style>
