@@ -80,5 +80,4 @@ export default {
 .right_item_container {
   margin-right: 20px;
 }
-
 </style>
