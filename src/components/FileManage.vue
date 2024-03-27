@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="main_container">
     文件资源管理页面{{ fileId }}
   </div>
 </template>
