@@ -158,6 +158,7 @@ export default {
 }
 </script>
 
+
 <style lang="css" scoped>
 .main_container {
   width: 100%;
