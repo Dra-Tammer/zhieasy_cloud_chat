@@ -1,94 +1,260 @@
 <template>
-  <div id="main_container">
-<!--    文件资源管理页面{{ fileId }}-->
-<!--    网盘的菜单栏-->
-    <div class="head">
-          <vs-navbar v-model="activeItem" class="nabarx">
-            <div slot="title">
-              <vs-navbar-title index="$route.path">
-<!--                这里不知道怎么将当前路由路径的id取过来,props?-->
-<!--                {{ item.name}}-->
-                <p>个人知识库</p>
-              </vs-navbar-title>
-            </div>
-            <vs-navbar-item index="0">
-              <vs-button type="line">上传</vs-button>
-            </vs-navbar-item>
-            <vs-navbar-item index="1">
-              <vs-button type="line">新建</vs-button>
-            </vs-navbar-item>
-            <vs-navbar-item index="2">
-              <vs-checkbox v-model="checkBox1">全选</vs-checkbox>
-            </vs-navbar-item>
-            <vs-input icon="search" placeholder="输入你想找的文件名" v-model="search"/>
-          </vs-navbar>
-    </div>
-
-<!--    下面的组件是用来进行文件类型的识别(如果匹配到文件类型,则渲染标签)  -->
-    <FileType></FileType>
-
-    <div class="foot">
-      <div>
-        <vs-pagination :total="40" v-model="currentx" class="Pagination"></vs-pagination>
+  <div class="knowledgeFileManagementContainer">
+    <div class="fileManagementTop">
+      <vs-breadcrumb :items="[
+        {
+          title: 'knowledge',
+        },
+        {
+          title: 'Link 1',
+        },
+        {
+          title: 'Link 2',
+        },
+        {
+          title: 'Active',
+          active: true
+        }
+      ]"></vs-breadcrumb>
+      <div class="fileManagementTopButtonContainer">
+        <vs-button style="margin-right: 20px;" size="small" type="flat">新建文件夹</vs-button>
+        <vs-button size="small" type="flat">上传文件</vs-button>
       </div>
+    </div>
+    <div class="fileListContainer">
+      <vs-table :data="users" maxHeight="100vh" search>
+        <template slot="thead">
+          <vs-th style="width: 20px;">
+          </vs-th>
+          <vs-th>
+            文件名
+          </vs-th>
+          <vs-th>
+            修改日期
+          </vs-th>
+          <vs-th>
+            类型
+          </vs-th>
+          <vs-th>
+            大小
+          </vs-th>
+          <vs-th>
+            操作
+          </vs-th>
+        </template>
+
+        <template slot-scope="{data}">
+          <vs-tr :key="indextr" v-for="(tr, indextr) in data">
+            <vs-td>
+              <img src="./file/dir.png" style="width: 22px;height: 22px;">
+            </vs-td>
+            <vs-td :data="data[indextr].email">
+              {{ data[indextr].email }}
+            </vs-td>
+
+            <vs-td :data="data[indextr].username">
+              {{ data[indextr].name }}
+            </vs-td>
+
+            <vs-td :data="data[indextr].id">
+              {{ data[indextr].id }}
+            </vs-td>
+            <vs-td>
+              <vs-td :data="data[indextr].website">
+                {{ data[indextr].website }}
+              </vs-td>
+            </vs-td>
+            <vs-td>
+              <vs-button size="small" type="flat" color="danger">删除</vs-button>
+
+            </vs-td>
+          </vs-tr>
+        </template>
+      </vs-table>
     </div>
   </div>
 </template>
 
 
 <script>
-import FileType from "@/filetype/File_type.vue";
 export default {
   name: 'FileManage',
-  components: {FileType},
   data() {
     return {
-      fileId: '',
-      knowledgeList: [
-        {id: '001', name: '个人知识库', groupCount: 30},
-        {id: '002', name: 'marks的知识库', groupCount: 310},
-        {id: '003', name: 'mike的知识库', groupCount: 230},
-        {id: '004', name: 'java知识库', groupCount: 330},
-        {id: '005', name: '公司人事知识库', groupCount: 30},
-        {id: '006', name: '公司财务知识库', groupCount: 40},
+      knowledgeId: '',
+      breadCrumbItem: [
+        {
+          title: 'knowledge',
+        },
+        {
+          title: 'Link 1',
+        },
+        {
+          title: 'Link 2',
+        },
+        {
+          title: 'Active',
+          active: true
+        }
       ],
-      search: '',
-      activeItem: 0,
-      currentx: 11
+      users: [
+        {
+          "id": 1,
+          "name": "Leanne Graham",
+          "username": "Bret",
+          "email": "Sincere@april.biz",
+          "website": "hildegard.org",
+        },
+        {
+          "id": 2,
+          "name": "Ervin Howell",
+          "username": "Antonette",
+          "email": "Shanna@melissa.tv",
+          "website": "anastasia.net",
+        },
+        {
+          "id": 3,
+          "name": "Clementine Bauch",
+          "username": "Samantha",
+          "email": "Nathan@yesenia.net",
+          "website": "ramiro.info",
+        },
+        {
+          "id": 4,
+          "name": "Patricia Lebsack",
+          "username": "Karianne",
+          "email": "Julianne.OConner@kory.org",
+          "website": "kale.biz",
+        },
+        {
+          "id": 5,
+          "name": "Chelsey Dietrich",
+          "username": "Kamren",
+          "email": "Lucio_Hettinger@annie.ca",
+          "website": "demarco.info",
+        },
+        {
+          "id": 6,
+          "name": "Mrs. Dennis Schulist",
+          "username": "Leopoldo_Corkery",
+          "email": "Karley_Dach@jasper.info",
+          "website": "ola.org",
+        },
+        {
+          "id": 7,
+          "name": "Kurtis Weissnat",
+          "username": "Elwyn.Skiles",
+          "email": "Telly.Hoeger@billy.biz",
+          "website": "elvis.io",
+        },
+        {
+          "id": 8,
+          "name": "Nicholas Runolfsdottir V",
+          "username": "Maxime_Nienow",
+          "email": "Sherwood@rosamond.me",
+          "website": "jacynthe.com",
+        },
+        {
+          "id": 9,
+          "name": "Glenna Reichert",
+          "username": "Delphine",
+          "email": "Chaim_McDermott@dana.io",
+          "website": "conrad.com",
+        },
+        {
+          "id": 10,
+          "name": "Clementina DuBuque",
+          "username": "Moriah.Stanton",
+          "email": "Rey.Padberg@karina.biz",
+          "website": "ambrose.net",
+        },
+        {
+          "id": 11,
+          "name": "Clementina DuBuque",
+          "username": "Moriah.Stanton",
+          "email": "Rey.Padberg@karina.biz",
+          "website": "ambrose.net",
+        },
+        {
+          "id": 12,
+          "name": "Clementina DuBuque",
+          "username": "Moriah.Stanton",
+          "email": "Rey.Padberg@karina.biz",
+          "website": "ambrose.net",
+        },
+        {
+          "id": 13,
+          "name": "Clementina DuBuque",
+          "username": "Moriah.Stanton",
+          "email": "Rey.Padberg@karina.biz",
+          "website": "ambrose.net",
+        },
+        {
+          "id": 14,
+          "name": "Clementina DuBuque",
+          "username": "Moriah.Stanton",
+          "email": "Rey.Padberg@karina.biz",
+          "website": "ambrose.net",
+        },
+        {
+          "id": 15,
+          "name": "Clementina DuBuque",
+          "username": "Moriah.Stanton",
+          "email": "Rey.Padberg@karina.biz",
+          "website": "ambrose.net",
+        },
+        {
+          "id": 16,
+          "name": "Clementina DuBuque",
+          "username": "Moriah.Stanton",
+          "email": "Rey.Padberg@karina.biz",
+          "website": "ambrose.net",
+        },
+        {
+          "id": 17,
+          "name": "Clementina DuBuque",
+          "username": "Moriah.Stanton",
+          "email": "Rey.Padberg@karina.biz",
+          "website": "ambrose.net",
+        }
+      ]
     }
   },
   created() {
     let path = this.$route.path.split('/')
-    this.fileId = path[path.length - 1]
+    this.knowledgeId = path[path.length - 1]
     this.$watch(
         () => this.$route.params,
         (toParams, preParams) => {
           console.log(preParams)
-          this.fileId = toParams.id
+          this.knowledgeId = toParams.id
         }
     )
   },
-  methods: {
-    //上传文件方法
-
-
-  },
+  methods: {},
 }
 </script>
 
 <style lang="css" scoped>
-.head{
+.knowledgeFileManagementContainer {
+  height: 100%;
+  width: 100%;
+}
+
+.fileManagementTop {
+  height: 4%;
+  border-bottom: 1px solid #c7c7c7;
   display: flex;
   justify-content: space-between;
-  width: 100%;
-  height: 40%;
-  background-color: #d3e3fe;
+  align-items: center;
 }
 
-.foot{
-  display: flex;
-  margin-top: 100%;
-  justify-content: center;
+.fileManagementTopButtonContainer {
+  margin-right: 20px;
 }
 
+.fileListContainer {
+  padding-top: 4px;
+  background-color: rgb(251, 251, 251);
+}
 </style>

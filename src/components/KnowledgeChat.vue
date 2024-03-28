@@ -173,18 +173,18 @@ export default {
   name: 'KnowledgeChat',
   data() {
     return {
-      fileId: '',
+      knowledgeId: '',
       userInputMessage: ''
     }
   },
   created() {
     let path = this.$route.path.split('/')
-    this.fileId = path[path.length - 1]
+    this.knowledgeId = path[path.length - 1]
     this.$watch(
         () => this.$route.params,
         (toParams, preParams) => {
           console.log(preParams)
-          this.fileId = toParams.id
+          this.knowledgeId = toParams.id
         }
     )
   },
