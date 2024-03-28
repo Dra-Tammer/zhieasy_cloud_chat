@@ -34,7 +34,7 @@ export default {
     },
     logout() {
       this.$vs.dialog({
-        color: 'success',
+        color: 'primary',
         title: 'Logout',
         text: '退出当前账号',
         accept: this.acceptLogout,

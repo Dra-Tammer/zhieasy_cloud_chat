@@ -37,19 +37,59 @@
       </div>
     </div>
     <vs-popup classContent="addKnowledgePopUP" title="新建知识库" :active.sync="addKnowledgeActivePrompt">
-      <div class="addKnowledgeLeftContainer">
-        <p style="margin-bottom: 10px;">命名新知识库：</p>
-        <vs-input placeholder="input" v-model="newKnowledgeName" style="margin-bottom: 10px;"/>
-        <p style="margin-bottom: 10px;">知识库规则</p>
-        <vs-select
-            v-model="addKnowledgeSelect"
-            style="margin-bottom: 20px;"
-        >
-          <vs-select-item :key="index" :value="item.value" :text="item.text"
-                          v-for="(item,index) in addKnowledgeRuleOptions"/>
-        </vs-select>
-        <vs-button @click="addKnowledge" style="width: 80px;margin-right: 20px;">确认</vs-button>
-        <vs-button type="flat" @click="cancelAddKnowledge" style="width: 80px;">取消</vs-button>
+      <div class="addKnowledgePopUP">
+        <div class="addKnowledgeLeftContainer">
+          <p style="margin-bottom: 10px;">命名新知识库：</p>
+          <vs-input placeholder="input" v-model="newKnowledgeName" style="margin-bottom: 10px;"/>
+          <p style="margin-bottom: 10px;">知识库规则</p>
+          <vs-select
+              v-model="addKnowledgeSelect"
+              style="margin-bottom: 20px;"
+          >
+            <vs-select-item :key="index" :value="item.value" :text="item.text"
+                            v-for="(item,index) in addKnowledgeRuleOptions"/>
+          </vs-select>
+          <vs-button @click="addKnowledge" style="width: 80px;margin-right: 20px;">确认</vs-button>
+          <vs-button type="flat" @click="cancelAddKnowledge" style="width: 80px;">取消</vs-button>
+        </div>
+        <div class="addKnowledgeRightContainer">
+          <p style="margin-bottom: 10px;">知识库就是用户利用知识管理软件创建一个集中式存储库</p>
+          <p style="margin-bottom: 10px;">该存储库可用于轻松创建、组织、查找和共享知识，</p>
+          <p style="margin-bottom: 10px;">将分散在各处的知识集中起来。</p>
+        </div>
+      </div>
+    </vs-popup>
+    <vs-popup classContent="manageGroupPopUP" title="管理知识库协作者" :active.sync="manageGroupActivePrompt">
+      <div class="manageGroupPopUP">
+        <div class="manageGroupLeftContainer">
+          <vs-table
+              maxHeight="300px"
+              search
+              multiple
+              v-model="manageGroupSelected"
+              :data="manageGroupUserList">
+            <template slot="header">
+              <vs-button v-if="0!==this.manageGroupSelected.length" line-position="top" line-origin="left"
+                         color="warning" type="line"
+                         style="width: 100px;margin-right: 20px;">移出
+              </vs-button>
+              <vs-button line-position="top" line-origin="left" color="primary" type="line">添加成员</vs-button>
+            </template>
+            <template slot="thead">
+              <vs-th>
+                成员名
+              </vs-th>
+            </template>
+
+            <template slot-scope="{data}">
+              <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
+                <vs-td :data="data[indextr].name">
+                  {{ data[indextr].name }}
+                </vs-td>
+              </vs-tr>
+            </template>
+          </vs-table>
+        </div>
       </div>
     </vs-popup>
   </div>
@@ -76,6 +116,59 @@ export default {
         {text: '自用一手新', value: 0},
         {text: '自用二手新', value: 1},
         {text: '包浆', value: 2}
+      ],
+      manageGroupActivePrompt: false,
+      manageGroupHandleId: null,
+      manageGroupSelected: [],
+      manageGroupUserList: [
+        {
+          "id": 1,
+          "name": "Leanne Graham",
+        },
+        {
+          "id": 2,
+          "name": "Ervin Howell",
+        },
+        {
+          "id": 3,
+          "name": "Clementine Bauch",
+        },
+        {
+          "id": 4,
+          "name": "Patricia Lebsack",
+        },
+        {
+          "id": 5,
+          "name": "Chelsey Dietrich",
+        },
+        {
+          "id": 6,
+          "name": "Mrs. Dennis Schulist",
+        },
+        {
+          "id": 7,
+          "name": "Kurtis Weissnat",
+        },
+        {
+          "id": 8,
+          "name": "Nicholas Runolfsdottir V",
+        },
+        {
+          "id": 9,
+          "name": "Glenna Reichert",
+        },
+        {
+          "id": 10,
+          "name": "Clementina DuBuque",
+        },
+        {
+          "id": 11,
+          "name": "Clementina DuBuque",
+        },
+        {
+          "id": 12,
+          "name": "Clementina DuBuque",
+        }
       ]
     }
   },
@@ -122,7 +215,12 @@ export default {
       })
     },
     manageGroup(id) {
-      console.log(id)
+      this.manageGroupActivePrompt = true
+      this.manageGroupHandleId = id
+      this.manageGroupUserList = this.manageGroupUserList.map(user => ({
+        ...user,
+        name: user.name + this.manageGroupHandleId
+      }))
     },
     cancelAddKnowledge() {
       this.addKnowledgeActivePrompt = false
@@ -249,10 +347,26 @@ export default {
 }
 
 .addKnowledgePopUP {
+  display: flex;
+  justify-content: space-between;
 }
 
 .addKnowledgeLeftContainer {
   width: 46%;
   border-right: 1px solid #c7c7c7;
+}
+
+.addKnowledgeRightContainer {
+  width: 50%;
+  color: gray;
+  line-height: 20px;
+}
+
+.manageGroupPopUP {
+  display: flex;
+}
+
+.manageGroupLeftContainer {
+  width: 100%;
 }
 </style>
