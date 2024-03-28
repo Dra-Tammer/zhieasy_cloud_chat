@@ -72,6 +72,7 @@ export default {
     addKnowledge() {
 
     },
+    // 将路由的路径改到/knowledge，重定向到对应的组件处
     switchKnowledge(id) {
       if (this.$route.path !== `/knowledge/${id}`) {
         this.$router.push(`/knowledge/${id}`)

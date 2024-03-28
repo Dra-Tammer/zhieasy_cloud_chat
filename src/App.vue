@@ -1,3 +1,4 @@
+<!--这个是我们的根组件-->
 <template>
   <div id="app">
     <router-view v-slot="{ Component, route }">
@@ -14,6 +15,7 @@ export default {
   name: 'App'
 }
 </script>
+
 <style>
 #app {
   margin: 0;
