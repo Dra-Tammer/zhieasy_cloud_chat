@@ -1,10 +1,6 @@
-<!--这个是我们的根组件-->
 <template>
   <div id="app">
-    <router-view v-slot="{ Component, route }">
-      <transition name="slide-left">
-        <component :is="Component" :key="route.path"/>
-      </transition>
+    <router-view>
     </router-view>
   </div>
 </template>

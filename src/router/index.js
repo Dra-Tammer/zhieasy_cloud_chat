@@ -7,7 +7,6 @@ Vue.use(Router)
 export const constantRoutes = [
     {
         path: '/',
-        // 这个地方就是为什么layout没有在根组件注册，但是依然会被渲染的原因
         component: Layout,
         redirect: '/chat',
         children: [{

@@ -1,6 +1,6 @@
 import Vue from 'vue'
-import Vuesax from 'vuesax'
-import 'vuesax/dist/vuesax.css'
+import Vuesax from '@brugarolas/vuesax'
+import '@brugarolas/vuesax/dist/vuesax.css'
 import 'material-icons/iconfont/material-icons.css';
 import App from './App.vue'
 import router from './router'

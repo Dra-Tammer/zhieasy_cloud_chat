@@ -31,11 +31,27 @@
         </div>
         <div style="margin-bottom: 10px;font-size: 14px;color: gray;">没有更多了</div>
       </div>
-      <div class="create_knowledge" @click="addKnowledge">
+      <div class="create_knowledge" @click="addKnowledgeActivePrompt = true">
         <vs-icon icon="add" style="margin-right: 10px;"></vs-icon>
         <div>添加知识库</div>
       </div>
     </div>
+    <vs-popup classContent="addKnowledgePopUP" title="新建知识库" :active.sync="addKnowledgeActivePrompt">
+      <div class="addKnowledgeLeftContainer">
+        <p style="margin-bottom: 10px;">命名新知识库：</p>
+        <vs-input placeholder="input" v-model="newKnowledgeName" style="margin-bottom: 10px;"/>
+        <p style="margin-bottom: 10px;">知识库规则</p>
+        <vs-select
+            v-model="addKnowledgeSelect"
+            style="margin-bottom: 20px;"
+        >
+          <vs-select-item :key="index" :value="item.value" :text="item.text"
+                          v-for="(item,index) in addKnowledgeRuleOptions"/>
+        </vs-select>
+        <vs-button @click="addKnowledge" style="width: 80px;margin-right: 20px;">确认</vs-button>
+        <vs-button type="flat" @click="cancelAddKnowledge" style="width: 80px;">取消</vs-button>
+      </div>
+    </vs-popup>
   </div>
 </template>
 
@@ -52,16 +68,19 @@ export default {
         {id: '004', name: 'java知识库', groupCount: 330},
         {id: '005', name: '公司人事知识库', groupCount: 30},
         {id: '006', name: '公司财务知识库', groupCount: 40},
+      ],
+      addKnowledgeActivePrompt: false,
+      newKnowledgeName: '',
+      addKnowledgeSelect: 0,
+      addKnowledgeRuleOptions: [
+        {text: '自用一手新', value: 0},
+        {text: '自用二手新', value: 1},
+        {text: '包浆', value: 2}
       ]
     }
   },
-  watch: {
-    $route(to, from) {
-      console.log('luyoubianhua', to, from)
-    }
-  },
+  watch: {},
   mounted() {
-    console.log(this.$route.path)
   },
   methods: {
     switchToPrimaryChat() {
@@ -70,9 +89,15 @@ export default {
       }
     },
     addKnowledge() {
-
+      this.$vs.notify({
+        color: 'success',
+        title: '知识库新建成功',
+        text: `成功新建：${this.newKnowledgeName}`
+      })
+      this.addKnowledgeActivePrompt = false
+      this.newKnowledgeName = ''
+      this.addKnowledgeSelect = 0
     },
-    // 将路由的路径改到/knowledge，重定向到对应的组件处
     switchKnowledge(id) {
       if (this.$route.path !== `/knowledge/${id}`) {
         this.$router.push(`/knowledge/${id}`)
@@ -80,11 +105,11 @@ export default {
     },
     deleteKnowledge(item) {
       this.$vs.dialog({
+        accept: this.deleteKnowledgeAccept,
         type: 'confirm',
         color: 'danger',
         title: `删除知识库${item.name}`,
         text: '请明确删除知识库的后果，知识库中的文件要不会保留，知识库协作者们将不能再使用此知识库！',
-        accept: this.deleteKnowledgeAccept,
         acceptText: '确定',
         cancelText: '取消'
       })
@@ -97,8 +122,13 @@ export default {
       })
     },
     manageGroup(id) {
-      console.log('管理知识库成员', id)
-    }
+      console.log(id)
+    },
+    cancelAddKnowledge() {
+      this.addKnowledgeActivePrompt = false
+      this.newKnowledgeName = ''
+      this.addKnowledgeSelect = 0
+    },
   }
 }
 </script>
@@ -216,5 +246,13 @@ export default {
   display: flex;
   padding-top: 10px;
   cursor: pointer;
+}
+
+.addKnowledgePopUP {
+}
+
+.addKnowledgeLeftContainer {
+  width: 46%;
+  border-right: 1px solid #c7c7c7;
 }
 </style>
