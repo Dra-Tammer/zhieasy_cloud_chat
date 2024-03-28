@@ -1,151 +1,89 @@
 <template>
-  <div class="all">
-    <div class="left">
-      <!-- 左边的内容(到时候填充图片) -->
-      <h1 class="line1">Chat with documents.
-        Get instant answers with
-        cited sources.</h1>
-      <p class="line2">ChatDOC is a ChatGPT-based file-reading assistant that can quickly
-        extract, locate and summarize information from documents.</p>
-      <img src="./picture/login.png" alt="" class="img1">
-    </div>
-    <div class="right">
-      <!-- 底下是登录的接口 -->
-      <button class="signup">sign up</button>
-      <div class="login">
-        <h1 class="head">Welcome to ZhiEasy!</h1>
-        <div class="login-inner">
-          <input v-model="form.userName" placeholder="Enter your email" class="usernameinput">
-          <input v-model="form.password" placeholder="Enter your password" class="passwordinput">
+  <div class='container' id='container'>
+    <div class="form-container sign-up-container">
+      <!-- 注册 -->
+      <form action="#">
+        <h1>Chat with ZhiEasy</h1>
+        <div class="social-container">
+          <a href="#" class="social"><i class="iconfont icon-qq"></i></a>
+          <a href="#" class="social"><i class="iconfont icon-weixin"></i></a>
+          <a href="#" class="social"><i class="iconfont icon-weibo-copy"></i></a>
+          <a href="#" class="social"><i class="iconfont icon-github"></i></a>
         </div>
-        <div class="login_inner1">
-          <input type="radio" class="select1">remember me
-          <button class="login_button">continue</button>
+        <span>其他注册方式</span>
+        <input type="text" placeholder="用户名">
+        <input type="password" placeholder="密码">
+        <input type="email" placeholder="邮箱">
+        <button id="send_code">发送验证码</button>
+        <input type="email" placeholder="验证码">
+        <button>注册</button>
+      </form>
+    </div>
+    <div class="form-container sign-in-container">
+
+      <!-- 登陆 -->
+      <form action="#">
+        <h1>Welcome to ZhiEasy!</h1>
+        <div class="social-container">
+          <a href="#" class="social"><i class="iconfont icon-qq"></i></a>
+          <a href="#" class="social"><i class="iconfont icon-weixin"></i></a>
+          <a href="#" class="social"><i class="iconfont icon-weibo-copy"></i></a>
+          <a href="#" class="social"><i class="iconfont icon-github"></i></a>
+        </div>
+        <span>其他登录方式</span>
+        <input type="text" placeholder="用户名">
+        <input type="password" placeholder="密码">
+        <a href="#">忘记密码？</a>
+        <button v-on:click="Userlogin()">登陆</button>
+      </form>
+    </div>
+    <!-- 侧边栏内容 -->
+    <div class="overlay-container">
+      <div class="overlay">
+        <div class="overlay-panel overlay-left">
+          <h1>已有帐号？</h1>
+          <p>创建属于你的知识库吧</p>
+          <button class='ghost' id="signIn">登陆</button>
+        </div>
+        <div class="overlay-panel overlay-right">
+          <h1>没有帐号？</h1>
+          <p>注册一个属于你的账号吧</p>
+          <button class='ghost' id="signUp">注册</button>
         </div>
       </div>
     </div>
   </div>
 </template>
 
+
+<!--<script>-->
 <script>
-export default {
+  export default {
   name: 'UserLogin',
   data() {
-    return {
-      form: {
-        userName: null,
-        password: null
-      }
-    }
-  }
+  return {
+  form: {
+  userName: '',
+  password: ''
+}
+}
+},
+  methods:{
+  Userlogin(){
+  this.axios.post('http://172.24.34.83:11434/user/login',this.form).then((resp) =>{
+  let data = resp.data
+  if(data.success){
+  this.form = {};
+  this.$router.push({path:'/Home'})
+}
+})
+}
+},
 }
 </script>
 
-<style lang="css" scoped>
-.all {
-  display: flex;
-  flex-wrap: nowrap;
-  height: 100%;
-  min-height: 100vh
-}
+<style src="./style.css"></style>
+<style src="./iconfont/iconfont.css"></style>
 
-.left {
-  width: 55%;
-  background-color: #ecf3ff;
-}
 
-.right {
-  width: 45%;
-  background-color: #fafcff;
-}
 
-.login {
-  width: 60%;
-  height: 50%;
-  margin-bottom: 45%;
-  margin-left: 25%;
-  margin-top: 20%;
-}
-
-.login-inner {
-  width: 80%;
-  display: flex;
-  flex-wrap: wrap;
-  margin: auto auto auto 10%;
-  align-items: center;
-}
-
-.head {
-  margin: auto;
-  text-align: center;
-}
-
-.usernameinput {
-  margin-top: 10%;
-  margin-left: 10%;
-  width: 80%;
-  height: 30px;
-  border-radius: 5px;
-}
-
-.passwordinput {
-  margin-top: 10%;
-  margin-left: 10%;
-  width: 80%;
-  height: 30px;
-  border-radius: 5px;
-}
-
-.login_inner1 {
-  margin-left: 10%;
-  width: 80%;
-  height: 10%;
-  margin-top: 5%;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-.select1 {
-  margin-left: 10%;
-}
-
-.login_button {
-  width: 80%;
-  height: 35px;
-  margin-top: 5%;
-  border-radius: 5px;
-  margin-left: 10%;
-}
-
-.signup {
-  margin-left: 80%;
-  margin-top: 5%;
-  width: 10%;
-  height: 5%;
-  border-radius: 10px;
-}
-
-.left .line1 {
-  margin-left: 20%;
-  width: 60%;
-  margin-top: 5%;
-  font-size: 60px;
-  text-align: center;
-}
-
-.left .line2 {
-  margin-left: 20%;
-  width: 60%;
-  font-size: 20px;
-  text-align: center;
-}
-
-.img1 {
-  margin-top: 5%;
-  display: flex;
-  width: 80%;
-  height: 50%;
-  margin-left: 10%;
-}
-</style>
