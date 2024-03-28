@@ -201,7 +201,7 @@ export default {
         accept: this.deleteKnowledgeAccept,
         type: 'confirm',
         color: 'danger',
-        title: `删除知识库${item.name}`,
+        title: `删除${item.name}`,
         text: '请明确删除知识库的后果，知识库中的文件要不会保留，知识库协作者们将不能再使用此知识库！',
         acceptText: '确定',
         cancelText: '取消'
