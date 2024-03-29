@@ -336,6 +336,7 @@ export default {
 }
 
 .create_knowledge {
+  padding-left: 8px;
   position: absolute;
   bottom: 0;
   width: 100%;
