@@ -93,16 +93,25 @@ export default {
 
       this.switchState = this.switchState === 'login' ? 'signup' : 'login';
     },
+
     login(){
-      this.axios.post('http://172.24.34.83:11434/user/login',this.form).then((resp) =>{
-        let data = resp.data
-        if(data.success){
-          this.form = {};
-          this.$router.push({path:'/Home'})
-        }
+      // this.axios.post('http://172.24.34.83:11434/user/login',this.form).then((resp) =>{
+      //   let data = resp.data
+      //   if(data.success){
+      //     this.form = {};
+      //     this.$router.push({path:'/Home'})
+      //   }
+      // })
+      this.$vs.dialog({
+        title: 'Login',
+        text: '登录账号',
+        accept: this.acceptLogin,
+        acceptText: '确认'
       })
     },
-
+    acceptLogin() {
+      this.$router.push({path: '/Home'})
+    },
   }
 }
 </script>
