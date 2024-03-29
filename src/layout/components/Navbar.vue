@@ -8,8 +8,9 @@
     </div>
     <div class="right_item_container">
       <vs-dropdown>
-<!--        <vs-avatar color="#26302a" text-color="rgb(246, 190, 16)"/>-->
-        <vs-avatar src="https://th.bing.com/th/id/R.b4839f9c3eb4bbc80de06ceaf2b6966b?rik=mDdSYeoiUGt1bA&riu=http%3a%2f%2f96845.com%2fuploads%2fallimg%2f221112%2f1-221112103926439.jpg&ehk=0P67BL1puo7MvsCwPDAD7T7iHwPpHDNFBF0N8%2fi%2fg28%3d&risl=&pid=ImgRaw&r=0"/>
+        <!--        <vs-avatar color="#26302a" text-color="rgb(246, 190, 16)"/>-->
+        <vs-avatar
+            src="https://th.bing.com/th/id/R.b4839f9c3eb4bbc80de06ceaf2b6966b?rik=mDdSYeoiUGt1bA&riu=http%3a%2f%2f96845.com%2fuploads%2fallimg%2f221112%2f1-221112103926439.jpg&ehk=0P67BL1puo7MvsCwPDAD7T7iHwPpHDNFBF0N8%2fi%2fg28%3d&risl=&pid=ImgRaw&r=0"/>
         <vs-dropdown-menu>
           <vs-dropdown-item style="width: 60px;" @click="logout">
             退出
