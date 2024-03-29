@@ -14,11 +14,10 @@ export const constantRoutes = [
         component: UserLogin
     },
     {
-        path: '/Home',
+        path: '/chat',
         component: Layout,
-        redirect: '/chat',
         children: [{
-            path: 'chat',
+            path: '',
             name: 'PrimaryChat',
             component: () => import('@/views/chat/index.vue')
         }]

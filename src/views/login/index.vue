@@ -3,6 +3,17 @@
   <div class="shell">
 <!--    注册界面-->
     <div class="container a-container" id="a-container">
+      <form action="" method="" class="form" id="b-form">
+        <h2 class="form_title title">登入账号</h2>
+        <span class="form_span">请使用电子邮箱登录</span>
+        <input type="text" class="form_input" placeholder="Email">
+        <input type="text" class="form_input" placeholder="Password">
+        <a class="form_link">忘记密码？</a>
+        <button class="form_button button submit" @click="acceptLogin()">登录</button>
+      </form>
+    </div>
+<!--    登录界面-->
+    <div class="container b-container" id="b-container">
       <form action="" method="" class="form" id="a-form">
         <h2 class="form_title title">创建账号</h2>
         <span class="form_span">请使用电子邮箱注册</span>
@@ -11,31 +22,20 @@
         <button class="form_button button submit">注册</button>
       </form>
     </div>
-<!--    登录界面-->
-    <div class="container b-container" id="b-container">
-      <form action="" method="" class="form" id="b-form">
-        <h2 class="form_title title">登入账号</h2>
-        <span class="form_span">请使用电子邮箱登录</span>
-        <input type="text" class="form_input" placeholder="Email">
-        <input type="text" class="form_input" placeholder="Password">
-        <a class="form_link">忘记密码？</a>
-        <button class="form_button button submit" @click="login()">登录</button>
-      </form>
-    </div>
 <!--    更换界面-->
     <div class="switch" id="switch-cnt">
       <div class="switch_circle"></div>
       <div class="switch_circle switch_circle-t"></div>
       <div class="switch_container" id="switch-c1">
         <h2 class="switch_title title" style="letter-spacing: 0;">Welcome to Zhieasy!</h2>
-        <p class="switch_description description">Already have an account？</p>
-        <button class="switch_button button switch-btn" @click="changeForm">SIGN IN</button>
+        <p class="switch_description description">Start to communicate with Zhieasy</p>
+        <button class="switch_button button switch-btn" @click="changeForm">SIGN UP</button>
       </div>
 
       <div class="switch_container is-hidden" id="switch-c2">
         <h2 class="switch_title title" style="letter-spacing: 0;">Join Zhieasy</h2>
-        <p class="switch_description description">Start to communicate with Zhieasy</p>
-        <button class="switch_button button switch-btn" @click="changeForm">SIGN UP</button>
+        <p class="switch_description description">Already have an account？</p>
+        <button class="switch_button button switch-btn" @click="changeForm">SIGN IN</button>
       </div>
     </div>
   </div>
@@ -94,23 +94,17 @@ export default {
       this.switchState = this.switchState === 'login' ? 'signup' : 'login';
     },
 
-    login(){
-      // this.axios.post('http://172.24.34.83:11434/user/login',this.form).then((resp) =>{
-      //   let data = resp.data
-      //   if(data.success){
-      //     this.form = {};
-      //     this.$router.push({path:'/Home'})
-      //   }
-      // })
-      this.$vs.dialog({
-        title: 'Login',
-        text: '登录账号',
-        accept: this.acceptLogin,
-        acceptText: '确认'
-      })
-    },
+    // login(){
+    //   this.axios.post('http://172.24.34.83:11434/user/login',this.form).then((resp) =>{
+    //     let data = resp.data
+    //     if(data.success){
+    //       this.form = {};
+    //       this.$router.push({path:'/Home'})
+    //     }
+    //   })
+    // },
     acceptLogin() {
-      this.$router.push({path: '/Home'})
+      this.$router.push({path: '/chat'})
     },
   }
 }
