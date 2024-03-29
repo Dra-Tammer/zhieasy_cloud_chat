@@ -6,6 +6,10 @@ import Layout from "@/layout/index.vue";
 Vue.use(Router)
 export const constantRoutes = [
     {
+        path: '/login',
+        component: UserLogin
+    },
+    {
         path: '/',
         component: Layout,
         redirect: '/chat',
@@ -15,7 +19,6 @@ export const constantRoutes = [
             component: () => import('@/views/chat/index.vue')
         }]
     },
-
     {
         path: '/knowledge/:id',
         component: Layout,
@@ -26,10 +29,6 @@ export const constantRoutes = [
                 component: () => import('@/views/knowledge/index.vue')
             }
         ]
-    },
-    {
-        path: '/login',
-        component: UserLogin
     }
 ]
 

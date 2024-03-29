@@ -19,10 +19,10 @@
         <input type="text" class="form_input" placeholder="Email">
         <input type="text" class="form_input" placeholder="Password">
         <a class="form_link">忘记密码？</a>
-        <button class="form_button button submit">登录</button>
+        <button class="form_button button submit" @click="login()">登录</button>
       </form>
     </div>
-
+<!--    更换界面-->
     <div class="switch" id="switch-cnt">
       <div class="switch_circle"></div>
       <div class="switch_circle switch_circle-t"></div>
@@ -43,7 +43,7 @@
 
 </template>
 
-<!--<script>-->
+
 <script>
 export default {
   name: 'UserLogin',
@@ -98,10 +98,11 @@ export default {
         let data = resp.data
         if(data.success){
           this.form = {};
-          this.$router.push({path:'/'})
+          this.$router.push({path:'/Home'})
         }
       })
-    }
+    },
+
   }
 }
 </script>
