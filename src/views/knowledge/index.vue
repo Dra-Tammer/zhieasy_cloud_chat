@@ -31,7 +31,12 @@ export default {
 
 .file_manage_container {
   height: 100%;
-  width: 49%;
+  width: 50%;
   border-right: 1px solid #c7c7c7;
+}
+
+.knowledge_chat_container {
+  width: 50%;
+  height: 100%;
 }
 </style>

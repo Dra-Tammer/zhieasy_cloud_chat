@@ -1,94 +1,104 @@
 <template>
-  <div id="main_container">
-<!--    文件资源管理页面{{ fileId }}-->
-<!--    网盘的菜单栏-->
-    <div class="head">
-          <vs-navbar v-model="activeItem" class="nabarx">
-            <div slot="title">
-              <vs-navbar-title index="$route.path">
-<!--                这里不知道怎么将当前路由路径的id取过来,props?-->
-<!--                {{ item.name}}-->
-                <p>个人知识库</p>
-              </vs-navbar-title>
-            </div>
-            <vs-navbar-item index="0">
-              <vs-button type="line">上传</vs-button>
-            </vs-navbar-item>
-            <vs-navbar-item index="1">
-              <vs-button type="line">新建</vs-button>
-            </vs-navbar-item>
-            <vs-navbar-item index="2">
-              <vs-checkbox v-model="checkBox1">全选</vs-checkbox>
-            </vs-navbar-item>
-            <vs-input icon="search" placeholder="输入你想找的文件名" v-model="search"/>
-          </vs-navbar>
+  <div class="knowledgeFileManagementContainer">
+    <div class="fileManagementTop">
+      <vs-button radius color="dark" type="flat" icon="chevron_left" style="margin-right: 20px;"></vs-button>
+      <div class="breadCrumbContainer">/knowledge/dir/item/zheshi/zhangsan</div>
     </div>
+    <div class="fileListContainer">
 
-<!--    下面的组件是用来进行文件类型的识别(如果匹配到文件类型,则渲染标签)  -->
-    <FileType></FileType>
-
-    <div class="foot">
-      <div>
-        <vs-pagination :total="40" v-model="currentx" class="Pagination"></vs-pagination>
-      </div>
+    </div>
+    <div class="fileManageBottomContainer">
+      <vs-chip style="font-size: 16px;margin-left: 20px;margin-right: 20px;">
+        知识库： {{ knowledgeId }}
+      </vs-chip>
+      <vs-button size="large" color="primary" type="flat" icon="window" @click="newDirDialogActivePrompt = true;">
+        新建文件夹
+      </vs-button>
+      <vs-button size="large" color="success" type="flat" icon="upload" @click="uploadFileToKnowledge">
+        上传文件到知识库
+      </vs-button>
+      <vs-prompt
+          @cancel="newDirName=''"
+          @accept="newDir"
+          @close="newDirName=''"
+          :active.sync="newDirDialogActivePrompt"
+          title="新建文件夹"
+          accept-text="确定"
+          cancel-text="取消"
+      >
+        <div>
+          <vs-input placeholder="命名文件夹" v-model="newDirName" style="margin-top: 20px;"/>
+        </div>
+      </vs-prompt>
     </div>
   </div>
 </template>
 
 
 <script>
-import FileType from "@/filetype/File_type.vue";
+
+
 export default {
   name: 'FileManage',
-  components: {FileType},
   data() {
     return {
-      fileId: '',
-      knowledgeList: [
-        {id: '001', name: '个人知识库', groupCount: 30},
-        {id: '002', name: 'marks的知识库', groupCount: 310},
-        {id: '003', name: 'mike的知识库', groupCount: 230},
-        {id: '004', name: 'java知识库', groupCount: 330},
-        {id: '005', name: '公司人事知识库', groupCount: 30},
-        {id: '006', name: '公司财务知识库', groupCount: 40},
-      ],
-      search: '',
-      activeItem: 0,
-      currentx: 11
+      knowledgeId: null,
+      newDirDialogActivePrompt: false,
+      newDirName: '',
     }
   },
   created() {
     let path = this.$route.path.split('/')
-    this.fileId = path[path.length - 1]
+    this.knowledgeId = path[path.length - 1]
     this.$watch(
         () => this.$route.params,
         (toParams, preParams) => {
           console.log(preParams)
-          this.fileId = toParams.id
+          this.knowledgeId = toParams.id
         }
     )
   },
   methods: {
-    //上传文件方法
+    newDir() {
+      this.$vs.notify({
+        color: 'success',
+        title: '新建文件夹成功',
+        text: `成功新建：${this.newDirName}`
+      })
+      this.newDirName = ''
+    },
+    uploadFileToKnowledge() {
 
-
+    }
   },
 }
 </script>
 
 <style lang="css" scoped>
-.head{
-  display: flex;
-  justify-content: space-between;
+.knowledgeFileManagementContainer {
+  height: 94%;
   width: 100%;
-  height: 40%;
-  background-color: #d3e3fe;
 }
 
-.foot{
+.fileManagementTop {
+  margin-top: 2px;
+  height: 4%;
+  border-bottom: 1px solid #c7c7c7;
   display: flex;
-  margin-top: 100%;
-  justify-content: center;
+  align-items: center;
 }
 
+.fileListContainer {
+  height: 86%;
+}
+
+.fileManageBottomContainer {
+  display: flex;
+  position: fixed;
+  align-items: center;
+  bottom: 0;
+  height: 8%;
+  width: 41%;
+  border-top: 1px solid #c7c7c7;
+}
 </style>

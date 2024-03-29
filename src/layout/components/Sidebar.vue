@@ -31,10 +31,10 @@
         </div>
         <div style="margin-bottom: 10px;font-size: 14px;color: gray;">没有更多了</div>
       </div>
-      <div class="create_knowledge" @click="addKnowledgeActivePrompt = true">
-        <vs-icon icon="add" style="margin-right: 10px;"></vs-icon>
-        <div>添加知识库</div>
-      </div>
+    </div>
+    <div class="create_knowledge" @click="addKnowledgeActivePrompt = true">
+      <vs-icon icon="add" style="margin-right: 10px;"></vs-icon>
+      <div>添加知识库</div>
     </div>
     <vs-popup classContent="addKnowledgePopUP" title="新建知识库" :active.sync="addKnowledgeActivePrompt">
       <div class="addKnowledgePopUP">
@@ -201,7 +201,7 @@ export default {
         accept: this.deleteKnowledgeAccept,
         type: 'confirm',
         color: 'danger',
-        title: `删除知识库${item.name}`,
+        title: `删除${item.name}`,
         text: '请明确删除知识库的后果，知识库中的文件要不会保留，知识库协作者们将不能再使用此知识库！',
         acceptText: '确定',
         cancelText: '取消'
@@ -237,17 +237,17 @@ export default {
   width: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
+  position: relative;
 }
 
 
 .view_content {
-  height: calc(100% - 34px);
+  height: 97%;
   width: 94%;
   display: flex;
   align-items: center;
+  justify-content: center;
   flex-direction: column;
-  gap: 10px;
   box-sizing: border-box;
   overflow: hidden;
   position: relative;
@@ -336,10 +336,11 @@ export default {
 }
 
 .create_knowledge {
+  padding-left: 8px;
   position: absolute;
   bottom: 0;
   width: 100%;
-  height: 30px;
+  height: 6%;
   border-top: 1px solid #c7c7c7;
   display: flex;
   padding-top: 10px;
