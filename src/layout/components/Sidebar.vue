@@ -3,7 +3,7 @@
     <div class="view_content">
       <div class="primary_chat" :class="{active:$route.path === '/chat'}" @click="switchToPrimaryChat">
         <vs-avatar text="AI" color="lightgreen"></vs-avatar>
-        New Primary Chat
+        普通 AI 对话
         <vs-icon icon="ios_share" style="margin-left: 20px;margin-right:6px;color: gray"></vs-icon>
       </div>
       <vs-divider position="left">
@@ -13,17 +13,30 @@
         <div class="knowledge_list_item" :class="{active:$route.path === `/knowledge/${item.id}`}"
              v-for="item in knowledgeList" :key="item.id" @click="switchKnowledge(item.id)">
           <div class="knowledge_list_item_top_container">
-            <vs-icon icon="token" class="icon"
-                     :class="{icon_active:$route.path === `/knowledge/${item.id}`}"></vs-icon>
-            <div class="knowledge_base_title">{{ item.name }}</div>
+            <div class="knowledge_list_item_top_left_container">
+              <vs-icon icon="token" class="icon"
+                       :class="{icon_active:$route.path === `/knowledge/${item.id}`}"></vs-icon>
+              <div class="knowledge_base_title">{{ item.name }}</div>
+            </div>
+            <div class="knowledge_limits">
+              <vs-chip transparent color="primary">
+                协作
+              </vs-chip>
+            </div>
           </div>
           <div class="knowledge_list_item_bottom_container">
-            <div class="knowledge_list_item_bottom_group_count">合作人数：{{ item.groupCount }}</div>
+            <div class="knowledge_list_item_bottom_group_count">
+              <vs-icon icon="browse_gallery"
+                       style="color: gray;font-size: 16px;margin-right: 10px;margin-left: 6px;"></vs-icon>
+              {{ item.createTime }}
+            </div>
             <div class="knowledge_list_item_bottom_button_container">
-              <vs-button line-position="top" line-origin="right" color="dark" type="line" style="width: 50%;"
+              <vs-button size="small" line-position="top" line-origin="right" color="dark" type="line"
+                         style="width: 50%;"
                          @click.stop="deleteKnowledge(item)">删除
               </vs-button>
-              <vs-button line-position="top" line-origin="left" color="dark" type="line" style="width: 50%;"
+              <vs-button size="small" line-position="top" line-origin="left" color="dark" type="line"
+                         style="width: 50%;"
                          @click.stop="manageGroup(item.id)">管理成员
               </vs-button>
             </div>
@@ -102,12 +115,12 @@ export default {
   data() {
     return {
       knowledgeList: [
-        {id: '001', name: '个人知识库', groupCount: 30},
-        {id: '002', name: 'marks的知识库', groupCount: 310},
-        {id: '003', name: 'mike的知识库', groupCount: 230},
-        {id: '004', name: 'java知识库', groupCount: 330},
-        {id: '005', name: '公司人事知识库', groupCount: 30},
-        {id: '006', name: '公司财务知识库', groupCount: 40},
+        {id: '001', name: '个人知识库', createTime: 30},
+        {id: '002', name: 'marks的知识库', createTime: 310},
+        {id: '003', name: 'mike的知识库', createTime: 230},
+        {id: '004', name: 'java知识库', createTime: 330},
+        {id: '005', name: '公司人事知识库', createTime: 30},
+        {id: '006', name: '公司财务知识库', createTime: 40},
       ],
       addKnowledgeActivePrompt: false,
       newKnowledgeName: '',
@@ -314,12 +327,25 @@ export default {
 .knowledge_list_item_top_container {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+}
+
+.knowledge_list_item_top_left_container {
+  display: flex;
+  align-items: center;
 }
 
 .knowledge_base_title {
   margin-left: 16px;
-  margin-bottom: 14px;
-  padding-top: 10px;
+  margin-bottom: 8px;
+  padding-top: 6px;
+}
+
+.knowledge_limits {
+  font-size: 12px;
+  color: gray;
+  margin-right: 10px;
+  margin-top: 4px;
 }
 
 .knowledge_list_item_bottom_container {
@@ -327,9 +353,11 @@ export default {
 }
 
 .knowledge_list_item_bottom_group_count {
+  display: flex;
+  align-items: center;
   color: gray;
   font-size: 14px;
-  margin-bottom: 16px;
+  margin-bottom: 6px;
 }
 
 .knowledge_list_item_bottom_button_container {

@@ -19,7 +19,7 @@
               <div class="fileName">{{ item.name }}</div>
             </div>
             <div class="fileListItemTopRightContainer">
-              <vs-icon icon="download" style="cursor: pointer; color: #9f9f9f;" @click="downloadFile(item)"></vs-icon>
+              <vs-icon v-if="!item.isDir" icon="download" style="cursor: pointer; color: #9f9f9f;" @click="downloadFile(item)"></vs-icon>
             </div>
           </div>
           <div class="fileListBottomContainer">
@@ -28,7 +28,7 @@
               <div class="fileCreateTime">{{ item.time }}</div>
             </div>
             <div class="fileListBottomRightContainer">
-              <vs-icon icon="delete" style="cursor: pointer; color: #9f9f9f;" @click="deleteFile(item)"></vs-icon>
+              <vs-icon v-if="!item.isDir" icon="delete" style="cursor: pointer; color: #9f9f9f;" @click="deleteFile(item)"></vs-icon>
             </div>
           </div>
         </div>
