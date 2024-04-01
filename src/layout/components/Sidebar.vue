@@ -16,11 +16,11 @@
             <div class="knowledge_list_item_top_left_container">
               <vs-icon icon="token" class="icon"
                        :class="{icon_active:$route.path === `/knowledge/${item.id}`}"></vs-icon>
-              <div class="knowledge_base_title">{{ item.name }}</div>
+              <div class="knowledge_base_title">{{ item.space_name }}</div>
             </div>
             <div class="knowledge_limits">
               <vs-chip transparent color="primary">
-                协作
+                {{ item.rule === 'GROUP' ? '协作' : '私有' }}
               </vs-chip>
             </div>
           </div>
@@ -28,7 +28,7 @@
             <div class="knowledge_list_item_bottom_group_count">
               <vs-icon icon="browse_gallery"
                        style="color: gray;font-size: 16px;margin-right: 10px;margin-left: 6px;"></vs-icon>
-              {{ item.createTime }}
+              {{ item.update_time }}
             </div>
             <div class="knowledge_list_item_bottom_button_container">
               <vs-button size="small" line-position="top" line-origin="right" color="dark" type="line"
@@ -110,25 +110,26 @@
 
 
 <script>
+import {addKnowledge, knowledgeList, deleteKnowledge} from "@/api/knowledge";
+
 export default {
   name: 'SideBar',
   data() {
     return {
       knowledgeList: [
-        {id: '001', name: '个人知识库', createTime: 30},
-        {id: '002', name: 'marks的知识库', createTime: 310},
-        {id: '003', name: 'mike的知识库', createTime: 230},
-        {id: '004', name: 'java知识库', createTime: 330},
-        {id: '005', name: '公司人事知识库', createTime: 30},
-        {id: '006', name: '公司财务知识库', createTime: 40},
+        {id: 1, space_name: '个人知识库', rule: 'PRIVATE', update_time: '2024-03-31 11:18:46'},
+        {id: 2, space_name: 'marks的知识库', rule: 'GROUP', update_time: '2024-03-31 11:18:46'},
+        {id: 3, space_name: 'mike的知识库', rule: 'GROUP', update_time: '2024-03-31 11:18:46'},
+        {id: 4, space_name: 'java知识库', rule: 'GROUP', update_time: '2024-03-31 11:18:46'},
+        {id: 5, space_name: '公司人事知识库', rule: 'GROUP', update_time: '2024-03-31 11:18:46'},
+        {id: 6, space_name: '公司财务知识库', rule: 'GROUP', update_time: '2024-03-31 11:18:46'},
       ],
       addKnowledgeActivePrompt: false,
       newKnowledgeName: '',
       addKnowledgeSelect: 0,
       addKnowledgeRuleOptions: [
-        {text: '自用一手新', value: 0},
-        {text: '自用二手新', value: 1},
-        {text: '包浆', value: 2}
+        {text: '私有', value: 0},
+        {text: '协作', value: 1},
       ],
       manageGroupActivePrompt: false,
       manageGroupHandleId: null,
@@ -182,27 +183,45 @@ export default {
           "id": 12,
           "name": "Clementina DuBuque",
         }
-      ]
+      ],
+      deletingKnowledgeId: null
     }
   },
   watch: {},
   mounted() {
   },
   methods: {
+    getKnowledgeList() {
+      knowledgeList(localStorage.getItem('token')).then((res) => {
+        this.knowledgeList = res
+      })
+    },
     switchToPrimaryChat() {
       if (this.$route.path !== '/chat') {
         this.$router.push('/chat');
       }
     },
     addKnowledge() {
-      this.$vs.notify({
-        color: 'success',
-        title: '知识库新建成功',
-        text: `成功新建：${this.newKnowledgeName}`
+      console.log(this.addKnowledgeSelect)
+      let knowledgeLimit = null
+      if (this.addKnowledgeSelect) knowledgeLimit = "GROUP"
+      else knowledgeLimit = 'PRIVATE'
+      addKnowledge(localStorage.getItem('token'), this.newKnowledgeName, knowledgeLimit).then((res) => {
+        // 请求成功之后的
+        if (res === 'success') {
+          this.getKnowledgeList()
+          this.$vs.notify({
+            color: 'success',
+            title: '知识库新建成功',
+            text: `成功新建：${this.newKnowledgeName}`
+          })
+          this.addKnowledgeActivePrompt = false
+          this.newKnowledgeName = ''
+          this.addKnowledgeSelect = 0
+        }
       })
-      this.addKnowledgeActivePrompt = false
-      this.newKnowledgeName = ''
-      this.addKnowledgeSelect = 0
+
+
     },
     switchKnowledge(id) {
       if (this.$route.path !== `/knowledge/${id}`) {
@@ -210,6 +229,7 @@ export default {
       }
     },
     deleteKnowledge(item) {
+      this.deletingKnowledgeId = item.id
       this.$vs.dialog({
         accept: this.deleteKnowledgeAccept,
         type: 'confirm',
@@ -221,6 +241,9 @@ export default {
       })
     },
     deleteKnowledgeAccept() {
+      deleteKnowledge(localStorage.getItem('token'), this.deletingKnowledgeId).then((res) => {
+        console.log(res)
+      })
       this.$vs.notify({
         color: 'danger',
         title: '删除知识库',

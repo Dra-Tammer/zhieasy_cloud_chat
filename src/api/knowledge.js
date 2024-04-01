@@ -1,29 +1,81 @@
 import request from '@/utils/request'
-export function getCarList() {
+
+export function addKnowledge(token, kbName, rule) {
     return request({
-        url: '/generate',
+        url: '/knowledge_base/add',
         method: 'POST',
         headers: {
+            'token': token,
             'Content-Type': 'application/json'
         },
         data: JSON.stringify({
-            "model": "qwen:0.5b",
-            "prompt": "你是谁"
+            "kbName": kbName,
+            "rule": rule
         })
     })
 }
 
-export function getData() {
+export function knowledgeList(token) {
     return request({
-        url: '/api/generate',
+        url: '/knowledge_base/list',
         method: 'POST',
         headers: {
+            'token': token,
+            'Content-Type': 'application/json'
+        },
+    })
+}
+
+export function switchKnowledge(token, kbId) {
+    return request({
+        url: '/knowledge_base/switch',
+        method: 'POST',
+        headers: {
+            'token': token,
             'Content-Type': 'application/json'
         },
         data: JSON.stringify({
-            "model": "llama2",
-            "prompt": "Why is the sky blue?"
-        }),
-        responseType: 'stream'
+            "kbId": kbId
+        })
+    })
+}
+
+export function knowledgeGroupInvite(token, kbId, username) {
+    return request({
+        url: '/knowledge_base/invite',
+        method: 'POST',
+        headers: {
+            'token': token,
+            'Content-Type': 'application/json'
+        },
+        data: JSON.stringify({
+            "username": username,
+            "kbId": kbId
+        })
+    })
+}
+
+export function deleteKnowledge(token, kbId) {
+    return request({
+        url: '/knowledge_base/delete',
+        method: 'POST',
+        headers: {
+            'token': token,
+            'Content-Type': 'application/json'
+        },
+        data: JSON.stringify({
+            "kbId": kbId
+        })
+    })
+}
+
+export function knowledgeMemberList(token) {
+    return request({
+        url: '/knowledge_base/members/list',
+        method: 'POST',
+        headers: {
+            'token': token,
+            'Content-Type': 'application/json'
+        }
     })
 }

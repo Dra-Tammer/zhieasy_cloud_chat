@@ -1,29 +1,29 @@
 import request from '@/utils/request'
-export function getCarList() {
+
+export function userRegister(username, password) {
     return request({
-        url: '/generate',
+        url: '/user/add',
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         data: JSON.stringify({
-            "model": "qwen:0.5b",
-            "prompt": "你是谁"
+            "username": username,
+            "password": password
         })
     })
 }
 
-export function getData() {
+export function userLogin(username, password) {
     return request({
-        url: '/api/generate',
+        url: '/user/login',
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         data: JSON.stringify({
-            "model": "llama2",
-            "prompt": "Why is the sky blue?"
-        }),
-        responseType: 'stream'
+            "username": username,
+            "password": password
+        })
     })
 }

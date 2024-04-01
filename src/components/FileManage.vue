@@ -19,7 +19,8 @@
               <div class="fileName">{{ item.name }}</div>
             </div>
             <div class="fileListItemTopRightContainer">
-              <vs-icon v-if="!item.isDir" icon="download" style="cursor: pointer; color: #9f9f9f;" @click="downloadFile(item)"></vs-icon>
+              <vs-icon v-if="!item.isDir" icon="download" style="cursor: pointer; color: #9f9f9f;"
+                       @click="downloadFile(item)"></vs-icon>
             </div>
           </div>
           <div class="fileListBottomContainer">
@@ -28,7 +29,8 @@
               <div class="fileCreateTime">{{ item.time }}</div>
             </div>
             <div class="fileListBottomRightContainer">
-              <vs-icon v-if="!item.isDir" icon="delete" style="cursor: pointer; color: #9f9f9f;" @click="deleteFile(item)"></vs-icon>
+              <vs-icon v-if="!item.isDir" icon="delete" style="cursor: pointer; color: #9f9f9f;"
+                       @click="deleteFile(item)"></vs-icon>
             </div>
           </div>
         </div>
@@ -68,6 +70,7 @@
 <script>
 
 import {fileImgMap} from '@/utils/imgMap'
+import {newDir} from "@/api/file";
 
 export default {
   name: 'FileManage',
@@ -199,6 +202,9 @@ export default {
   },
   methods: {
     newDir() {
+      newDir(localStorage.getItem('token'), this.newDirName).then((res) => {
+        console.log(res)
+      })
       this.$vs.notify({
         color: 'success',
         title: '新建文件夹成功',
