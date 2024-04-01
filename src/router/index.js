@@ -7,15 +7,21 @@ Vue.use(Router)
 export const constantRoutes = [
     {
         path: '/',
+        redirect: '/login'
+    },
+    {
+        path: '/login',
+        component: UserLogin
+    },
+    {
+        path: '/chat',
         component: Layout,
-        redirect: '/chat',
         children: [{
-            path: 'chat',
+            path: '',
             name: 'PrimaryChat',
             component: () => import('@/views/chat/index.vue')
         }]
     },
-
     {
         path: '/knowledge/:id',
         component: Layout,
@@ -26,10 +32,6 @@ export const constantRoutes = [
                 component: () => import('@/views/knowledge/index.vue')
             }
         ]
-    },
-    {
-        path: '/login',
-        component: UserLogin
     }
 ]
 
