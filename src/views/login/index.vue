@@ -79,7 +79,7 @@ export default {
 
       switchCtn.classList.add("is-gx");
       setTimeout(() => {
-        switchCtn.classList.remove("is-gx");
+      switchCtn.classList.remove("is-gx");
       }, 1500);
       switchCtn.classList.toggle("is-txr");
       switchCircle[0].classList.toggle("is-txr");
