@@ -7,7 +7,7 @@ Vue.use(Router)
 export const constantRoutes = [
     {
         path: '/',
-        redirect: '/login'
+        redirect: '/chat'
     },
     {
         path: '/login',
