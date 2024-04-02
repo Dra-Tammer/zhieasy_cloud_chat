@@ -1,58 +1,60 @@
 <template>
   <div class="body">
-  <div class="shell">
-<!--    注册界面-->
-    <div class="container a-container" id="a-container">
-      <form action="" method="" class="form" id="b-form">
-        <h2 class="form_title title">登入账号</h2>
-        <span class="form_span">请使用电子邮箱登录</span>
-        <input type="text" class="form_input" placeholder="Email">
-        <input type="text" class="form_input" placeholder="Password">
-        <a class="form_link">忘记密码？</a>
-        <button class="form_button button submit" @click="acceptLogin()">登录</button>
-      </form>
-    </div>
-<!--    登录界面-->
-    <div class="container b-container" id="b-container">
-      <form action="" method="" class="form" id="a-form">
-        <h2 class="form_title title">创建账号</h2>
-        <span class="form_span">请使用电子邮箱注册</span>
-        <input type="text" class="form_input" placeholder="Email">
-        <input type="text" class="form_input" placeholder="Password">
-        <button class="form_button button submit">注册</button>
-      </form>
-    </div>
-<!--    更换界面-->
-    <div class="switch" id="switch-cnt">
-      <div class="switch_circle"></div>
-      <div class="switch_circle switch_circle-t"></div>
-      <div class="switch_container" id="switch-c1">
-        <h2 class="switch_title title" style="letter-spacing: 0;">Welcome to Zhieasy!</h2>
-        <p class="switch_description description">Start to communicate with Zhieasy</p>
-        <button class="switch_button button switch-btn" @click="changeForm">SIGN UP</button>
+    <div class="shell">
+      <!--    登录界面-->
+      <div class="container a-container" id="a-container">
+        <form action="" method="" class="form" id="b-form">
+          <h2 class="form_title title">登入账号</h2>
+          <span class="form_span">请使用用户名和密码登录</span>
+          <input type="text" class="form_input" placeholder="Username" v-model="form.username">
+          <input type="text" class="form_input" placeholder="Password" v-model="form.password">
+          <button class="form_button button submit" @click="acceptLogin()">登录</button>
+        </form>
       </div>
+      <!--    注册界面-->
+      <div class="container b-container" id="b-container">
+        <form action="" method="" class="form" id="a-form">
+          <h2 class="form_title title">创建账号</h2>
+          <span class="form_span">请使用用户名和密码登录</span>
+          <input type="text" class="form_input" placeholder="Username" v-model="form.username">
+          <input type="text" class="form_input" placeholder="Password" v-model="form.password">
+          <button class="form_button button submit" @click="acceptRegister()">注册</button>
+        </form>
+      </div>
+      <!--    更换界面-->
+      <div class="switch" id="switch-cnt">
+        <div class="switch_circle"></div>
+        <div class="switch_circle switch_circle-t"></div>
+        <div class="switch_container" id="switch-c1">
+          <h2 class="switch_title title" style="letter-spacing: 0;">Welcome to Zhieasy!</h2>
+          <p class="switch_description description">Start to communicate with Zhieasy</p>
+          <button class="switch_button button switch-btn" @click="changeForm">SIGN UP</button>
+        </div>
 
-      <div class="switch_container is-hidden" id="switch-c2">
-        <h2 class="switch_title title" style="letter-spacing: 0;">Join Zhieasy</h2>
-        <p class="switch_description description">Already have an account？</p>
-        <button class="switch_button button switch-btn" @click="changeForm">SIGN IN</button>
+        <div class="switch_container is-hidden" id="switch-c2">
+          <h2 class="switch_title title" style="letter-spacing: 0;">Join Zhieasy</h2>
+          <p class="switch_description description">Already have an account？</p>
+          <button class="switch_button button switch-btn" @click="changeForm">SIGN IN</button>
+        </div>
       </div>
     </div>
   </div>
-  </div>
-
 </template>
 
 
 <script>
+import {userLogin,userRegister} from "@/api/user";
+
 export default {
   name: 'UserLogin',
   data() {
     return {
       form: {
-        Email: '',
-        Password: ''
-      }
+        username: 'wenqi',
+        password: '200306'
+      },
+      login_sign: false,
+      regist_sign: false,
     }
   },
   mounted() {
@@ -64,6 +66,18 @@ export default {
     }
   },
   methods: {
+    login_randomCenter() {
+      this.$vs.notify({title: '成功', text: '用户登录成功', position: 'top-center'})
+    },
+    regist_randomCenter() {
+      this.$vs.notify({title: '成功', text: '用户注册成功', position: 'top-center'})
+    },
+    login_reject_randomCenter() {
+      this.$vs.notify({title: '错误', text: '用户名或密码错误', position: 'top-center',color:"warning"})
+    },
+    regist_reject_randomCenter() {
+      this.$vs.notify({title: '错误', text: '用户名或密码格式错误', position: 'top-center',color:"warning"})
+    },
     // 阻止按钮的默认行为
     getButtons(e) {
       e.preventDefault();
@@ -79,7 +93,7 @@ export default {
 
       switchCtn.classList.add("is-gx");
       setTimeout(() => {
-      switchCtn.classList.remove("is-gx");
+        switchCtn.classList.remove("is-gx");
       }, 1500);
       switchCtn.classList.toggle("is-txr");
       switchCircle[0].classList.toggle("is-txr");
@@ -93,18 +107,31 @@ export default {
 
       this.switchState = this.switchState === 'login' ? 'signup' : 'login';
     },
-
-    // login(){
-    //   this.axios.post('http://172.24.34.83:11434/user/login',this.form).then((resp) =>{
-    //     let data = resp.data
-    //     if(data.success){
-    //       this.form = {};
-    //       this.$router.push({path:'/Home'})
-    //     }
-    //   })
-    // },
     acceptLogin() {
-      this.$router.push({path: '/chat'})
+      let username = this.form.username;
+      let password = this.form.password;
+      userLogin(username, password).then((res) => {
+        console.log(res)
+        if (res.data.code === 200) {
+          localStorage.setItem('token', res.data.data);
+          this.login_randomCenter();
+          this.$router.push({path: '/chat'})
+        } else {
+          this.login_reject_randomCenter();
+        }
+      })
+    },
+    acceptRegister() {
+      let username = this.$data.form.username;
+      let password = this.$data.form.password;
+      userRegister(username, password).then((res) => {
+        if(res.data.code === 200) {
+          this.regist_randomCenter();
+          window.location.reload();
+        } else {
+          this.regist_reject_randomCenter();
+        }
+      })
     },
   }
 }
@@ -123,11 +150,17 @@ export default {
   width: 100%;
   height: 100vh;
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   font-size: 12px;
   background-color: #ecf0f3;
   color: #a0a5a8;
+}
+
+.login_alert {
+  width: 60%;
+  text-align: center;
 }
 
 .shell {
