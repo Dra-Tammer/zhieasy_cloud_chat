@@ -26,7 +26,7 @@ export function knowledgeList(token) {
     })
 }
 
-export function switchKnowledge(token, kbId) {
+export function switchToKnowledge(token, kbId, switchToNormalChat) {
     return request({
         url: '/knowledge_base/switch',
         method: 'POST',
@@ -35,7 +35,22 @@ export function switchKnowledge(token, kbId) {
             'Content-Type': 'application/json'
         },
         data: JSON.stringify({
-            "kbId": kbId
+            "kbId": kbId,
+            "switchToNormalChat": switchToNormalChat
+        })
+    })
+}
+
+export function switchToPrimaryChat(token, switchToNormalChat) {
+    return request({
+        url: '/knowledge_base/switch',
+        method: 'POST',
+        headers: {
+            'token': token,
+            'Content-Type': 'application/json'
+        },
+        data: JSON.stringify({
+            "switchToNormalChat": switchToNormalChat
         })
     })
 }

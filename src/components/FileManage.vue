@@ -35,8 +35,10 @@
             </div>
           </div>
         </div>
+        <div class="noMoreFile">没有更多了</div>
       </div>
     </div>
+
     <div class="fileManageBottomContainer">
       <vs-chip style="font-size: 16px;margin-left: 20px;margin-right: 100px;">
         知识库： {{ knowledgeId }}
@@ -121,13 +123,20 @@ export default {
     this.$watch(
         () => this.$route.params,
         (toParams, preParams) => {
-          console.log(preParams)
+
+          console.log('pre:',preParams)
           this.knowledgeId = toParams.id
+          console.log('knowledgeId',this.knowledgeId)
+          this.getFileList()
+
         }
     )
   },
+  watch: {
+
+  },
   mounted() {
-    this.getFileList()
+    this.getFileList();
   },
   methods: {
     newDir() {
@@ -359,5 +368,13 @@ export default {
 }
 
 .uploadButton {
+}
+
+.noMoreFile {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: gray;
 }
 </style>

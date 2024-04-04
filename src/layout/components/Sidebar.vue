@@ -30,7 +30,7 @@
                        style="color: gray;font-size: 16px;margin-right: 10px;margin-left: 6px;"></vs-icon>
               {{ item.update_time }}
             </div>
-            <div class="knowledge_list_item_bottom_button_container" v-if="item.rule!=='PRIVATE'">
+            <div class="knowledge_list_item_bottom_button_container" v-if="item.space_name!=='个人空间'">
               <vs-button size="small" line-position="top" line-origin="right" color="dark" type="line"
                          style="width: 50%;"
                          @click.stop="deleteKnowledge(item)">删除
@@ -122,9 +122,9 @@ import {
   addKnowledge,
   knowledgeList,
   deleteKnowledge,
-  switchKnowledge,
+  switchToPrimaryChat,
   knowledgeMemberList,
-  knowledgeGroupInvite
+  knowledgeGroupInvite, switchToKnowledge
 } from "@/api/knowledge";
 
 export default {
@@ -170,6 +170,10 @@ export default {
       if (this.$route.path !== '/chat') {
         this.$router.push('/chat');
       }
+      switchToPrimaryChat(localStorage.getItem('token'), true).then((res) => {
+        localStorage.setItem('sessionId', res.data.data.sessionId)
+        localStorage.setItem('token', res.data.data.token)
+      })
     },
     addKnowledge() {
       let knowledgeLimit = null
@@ -202,13 +206,12 @@ export default {
 
     },
     switchKnowledge(id) {
-      if (this.$route.path !== `/knowledge/${id}`) {
-        this.$router.push(`/knowledge/${id}`)
-      }
-      switchKnowledge(localStorage.getItem('token'), id).then((res) => {
+      switchToKnowledge(localStorage.getItem('token'), id, false).then((res) => {
         localStorage.setItem('sessionId', res.data.data.sessionId)
         localStorage.setItem('token', res.data.data.token)
-        console.log(localStorage.getItem('token'), localStorage.getItem('sessionId'))
+        if (this.$route.path !== `/knowledge/${id}`) {
+          this.$router.push(`/knowledge/${id}`)
+        }
       })
     },
     deleteKnowledge(item) {
@@ -225,13 +228,16 @@ export default {
     },
     deleteKnowledgeAccept() {
       deleteKnowledge(localStorage.getItem('token'), this.deletingKnowledgeId).then((res) => {
-        console.log(res)
+        if (res.data.code === 200) {
+          this.$vs.notify({
+            color: 'danger',
+            title: '删除知识库',
+            text: '知识库删除成功'
+          })
+          this.getKnowledgeList()
+        }
       })
-      this.$vs.notify({
-        color: 'danger',
-        title: '删除知识库',
-        text: '知识库删除成功'
-      })
+
     },
     manageGroup(id) {
       this.manageGroupActivePrompt = true

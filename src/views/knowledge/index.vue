@@ -1,7 +1,7 @@
 <template>
   <div class="main_container">
     <div class="file_manage_container">
-      <file-manage></file-manage>
+      <file-manage ref="fileManage"></file-manage>
     </div>
     <div class="knowledge_chat_container">
       <knowledge-chat></knowledge-chat>
@@ -20,6 +20,10 @@ export default {
     return {}
   },
   mounted() {
+    this.$router.afterEach(() => {
+      const fileMangeComponent = this.$refs.fileManage
+      if (fileMangeComponent) fileMangeComponent.getFileList()
+    })
   }
 }
 </script>
