@@ -94,3 +94,17 @@ export function knowledgeMemberList(token) {
         }
     })
 }
+
+export function knowledgeMemberRemove(token, ids) {
+    return request({
+        url: '/knowledge_base/members/remove',
+        method: 'POST',
+        headers: {
+            'token': token,
+            'Content-Type': 'application/json'
+        },
+        data: JSON.stringify({
+            "ids": ids
+        })
+    })
+}

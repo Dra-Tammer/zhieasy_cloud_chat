@@ -124,7 +124,7 @@ import {
   deleteKnowledge,
   switchToPrimaryChat,
   knowledgeMemberList,
-  knowledgeGroupInvite, switchToKnowledge
+  knowledgeGroupInvite, switchToKnowledge, knowledgeMemberRemove
 } from "@/api/knowledge";
 
 export default {
@@ -153,7 +153,7 @@ export default {
       manageGroupUserList: [],
       deletingKnowledgeId: null,
       newKnowledgeMemberName: '',
-      addMemberActivePrompt: false
+      addMemberActivePrompt: false,
     }
   },
   watch: {},
@@ -260,22 +260,28 @@ export default {
       })
     },
     removePersonFromKnowledge() {
-      console.log(this.manageGroupSelected)
-      this.$vs.notify({
-        color: 'danger',
-        title: '移出成员',
-        text: '已经将成员移出知识库'
+      let ids = this.manageGroupSelected.map(item => item.id)
+      knowledgeMemberRemove(localStorage.getItem('token'), ids).then((res) => {
+        if (res.data.code === 200) {
+          this.$vs.notify({
+            color: 'danger',
+            title: '移出成员',
+            text: '已经将成员移出知识库'
+          })
+          this.manageGroupSelected = []
+          this.getMemberList()
+        }
       })
-      this.manageGroupSelected = []
     },
     addKnowledgeMember() {
       if (this.newKnowledgeMemberName !== '') {
         console.log(this.manageGroupHandleId, this.newKnowledgeMemberName)
         knowledgeGroupInvite(localStorage.getItem('token'), this.manageGroupHandleId, this.newKnowledgeMemberName).then((res) => {
-          console.log(res.data)
+          if (res.data.code === 200) {
+            this.addMemberActivePrompt = false
+            this.getMemberList()
+          }
         })
-        this.addMemberActivePrompt = false
-        this.getMemberList()
       }
     },
   }
