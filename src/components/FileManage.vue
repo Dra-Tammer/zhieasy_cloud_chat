@@ -27,7 +27,7 @@
           <div class="fileListBottomContainer">
             <div class="fileListBottomLeftContainer">
               <vs-icon icon="browse_gallery" style="color: gray;font-size: 16px;"></vs-icon>
-              <div class="fileCreateTime">{{ item.time }}</div>
+              <div class="fileCreateTime">{{ item.createTime }}</div>
             </div>
             <div class="fileListBottomRightContainer">
               <vs-icon v-if="!item.isDir" icon="delete" style="cursor: pointer; color: #9f9f9f;"
@@ -63,7 +63,9 @@
           </div>
         </vs-prompt>
         <vs-popup title="上传文件到知识库" :active.sync="uploadToKnowledgeActivePrompt">
-          <vs-upload automatic action="https://jsonplaceholder.typicode.com/posts/" @on-success="successUpload"/>
+          <input type="file" ref="fileInput" @change="uploadFile" class="uploadButton"/>
+          <vs-button @click="upload" size="small" :disabled="uploadSuccess">上传</vs-button>
+          <vs-progress indeterminate color="primary" v-if="uploadSuccess">primary</vs-progress>
         </vs-popup>
       </div>
     </div>
@@ -74,124 +76,41 @@
 <script>
 
 import {fileImgMap} from '@/utils/imgMap'
-import {downloadFile, newDir} from "@/api/file";
+import {downloadFile, fileList, newDir, uploadFile} from "@/api/file";
 
 export default {
   name: 'FileManage',
   data() {
     return {
       knowledgeId: null,
+      uploadSuccess: false,
       newDirDialogActivePrompt: false,
       newDirName: '',
       fileList: [
         {
           name: 'chat_doc_user_guide.png',
           isDir: false,
-          time: '2024-03-24'
+          createTime: '2024-03-24'
         },
         {
           name: 'chat_doc_user_guide.jpg',
           isDir: false,
-          time: '2024-03-24'
+          createTime: '2024-03-24'
         },
         {
           name: 'chat_doc_user_guide.doc',
           isDir: false,
-          time: '2024-03-24'
+          createTime: '2024-03-24'
         },
         {
           name: 'chat_doc_user_guide.pdf',
           isDir: false,
-          time: '2024-03-24'
-        },
-        {
-          name: 'chat_doc_user_guide.c',
-          isDir: false,
-          time: '2024-03-24'
-        },
-        {
-          name: 'chat_doc_user_guide',
-          isDir: true,
-          time: '2024-03-24'
-        },
-        {
-          name: 'chat_doc_user_guide.gif',
-          isDir: false,
-          time: '2024-03-24'
-        },
-        {
-          name: 'chat_doc_user_guide.exe',
-          isDir: false,
-          time: '2024-03-24'
-        },
-        {
-          name: 'chat_doc_user_guide.go',
-          isDir: false,
-          time: '2024-03-24'
-        },
-        {
-          name: 'chat_doc_user_guide.css',
-          isDir: false,
-          time: '2024-03-24'
-        },
-        {
-          name: 'chat_doc_user_guide.sql',
-          isDir: false,
-          time: '2024-03-24'
-        },
-        {
-          name: 'chat_doc_user_guide.svg',
-          isDir: false,
-          time: '2024-03-24'
-        },
-        {
-          name: 'chat_doc_user_guide.txt',
-          isDir: false,
-          time: '2024-03-24'
-        },
-        {
-          name: 'chat_doc_user_guide.png',
-          isDir: false,
-          time: '2024-03-24'
-        },
-        {
-          name: 'chat_doc_user_guide.png',
-          isDir: false,
-          time: '2024-03-24'
-        },
-        {
-          name: 'chat_doc_user_guide.png',
-          isDir: false,
-          time: '2024-03-24'
-        },
-        {
-          name: 'chat_doc_user_guide.png',
-          isDir: false,
-          time: '2024-03-24'
-        },
-        {
-          name: 'chat_doc_user_guide.png',
-          isDir: false,
-          time: '2024-03-24'
-        },
-        {
-          name: 'chat_doc_user_guide.png',
-          isDir: false,
-          time: '2024-03-24'
-        },
-        {
-          name: 'chat_doc_user_guide.png',
-          isDir: false,
-          time: '2024-03-24'
-        },
-        {
-          name: 'chat_doc_user_guide.png',
-          isDir: false,
-          time: '2024-03-24'
-        },
+          createTime: '2024-03-24'
+        }
       ],
       fileBreadCrumbPath: '/knowledge/dirone/dirtwo/dirthree',
-      dirName: '',
+      dirName: '/',
+      filePath: '/',
       uploadToKnowledgeActivePrompt: false
     }
   },
@@ -224,7 +143,7 @@ export default {
     },
     successUpload() {
       this.uploadToKnowledgeActivePrompt = false
-      this.$vs.notify({color:'success',title:'Upload Success',text:'上传成功'})
+      this.$vs.notify({color: 'success', title: 'Upload Success', text: '上传成功'})
     },
     async downloadFile(item) {
       console.log('下载', item.name)
@@ -285,13 +204,36 @@ export default {
       }
     },
     getFileList() {
-
+      fileList(localStorage.getItem('token'), this.filePath).then((res) => {
+        if (res.data.code === 200) {
+          this.fileList = res.data.data
+        }
+      })
     },
     goBackward() {
       let str = this.fileBreadCrumbPath
       this.fileBreadCrumbPath = str.substring(0, str.lastIndexOf('/'))
       this.dirName = str.substring(str.lastIndexOf('/') + 1, str.length)
       console.log(this.dirName)
+    },
+    uploadFile() {
+      const file = this.$refs.fileInput.files[0];
+      this.file = file;
+    },
+    upload() {
+      this.uploadSuccess = true
+      uploadFile(localStorage.getItem('token'), '/' + this.file.name, this.file).then((res) => {
+        if (res.data.code === 200) {
+          this.$vs.notify({
+            color: 'success',
+            title: '文件上传成功',
+            text: `成功上传：${this.file.name}`
+          })
+          this.uploadToKnowledgeActivePrompt = false
+          this.uploadSuccess = false
+          this.getFileList()
+        }
+      })
     },
   }
 }
@@ -416,5 +358,6 @@ export default {
   border-top: 1px solid #c7c7c7;
 }
 
-
+.uploadButton {
+}
 </style>

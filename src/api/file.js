@@ -1,8 +1,9 @@
 import request from '@/utils/request'
 
-export function uploadFile(token, file) {
+export function uploadFile(token, fileName, file) {
     const formData = new FormData();
     formData.append('file', file)
+    formData.append('fileName', fileName);
     return request({
         url: '/knowledge_base/upload/file',
         method: 'POST',
