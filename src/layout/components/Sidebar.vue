@@ -30,7 +30,7 @@
                        style="color: gray;font-size: 16px;margin-right: 10px;margin-left: 6px;"></vs-icon>
               {{ item.update_time }}
             </div>
-            <div class="knowledge_list_item_bottom_button_container">
+            <div class="knowledge_list_item_bottom_button_container" v-if="item.rule!=='PRIVATE'">
               <vs-button size="small" line-position="top" line-origin="right" color="dark" type="line"
                          style="width: 50%;"
                          @click.stop="deleteKnowledge(item)">删除
@@ -98,8 +98,8 @@
 
             <template slot-scope="{data}">
               <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
-                <vs-td :data="data[indextr].name">
-                  {{ data[indextr].name }}
+                <vs-td :data="data[indextr].username">
+                  {{ data[indextr].username }}
                 </vs-td>
               </vs-tr>
             </template>
@@ -118,7 +118,14 @@
 
 
 <script>
-import {addKnowledge, knowledgeList, deleteKnowledge} from "@/api/knowledge";
+import {
+  addKnowledge,
+  knowledgeList,
+  deleteKnowledge,
+  switchKnowledge,
+  knowledgeMemberList,
+  knowledgeGroupInvite
+} from "@/api/knowledge";
 
 export default {
   name: 'SideBar',
@@ -143,56 +150,7 @@ export default {
       manageGroupActivePrompt: false,
       manageGroupHandleId: null,
       manageGroupSelected: [],
-      manageGroupUserList: [
-        {
-          "id": 1,
-          "name": "Leanne Graham",
-        },
-        {
-          "id": 2,
-          "name": "Ervin Howell",
-        },
-        {
-          "id": 3,
-          "name": "Clementine Bauch",
-        },
-        {
-          "id": 4,
-          "name": "Patricia Lebsack",
-        },
-        {
-          "id": 5,
-          "name": "Chelsey Dietrich",
-        },
-        {
-          "id": 6,
-          "name": "Mrs. Dennis Schulist",
-        },
-        {
-          "id": 7,
-          "name": "Kurtis Weissnat",
-        },
-        {
-          "id": 8,
-          "name": "Nicholas Runolfsdottir V",
-        },
-        {
-          "id": 9,
-          "name": "Glenna Reichert",
-        },
-        {
-          "id": 10,
-          "name": "Clementina DuBuque",
-        },
-        {
-          "id": 11,
-          "name": "Clementina DuBuque",
-        },
-        {
-          "id": 12,
-          "name": "Clementina DuBuque",
-        }
-      ],
+      manageGroupUserList: [],
       deletingKnowledgeId: null,
       newKnowledgeMemberName: '',
       addMemberActivePrompt: false
@@ -200,7 +158,7 @@ export default {
   },
   watch: {},
   mounted() {
-    // this.getKnowledgeList()
+    this.getKnowledgeList()
   },
   methods: {
     getKnowledgeList() {
@@ -214,18 +172,26 @@ export default {
       }
     },
     addKnowledge() {
-      console.log(this.addKnowledgeSelect)
       let knowledgeLimit = null
       if (this.addKnowledgeSelect) knowledgeLimit = "GROUP"
       else knowledgeLimit = 'PRIVATE'
       addKnowledge(localStorage.getItem('token'), this.newKnowledgeName, knowledgeLimit).then((res) => {
         // 请求成功之后的
-        if (res === 'success') {
+        if (res.data.data === 'success') {
           this.getKnowledgeList()
           this.$vs.notify({
             color: 'success',
             title: '知识库新建成功',
             text: `成功新建：${this.newKnowledgeName}`
+          })
+          this.addKnowledgeActivePrompt = false
+          this.newKnowledgeName = ''
+          this.addKnowledgeSelect = 0
+        } else {
+          this.$vs.notify({
+            color: 'warning',
+            title: '知识库已存在',
+            text: `${this.newKnowledgeName}已存在，无需重新建库`
           })
           this.addKnowledgeActivePrompt = false
           this.newKnowledgeName = ''
@@ -239,6 +205,11 @@ export default {
       if (this.$route.path !== `/knowledge/${id}`) {
         this.$router.push(`/knowledge/${id}`)
       }
+      switchKnowledge(localStorage.getItem('token'), id).then((res) => {
+        localStorage.setItem('sessionId', res.data.data.sessionId)
+        localStorage.setItem('token', res.data.data.token)
+        console.log(localStorage.getItem('token'), localStorage.getItem('sessionId'))
+      })
     },
     deleteKnowledge(item) {
       this.deletingKnowledgeId = item.id
@@ -265,10 +236,7 @@ export default {
     manageGroup(id) {
       this.manageGroupActivePrompt = true
       this.manageGroupHandleId = id
-      this.manageGroupUserList = this.manageGroupUserList.map(user => ({
-        ...user,
-        name: user.name + this.manageGroupHandleId
-      }))
+      this.getMemberList()
     },
     cancelAddKnowledge() {
       this.addKnowledgeActivePrompt = false
@@ -276,7 +244,14 @@ export default {
       this.addKnowledgeSelect = 0
     },
     getMemberList() {
-
+      knowledgeMemberList(localStorage.getItem('token')).then((res) => {
+        this.manageGroupUserList = res.data.data.map(member => {
+          return {
+            id: member.id,
+            username: member.username
+          }
+        })
+      })
     },
     removePersonFromKnowledge() {
       console.log(this.manageGroupSelected)
@@ -290,6 +265,9 @@ export default {
     addKnowledgeMember() {
       if (this.newKnowledgeMemberName !== '') {
         console.log(this.manageGroupHandleId, this.newKnowledgeMemberName)
+        knowledgeGroupInvite(localStorage.getItem('token'), this.manageGroupHandleId, this.newKnowledgeMemberName).then((res) => {
+          console.log(res.data)
+        })
         this.addMemberActivePrompt = false
         this.getMemberList()
       }

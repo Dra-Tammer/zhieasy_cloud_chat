@@ -56,26 +56,25 @@ export default {
         {text: '有什么可以帮您', type: 'received'},
       ],
       loading: false,
-      prompt: {
-        "model": "qwen:4b",
-        "messages": [
-          {
-            "role": "user",
-            "content": ''
-          }
-        ]
-      },
       // prompt: {
-      //   query: null,
-      //   sessionid: 1
-      // }
+      //   "model": "qwen:4b",
+      //   "messages": [
+      //     {
+      //       "role": "user",
+      //       "content": ''
+      //     }
+      //   ]
+      // },
+      prompt: {
+        query: null,
+        sessionId: 0
+      }
     }
   },
   props: {
     msg: String
   },
   mounted() {
-    localStorage.setItem('token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjozLCJzcGFjZV9pZCI6LTEsImV4cCI6MTcxMjY2NDA5NH0.BrnbvU27L_0Zsx_qKIBLkQ9ioB2k6R5i8_wTl3j9L8o')
   },
   methods: {
     scrollToBottom() {
@@ -94,46 +93,23 @@ export default {
       })
       if (this.userMessage.trim() === '') return;
       this.messages.push({text: this.userMessage, type: 'sent'});
-      // let URL = 'http://127.0.0.1:4523/m1/4197185-0-default/chat'
+      let URL = 'http://zerb36.natappfree.cc/chat'
       // if (this.chat_mode_select) {
       //   URL = 'http://127.0.0.1:4523/m1/4197185-0-default/knowledge_base/chat'
       // }
-      // this.prompt.query = this.userMessage
-      this.prompt.messages[0].content = this.userMessage
+      this.prompt.query = this.userMessage
+      this.prompt.sessionId = localStorage.getItem('sessionId')
+      // this.prompt.messages[0].content = this.userMessage
       this.userMessage = ''
 
-      // const res = await fetch(URL, {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json"
-      //   },
-      //   body: JSON.stringify(this.prompt),
-      // });
-      // if (!res.body) console.log("返回的结果为空")
-      // const reader = res.body.pipeThrough(new TextDecoderStream()).getReader();
-      // let is_true = true
-      // this.messages.push({text: '', type: 'received'})
-      // let count = 0
-      // while (is_true) {
-      //   count++
-      //   if (count === 1) typewriter.start()
-      //   this.$nextTick(() => {
-      //     this.scrollToBottom();
-      //   });
-      //   var {value, done} = await reader.read()
-      //   if (done) break;
-      //   typewriter.add(JSON.parse(value).data)
-      // }
-
-
-      const res = await fetch('http://127.0.0.1:11434/api/chat', {
+      const res = await fetch(URL, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "token": localStorage.getItem('token')
         },
         body: JSON.stringify(this.prompt),
       });
-
       if (!res.body) console.log("返回的结果为空")
       const reader = res.body.pipeThrough(new TextDecoderStream()).getReader();
       let is_true = true
@@ -147,11 +123,36 @@ export default {
         });
         var {value, done} = await reader.read()
         if (done) break;
-        // const jsonArray = parsePack(value)
-        typewriter.add(JSON.parse(value).message.content)
-        // typewriter.add(JSON.parse(value).message.content)
-
+        typewriter.add(JSON.parse(value).data)
       }
+
+
+      // const res = await fetch('http://127.0.0.1:11434/api/chat', {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json"
+      //   },
+      //   body: JSON.stringify(this.prompt),
+      // });
+
+      // if (!res.body) console.log("返回的结果为空")
+      // const reader = res.body.pipeThrough(new TextDecoderStream()).getReader();
+      // let is_true = true
+      // this.messages.push({text: '', type: 'received'})
+      // let count = 0
+      // while (is_true) {
+      //   count++
+      //   if (count === 1) typewriter.start()
+      //   this.$nextTick(() => {
+      //     this.scrollToBottom();
+      //   });
+      //   var {value, done} = await reader.read()
+      //   if (done) break;
+      //   // const jsonArray = parsePack(value)
+      //   typewriter.add(JSON.parse(value).message.content)
+      //   // typewriter.add(JSON.parse(value).message.content)
+      //
+      // }
       typewriter.done()
       this.loading = false
     }
