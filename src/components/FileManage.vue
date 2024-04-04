@@ -45,7 +45,7 @@
         <vs-button size="large" color="primary" type="flat" icon="window" @click="newDirDialogActivePrompt = true;">
           新建文件夹
         </vs-button>
-        <vs-button size="large" color="success" type="flat" icon="upload" @click="uploadFileToKnowledge"
+        <vs-button size="large" color="success" type="flat" icon="upload" @click="uploadToKnowledgeActivePrompt = true"
                    style="margin-right: 10px;">
           上传文件到知识库
         </vs-button>
@@ -62,6 +62,9 @@
             <vs-input placeholder="命名文件夹" v-model="newDirName" style="margin-top: 20px;"/>
           </div>
         </vs-prompt>
+        <vs-popup title="上传文件到知识库" :active.sync="uploadToKnowledgeActivePrompt">
+          <vs-upload automatic action="https://jsonplaceholder.typicode.com/posts/" @on-success="successUpload"/>
+        </vs-popup>
       </div>
     </div>
   </div>
@@ -189,6 +192,7 @@ export default {
       ],
       fileBreadCrumbPath: '/knowledge/dirone/dirtwo/dirthree',
       dirName: '',
+      uploadToKnowledgeActivePrompt: false
     }
   },
   computed: {},
@@ -218,8 +222,9 @@ export default {
       })
       this.newDirName = ''
     },
-    uploadFileToKnowledge() {
-
+    successUpload() {
+      this.uploadToKnowledgeActivePrompt = false
+      this.$vs.notify({color:'success',title:'Upload Success',text:'上传成功'})
     },
     async downloadFile(item) {
       console.log('下载', item.name)
