@@ -1,7 +1,9 @@
 <template>
   <div class="knowledgeFileManagementContainer">
     <div class="fileManagementTop">
-      <vs-icon icon="chevron_left" style="color: white;margin-right: 10px;margin-left: 10px;cursor: pointer; background-color: #4B70E2" @click="goBackward"></vs-icon>
+      <vs-icon icon="chevron_left"
+               style="color: white;margin-right: 10px;margin-left: 10px;cursor: pointer; background-color: #4B70E2"
+               @click="goBackward"></vs-icon>
       <div class="breadCrumbContainer">
         <vs-chip style="font-size: 16px;color: gray;" v-if="filePath.length !== 0">
           {{ this.filePath }}
@@ -225,9 +227,11 @@ export default {
 
     },
     enterDir(item) {
-      if (this.filePath === '/') this.filePath += item.name
-      else this.filePath += '/' + item.name
-      this.getFileList()
+      if (item.isDir) {
+        if (this.filePath === '/') this.filePath += item.name
+        else this.filePath += '/' + item.name
+        this.getFileList()
+      }
     },
     setFileImg(item) {
       if (item.isDir) return fileImgMap.get('dir')
@@ -261,7 +265,11 @@ export default {
     },
     upload() {
       this.uploadSuccess = true
-      uploadFile(localStorage.getItem('token'), '/' + this.file.name, this.file).then((res) => {
+      let pathStr = ''
+      if (this.filePath === '/') pathStr = '/' + this.file.name
+      else pathStr = this.filePath + '/' + this.file.name
+      uploadFile(localStorage.getItem('token'), pathStr, this.file).then((res) => {
+        console.log(pathStr)
         if (res.data.code === 200) {
           this.$vs.notify({
             color: 'success',
