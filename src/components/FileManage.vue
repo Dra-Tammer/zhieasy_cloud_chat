@@ -1,8 +1,7 @@
 <template>
   <div class="knowledgeFileManagementContainer">
     <div class="fileManagementTop">
-      <vs-button radius color="dark" type="flat" icon="chevron_left" style="margin-right: 10px;"
-                 @click="goBackward"></vs-button>
+      <vs-icon icon="chevron_left" style="color: white;margin-right: 10px;margin-left: 10px;cursor: pointer; background-color: #4B70E2" @click="goBackward"></vs-icon>
       <div class="breadCrumbContainer">
         <vs-chip style="font-size: 16px;color: gray;" v-if="filePath.length !== 0">
           {{ this.filePath }}
@@ -25,7 +24,7 @@
             </div>
           </div>
           <div class="fileListBottomContainer">
-            <div class="fileListBottomLeftContainer">
+            <div class="fileListBottomLeftContainer" v-if="!item.isDir">
               <vs-icon icon="browse_gallery" style="color: gray;font-size: 16px;"></vs-icon>
               <div class="fileCreateTime">{{ item.createTime }}</div>
             </div>
@@ -110,8 +109,6 @@ export default {
           createTime: '2024-03-24'
         }
       ],
-      fileBreadCrumbPath: '/knowledge/dirone/dirtwo/dirthree',
-      dirName: '/',
       filePath: '/',
       deletingFileName: '',
       uploadToKnowledgeActivePrompt: false
@@ -140,7 +137,7 @@ export default {
   methods: {
     newDir() {
       newDir(localStorage.getItem('token'), this.filePath + this.newDirName).then((res) => {
-        if(res.data.code === 200) {
+        if (res.data.code === 200) {
           console.log(res.data)
           this.$vs.notify({
             color: 'success',
@@ -228,9 +225,9 @@ export default {
 
     },
     enterDir(item) {
-      if (item.isDir) {
-        this.fileList = this.fileList.slice(1, 3)
-      }
+      if (this.filePath === '/') this.filePath += item.name
+      else this.filePath += '/' + item.name
+      this.getFileList()
     },
     setFileImg(item) {
       if (item.isDir) return fileImgMap.get('dir')
@@ -250,10 +247,13 @@ export default {
     goBackward() {
       let str = this.filePath
       if (str !== '/') {
-        this.filePath = str.substring(0, str.lastIndexOf('/'))
-        this.dirName = str.substring(str.lastIndexOf('/') + 1, str.length)
-        console.log(this.dirName)
+        if (str.lastIndexOf('/') !== 0) {
+          this.filePath = str.substring(0, str.lastIndexOf('/'))
+        } else {
+          this.filePath = str.substring(0, str.lastIndexOf('/') + 1)
+        }
       }
+      this.getFileList()
     },
     uploadFile() {
       const file = this.$refs.fileInput.files[0];
