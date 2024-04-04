@@ -154,6 +154,7 @@ export default {
       deletingKnowledgeId: null,
       newKnowledgeMemberName: '',
       addMemberActivePrompt: false,
+      personalKnowledgeId: -1
     }
   },
   watch: {},
@@ -164,6 +165,7 @@ export default {
     getKnowledgeList() {
       knowledgeList(localStorage.getItem('token')).then((res) => {
         this.knowledgeList = res.data.data
+        this.personalKnowledgeId = this.knowledgeList.find(item => item.space_name === '个人空间').id
       })
     },
     switchToPrimaryChat() {
@@ -235,6 +237,7 @@ export default {
             text: '知识库删除成功'
           })
           this.getKnowledgeList()
+          this.switchKnowledge(this.personalKnowledgeId)
         }
       })
 

@@ -165,6 +165,9 @@ export default {
     async handleDownload(item) {
       try {
         let fileName = this.filePath + item.name
+
+        if (this.filePath === '/') fileName = this.filePath + item.name
+        else fileName = this.filePath + '/' + item.name
         // 在这里调用下载文件的函数
         const response = await downloadFile(localStorage.getItem('token'), fileName);
 
