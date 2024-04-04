@@ -113,7 +113,8 @@ export default {
       userLogin(username, password).then((res) => {
         console.log(res)
         if (res.data.code === 200) {
-          localStorage.setItem('token', res.data.data);
+          localStorage.setItem('token', res.data.data.token);
+          localStorage.setItem('sessionId',res.data.data.sessionId)
           this.login_randomCenter();
           this.$router.push({path: '/chat'})
         } else {
