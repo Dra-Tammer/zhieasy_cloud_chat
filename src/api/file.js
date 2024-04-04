@@ -60,15 +60,14 @@ export function fileList(token, dirName) {
 
 export function newDir(token, dirName) {
     return request({
-        // todo: 路径修改
-        url: '/knowledge_base/list/file',
+        url: '/knowledge_base/upload/directory',
         method: 'POST',
         headers: {
             'token': token,
             'Content-Type': 'application/json'
         },
         data: JSON.stringify({
-            "dirName": dirName
+            "name": dirName
         })
     })
 }

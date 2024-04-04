@@ -4,8 +4,8 @@
       <vs-button radius color="dark" type="flat" icon="chevron_left" style="margin-right: 10px;"
                  @click="goBackward"></vs-button>
       <div class="breadCrumbContainer">
-        <vs-chip style="font-size: 16px;color: gray;" v-if="fileBreadCrumbPath.length !== 0">
-          {{ this.fileBreadCrumbPath }}
+        <vs-chip style="font-size: 16px;color: gray;" v-if="filePath.length !== 0">
+          {{ this.filePath }}
         </vs-chip>
       </div>
     </div>
@@ -21,7 +21,7 @@
             </div>
             <div class="fileListItemTopRightContainer">
               <vs-icon v-if="!item.isDir" icon="download" style="cursor: pointer; color: #9f9f9f;"
-                       @click="downloadFile(item)"></vs-icon>
+                       @click="handleDownload(item)"></vs-icon>
             </div>
           </div>
           <div class="fileListBottomContainer">
@@ -78,7 +78,7 @@
 <script>
 
 import {fileImgMap} from '@/utils/imgMap'
-import {downloadFile, fileList, newDir, uploadFile} from "@/api/file";
+import {downloadFile, fileList, newDir, uploadFile, deleteFile} from "@/api/file";
 
 export default {
   name: 'FileManage',
@@ -113,6 +113,7 @@ export default {
       fileBreadCrumbPath: '/knowledge/dirone/dirtwo/dirthree',
       dirName: '/',
       filePath: '/',
+      deletingFileName: '',
       uploadToKnowledgeActivePrompt: false
     }
   },
@@ -124,64 +125,78 @@ export default {
         () => this.$route.params,
         (toParams, preParams) => {
 
-          console.log('pre:',preParams)
+          console.log('pre:', preParams)
           this.knowledgeId = toParams.id
-          console.log('knowledgeId',this.knowledgeId)
+          console.log('knowledgeId', this.knowledgeId)
           this.getFileList()
 
         }
     )
   },
-  watch: {
-
-  },
+  watch: {},
   mounted() {
     this.getFileList();
   },
   methods: {
     newDir() {
-      newDir(localStorage.getItem('token'), this.newDirName).then((res) => {
-        console.log(res)
+      newDir(localStorage.getItem('token'), this.filePath + this.newDirName).then((res) => {
+        if(res.data.code === 200) {
+          console.log(res.data)
+          this.$vs.notify({
+            color: 'success',
+            title: '新建文件夹成功',
+            text: `成功新建：${this.newDirName}`
+          })
+          this.getFileList()
+          this.newDirName = ''
+        } else {
+          this.$vs.notify({
+            color: 'warning',
+            title: '错误',
+            text: `${res.data.msg}`
+          })
+          this.newDirName = ''
+        }
       })
-      this.$vs.notify({
-        color: 'success',
-        title: '新建文件夹成功',
-        text: `成功新建：${this.newDirName}`
-      })
-      this.newDirName = ''
     },
     successUpload() {
       this.uploadToKnowledgeActivePrompt = false
       this.$vs.notify({color: 'success', title: 'Upload Success', text: '上传成功'})
     },
-    async downloadFile(item) {
-      console.log('下载', item.name)
-      await downloadFile(localStorage.getItem('token'), item.name).then((res) => {
-        // 创建一个 Blob 对象
-        const blob = new Blob([res.data], {type: res.headers['content-type']});
+    async handleDownload(item) {
+      try {
+        let fileName = this.filePath + item.name
+        // 在这里调用下载文件的函数
+        const response = await downloadFile(localStorage.getItem('token'), fileName);
 
-        // 创建一个临时链接
-        const url = window.URL.createObjectURL(blob);
+        // 创建一个Blob对象，并将文件流(response.data)存入其中
+        const blob = new Blob([response.data], {type: response.data.type});
 
-        // 创建一个 a 标签
+        // 创建一个a标签，设置其href为Blob对象的URL，以及下载文件的名称
         const link = document.createElement('a');
-        link.href = url;
+        link.href = window.URL.createObjectURL(blob);
+        link.download = fileName.split('/').pop(); // 提取文件名
 
-        // 设置下载的文件名
-        const contentDisposition = res.headers['content-disposition'];
-        const fileName = contentDisposition.split(';')[1].trim().split('=')[1].replace(/"/g, '');
-        link.setAttribute('download', fileName);
-
-        // 触发点击事件，下载文件
+        // 将a标签插入到DOM中，并触发点击事件，开始下载
         document.body.appendChild(link);
         link.click();
 
-        // 清理临时链接
-        window.URL.revokeObjectURL(url);
+        // 下载完成后，移除a标签
+        this.$vs.notify({
+          color: 'success',
+          title: '成功',
+          text: '文件下载成功'
+        })
         document.body.removeChild(link);
-      })
+
+
+      } catch (error) {
+        console.error('下载文件时发生错误：', error);
+        // 处理错误情况，例如提示用户下载失败等
+      }
     },
     deleteFile(item) {
+      this.deletingFileName = this.filePath + item.name
       this.$vs.dialog({
         accept: this.deleteKnowledgeAccept,
         type: 'confirm',
@@ -193,11 +208,24 @@ export default {
       })
     },
     deleteKnowledgeAccept() {
-      this.$vs.notify({
-        color: 'danger',
-        title: '删除',
-        text: '文件删除成功'
+      deleteFile(localStorage.getItem('token'), this.deletingFileName).then((res) => {
+        console.log(res)
+        if (res.data.code === 200) {
+          this.$vs.notify({
+            color: 'danger',
+            title: '删除',
+            text: '文件删除成功'
+          })
+          this.getFileList()
+        } else {
+          this.$vs.notify({
+            color: 'warning',
+            title: '错误',
+            text: `${res.data.msg}`
+          })
+        }
       })
+
     },
     enterDir(item) {
       if (item.isDir) {
@@ -220,10 +248,12 @@ export default {
       })
     },
     goBackward() {
-      let str = this.fileBreadCrumbPath
-      this.fileBreadCrumbPath = str.substring(0, str.lastIndexOf('/'))
-      this.dirName = str.substring(str.lastIndexOf('/') + 1, str.length)
-      console.log(this.dirName)
+      let str = this.filePath
+      if (str !== '/') {
+        this.filePath = str.substring(0, str.lastIndexOf('/'))
+        this.dirName = str.substring(str.lastIndexOf('/') + 1, str.length)
+        console.log(this.dirName)
+      }
     },
     uploadFile() {
       const file = this.$refs.fileInput.files[0];
