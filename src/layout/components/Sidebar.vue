@@ -84,9 +84,11 @@
             <template slot="header">
               <vs-button v-if="0!==this.manageGroupSelected.length" line-position="top" line-origin="left"
                          color="warning" type="line"
-                         style="width: 100px;margin-right: 20px;">移出
+                         style="width: 100px;margin-right: 20px;" @click="removePersonFromKnowledge">移出
               </vs-button>
-              <vs-button line-position="top" line-origin="left" color="primary" type="line">添加成员</vs-button>
+              <vs-button line-position="top" line-origin="left" color="primary" type="line"
+                         @click="addMemberActivePrompt = true">添加成员
+              </vs-button>
             </template>
             <template slot="thead">
               <vs-th>
@@ -104,6 +106,12 @@
           </vs-table>
         </div>
       </div>
+      <vs-popup title="添加成员" :active.sync="addMemberActivePrompt">
+        <div style="display: flex;">
+          <vs-input placeholder="成员用户名" v-model="newKnowledgeMemberName" style="margin-top: 10px;"/>
+          <vs-button style="margin-left: 20px;" size="small" @click="addKnowledgeMember">确认</vs-button>
+        </div>
+      </vs-popup>
     </vs-popup>
   </div>
 </template>
@@ -124,6 +132,7 @@ export default {
         {id: 5, space_name: '公司人事知识库', rule: 'GROUP', update_time: '2024-03-31 11:18:46'},
         {id: 6, space_name: '公司财务知识库', rule: 'GROUP', update_time: '2024-03-31 11:18:46'},
       ],
+      // knowledgeList: null,
       addKnowledgeActivePrompt: false,
       newKnowledgeName: '',
       addKnowledgeSelect: 0,
@@ -184,16 +193,19 @@ export default {
           "name": "Clementina DuBuque",
         }
       ],
-      deletingKnowledgeId: null
+      deletingKnowledgeId: null,
+      newKnowledgeMemberName: '',
+      addMemberActivePrompt: false
     }
   },
   watch: {},
   mounted() {
+    // this.getKnowledgeList()
   },
   methods: {
     getKnowledgeList() {
       knowledgeList(localStorage.getItem('token')).then((res) => {
-        this.knowledgeList = res
+        this.knowledgeList = res.data.data
       })
     },
     switchToPrimaryChat() {
@@ -262,6 +274,25 @@ export default {
       this.addKnowledgeActivePrompt = false
       this.newKnowledgeName = ''
       this.addKnowledgeSelect = 0
+    },
+    getMemberList() {
+
+    },
+    removePersonFromKnowledge() {
+      console.log(this.manageGroupSelected)
+      this.$vs.notify({
+        color: 'danger',
+        title: '移出成员',
+        text: '已经将成员移出知识库'
+      })
+      this.manageGroupSelected = []
+    },
+    addKnowledgeMember() {
+      if (this.newKnowledgeMemberName !== '') {
+        console.log(this.manageGroupHandleId, this.newKnowledgeMemberName)
+        this.addMemberActivePrompt = false
+        this.getMemberList()
+      }
     },
   }
 }
@@ -338,7 +369,7 @@ export default {
   border-radius: 4px;
   cursor: pointer;
   box-shadow: 0 0 0 1px #dcdfe6;
-  margin-bottom: 16px;
+  margin-bottom: 10px;
 }
 
 .knowledge_list_item:hover:not(.active) {

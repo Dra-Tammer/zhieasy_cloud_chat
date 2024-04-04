@@ -1,10 +1,11 @@
 <template>
   <div class="knowledgeFileManagementContainer">
     <div class="fileManagementTop">
-      <vs-button radius color="dark" type="flat" icon="chevron_left" style="margin-right: 10px;"></vs-button>
+      <vs-button radius color="dark" type="flat" icon="chevron_left" style="margin-right: 10px;"
+                 @click="goBackward"></vs-button>
       <div class="breadCrumbContainer">
-        <vs-chip style="font-size: 16px;color: gray;">
-          / knowledge / dirOne / dirTwo / dirThree / dirFour
+        <vs-chip style="font-size: 16px;color: gray;" v-if="fileBreadCrumbPath.length !== 0">
+          {{ this.fileBreadCrumbPath }}
         </vs-chip>
       </div>
     </div>
@@ -70,7 +71,7 @@
 <script>
 
 import {fileImgMap} from '@/utils/imgMap'
-import {newDir} from "@/api/file";
+import {downloadFile, newDir} from "@/api/file";
 
 export default {
   name: 'FileManage',
@@ -185,7 +186,9 @@ export default {
           isDir: false,
           time: '2024-03-24'
         },
-      ]
+      ],
+      fileBreadCrumbPath: '/knowledge/dirone/dirtwo/dirthree',
+      dirName: '',
     }
   },
   computed: {},
@@ -199,6 +202,9 @@ export default {
           this.knowledgeId = toParams.id
         }
     )
+  },
+  mounted() {
+    this.getFileList()
   },
   methods: {
     newDir() {
@@ -215,8 +221,32 @@ export default {
     uploadFileToKnowledge() {
 
     },
-    downloadFile(item) {
-      console.log('下载', item)
+    async downloadFile(item) {
+      console.log('下载', item.name)
+      await downloadFile(localStorage.getItem('token'), item.name).then((res) => {
+        // 创建一个 Blob 对象
+        const blob = new Blob([res.data], {type: res.headers['content-type']});
+
+        // 创建一个临时链接
+        const url = window.URL.createObjectURL(blob);
+
+        // 创建一个 a 标签
+        const link = document.createElement('a');
+        link.href = url;
+
+        // 设置下载的文件名
+        const contentDisposition = res.headers['content-disposition'];
+        const fileName = contentDisposition.split(';')[1].trim().split('=')[1].replace(/"/g, '');
+        link.setAttribute('download', fileName);
+
+        // 触发点击事件，下载文件
+        document.body.appendChild(link);
+        link.click();
+
+        // 清理临时链接
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(link);
+      })
     },
     deleteFile(item) {
       this.$vs.dialog({
@@ -248,8 +278,17 @@ export default {
         let type = item.name.substring(dotIndex + 1)
         return fileImgMap.get(type)
       }
-    }
-  },
+    },
+    getFileList() {
+
+    },
+    goBackward() {
+      let str = this.fileBreadCrumbPath
+      this.fileBreadCrumbPath = str.substring(0, str.lastIndexOf('/'))
+      this.dirName = str.substring(str.lastIndexOf('/') + 1, str.length)
+      console.log(this.dirName)
+    },
+  }
 }
 </script>
 

@@ -24,7 +24,8 @@ export function downloadFile(token, fileName) {
         },
         data: JSON.stringify({
             "fileName": fileName
-        })
+        }),
+        responseType: 'blob'
     })
 }
 

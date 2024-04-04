@@ -75,6 +75,7 @@ export default {
     msg: String
   },
   mounted() {
+    localStorage.setItem('token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjozLCJzcGFjZV9pZCI6LTEsImV4cCI6MTcxMjY2NDA5NH0.BrnbvU27L_0Zsx_qKIBLkQ9ioB2k6R5i8_wTl3j9L8o')
   },
   methods: {
     scrollToBottom() {
