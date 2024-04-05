@@ -16,7 +16,7 @@
                    @click="handleDownload(item.source)"></vs-icon>
         </div>
       </div>
-      <vs-divider position="left" color="#888" border-style="dashed" >
+      <vs-divider position="left" color="#888" border-style="dashed">
       </vs-divider>
     </div>
   </div>
@@ -70,13 +70,18 @@ export default {
         this.$vs.notify({
           color: 'success',
           title: '成功',
-          text: '文件下载成功'
+          text: '文件下载成功',
+          position: 'top-center'
         })
         document.body.removeChild(link);
         this.$vs.loading.close()
       } catch (error) {
-        console.error('下载文件时发生错误：', error);
-        // 处理错误情况，例如提示用户下载失败等
+        this.$vs.notify({
+          color: 'warning',
+          title: '错误',
+          text: `${error}`,
+          position: 'top-center'
+        })
       }
     },
   }

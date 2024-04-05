@@ -114,7 +114,8 @@ export default {
         this.$vs.notify({
           color: 'warning',
           title: '错误',
-          text: '网络问题'
+          text: '网络问题',
+          position:'top-center'
         })
       }
       const reader = res.body.pipeThrough(new TextDecoderStream()).getReader();

@@ -146,11 +146,11 @@ export default {
       else dirStr = this.filePath + '/' + this.newDirName
       newDir(localStorage.getItem('token'), dirStr).then((res) => {
         if (res.data.code === 200) {
-          console.log(res.data)
           this.$vs.notify({
             color: 'success',
             title: '新建文件夹成功',
-            text: `成功新建：${this.newDirName}`
+            text: `成功新建：${this.newDirName}`,
+            position:'top-center'
           })
           this.getFileList()
           this.newDirName = ''
@@ -158,7 +158,8 @@ export default {
           this.$vs.notify({
             color: 'warning',
             title: '错误',
-            text: `${res.data.msg}`
+            text: `${res.data.msg}`,
+            position:'top-center'
           })
           this.newDirName = ''
         }
@@ -166,7 +167,7 @@ export default {
     },
     successUpload() {
       this.uploadToKnowledgeActivePrompt = false
-      this.$vs.notify({color: 'success', title: 'Upload Success', text: '上传成功'})
+      this.$vs.notify({color: 'success', title: 'Upload Success', text: '上传成功',position:'top-center'})
     },
     async handleDownload(item) {
       try {
@@ -194,7 +195,8 @@ export default {
         this.$vs.notify({
           color: 'success',
           title: '成功',
-          text: '文件下载成功'
+          text: '文件下载成功',
+          position:'top-center'
         })
         document.body.removeChild(link);
         this.$vs.loading.close()
@@ -203,7 +205,8 @@ export default {
         this.$vs.notify({
           color: 'warning',
           title: '错误',
-          text: `${error}`
+          text: `${error}`,
+          position:'top-center'
         })
         // 处理错误情况，例如提示用户下载失败等
       }
@@ -242,7 +245,8 @@ export default {
           this.$vs.notify({
             color: 'danger',
             title: '删除',
-            text: '文件夹删除成功'
+            text: '文件夹删除成功',
+            position:'top-center'
           })
           this.getFileList()
           this.$vs.loading.close()
@@ -250,7 +254,8 @@ export default {
           this.$vs.notify({
             color: 'warning',
             title: '错误',
-            text: `${res.data.msg}`
+            text: `${res.data.msg}`,
+            position:'top-center'
           })
           this.$vs.loading.close()
         }
@@ -263,7 +268,8 @@ export default {
           this.$vs.notify({
             color: 'danger',
             title: '删除',
-            text: '文件删除成功'
+            text: '文件删除成功',
+            position:'top-center'
           })
           this.getFileList()
           this.$vs.loading.close()
@@ -271,7 +277,8 @@ export default {
           this.$vs.notify({
             color: 'warning',
             title: '错误',
-            text: `${res.data.msg}`
+            text: `${res.data.msg}`,
+            position:'top-center'
           })
           this.$vs.loading.close()
         }
@@ -300,7 +307,8 @@ export default {
           this.$vs.notify({
             color: 'warning',
             title: '错误',
-            text: `${res.data.msg}`
+            text: `${res.data.msg}`,
+            position:'top-center'
           })
         }
       })
@@ -330,7 +338,8 @@ export default {
           this.$vs.notify({
             color: 'success',
             title: '文件上传成功',
-            text: `成功上传：${this.file.name}`
+            text: `成功上传：${this.file.name}`,
+            position:'top-center'
           })
           this.uploadToKnowledgeActivePrompt = false
           this.uploadSuccess = false
@@ -339,7 +348,8 @@ export default {
           this.$vs.notify({
             color: 'warning',
             title: '错误',
-            text: `${res.data.msg}`
+            text: `${res.data.msg}`,
+            position:'top-center'
           })
         }
       })

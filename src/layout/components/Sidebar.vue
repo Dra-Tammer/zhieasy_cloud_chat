@@ -163,17 +163,37 @@ export default {
   methods: {
     getKnowledgeList() {
       knowledgeList(localStorage.getItem('token')).then((res) => {
-        this.knowledgeList = res.data.data
-        this.personalKnowledgeId = this.knowledgeList.find(item => item.space_name === '个人空间').id
+        if (res.data.code === 200) {
+          this.knowledgeList = res.data.data
+          this.personalKnowledgeId = this.knowledgeList.find(item => item.space_name === '个人空间').id
+        } else {
+          this.$vs.notify({
+            color: 'warning',
+            title: '错误',
+            text: `${res.data.msg}`,
+            position: 'top-center'
+          })
+        }
       })
     },
     switchToPrimaryChat() {
-      if (this.$route.path !== '/chat') {
-        this.$router.push('/chat');
-      }
+
+
       switchToPrimaryChat(localStorage.getItem('token'), true).then((res) => {
-        localStorage.setItem('sessionId', res.data.data.sessionId)
-        localStorage.setItem('token', res.data.data.token)
+        if (res.data.code === 200) {
+          if (this.$route.path !== '/chat') {
+            this.$router.push('/chat');
+          }
+          localStorage.setItem('sessionId', res.data.data.sessionId)
+          localStorage.setItem('token', res.data.data.token)
+        } else {
+          this.$vs.notify({
+            color: 'warning',
+            title: '错误',
+            text: `${res.data.msg}`,
+            position: 'top-center'
+          })
+        }
       })
     },
     addKnowledge() {
@@ -182,12 +202,13 @@ export default {
       else knowledgeLimit = 'PRIVATE'
       addKnowledge(localStorage.getItem('token'), this.newKnowledgeName, knowledgeLimit).then((res) => {
         // 请求成功之后的
-        if (res.data.data === 'success') {
+        if (res.data.code === 200) {
           this.getKnowledgeList()
           this.$vs.notify({
             color: 'success',
             title: '知识库新建成功',
-            text: `成功新建：${this.newKnowledgeName}`
+            text: `成功新建：${this.newKnowledgeName}`,
+            position: 'top-center'
           })
           this.addKnowledgeActivePrompt = false
           this.newKnowledgeName = ''
@@ -195,8 +216,9 @@ export default {
         } else {
           this.$vs.notify({
             color: 'warning',
-            title: '知识库已存在',
-            text: `${this.newKnowledgeName}已存在，无需重新建库`
+            title: '错误',
+            text: `${res.data.msg}`,
+            position: 'top-center'
           })
           this.addKnowledgeActivePrompt = false
           this.newKnowledgeName = ''
@@ -208,11 +230,20 @@ export default {
     },
     switchKnowledge(id) {
       switchToKnowledge(localStorage.getItem('token'), id, false).then((res) => {
-        localStorage.setItem('sessionId', res.data.data.sessionId)
-        localStorage.setItem('token', res.data.data.token)
-        localStorage.setItem('activeKnowledgeName', res.data.data.kbName)
-        if (this.$route.path !== `/knowledge/${id}`) {
-          this.$router.push(`/knowledge/${id}`)
+        if (res.data.code === 200) {
+          localStorage.setItem('sessionId', res.data.data.sessionId)
+          localStorage.setItem('token', res.data.data.token)
+          localStorage.setItem('activeKnowledgeName', res.data.data.kbName)
+          if (this.$route.path !== `/knowledge/${id}`) {
+            this.$router.push(`/knowledge/${id}`)
+          }
+        } else {
+          this.$vs.notify({
+            color: 'warning',
+            title: '错误',
+            text: `${res.data.msg}`,
+            position: 'top-center'
+          })
         }
       })
     },
@@ -222,22 +253,32 @@ export default {
         accept: this.deleteKnowledgeAccept,
         type: 'confirm',
         color: 'danger',
-        title: `删除${item.name}`,
+        title: `删除${item.space_name}`,
         text: '请明确删除知识库的后果，知识库中的文件要不会保留，知识库协作者们将不能再使用此知识库！',
         acceptText: '确定',
         cancelText: '取消'
       })
     },
     deleteKnowledgeAccept() {
+      this.$vs.loading()
       deleteKnowledge(localStorage.getItem('token'), this.deletingKnowledgeId).then((res) => {
         if (res.data.code === 200) {
           this.$vs.notify({
             color: 'danger',
             title: '删除知识库',
-            text: '知识库删除成功'
+            text: '知识库删除成功',
+            position: 'top-center'
           })
           this.getKnowledgeList()
           this.switchKnowledge(this.personalKnowledgeId)
+          this.$vs.loading.close()
+        } else {
+          this.$vs.notify({
+            color: 'warning',
+            title: '错误',
+            text: `${res.data.msg}`,
+            position: 'top-center'
+          })
         }
       })
 
@@ -254,12 +295,21 @@ export default {
     },
     getMemberList() {
       knowledgeMemberList(localStorage.getItem('token'), this.manageGroupHandleId).then((res) => {
-        this.manageGroupUserList = res.data.data.map(member => {
-          return {
-            id: member.id,
-            username: member.username
-          }
-        })
+        if (res.data.code === 200) {
+          this.manageGroupUserList = res.data.data.map(member => {
+            return {
+              id: member.id,
+              username: member.username
+            }
+          })
+        } else {
+          this.$vs.notify({
+            color: 'warning',
+            title: '错误',
+            text: `${res.data.msg}`,
+            position: 'top-center'
+          })
+        }
       })
     },
     removePersonFromKnowledge() {
@@ -273,21 +323,36 @@ export default {
           })
           this.manageGroupSelected = []
           this.getMemberList()
+        } else {
+          this.$vs.notify({
+            color: 'warning',
+            title: '错误',
+            text: `${res.data.msg}`,
+            position: 'top-center'
+          })
         }
       })
     },
     addKnowledgeMember() {
       if (this.newKnowledgeMemberName !== '') {
-        console.log(this.manageGroupHandleId, this.newKnowledgeMemberName)
         knowledgeGroupInvite(localStorage.getItem('token'), this.manageGroupHandleId, this.newKnowledgeMemberName).then((res) => {
           if (res.data.code === 200) {
             this.addMemberActivePrompt = false
             this.$vs.notify({
               color: 'success',
               title: '成功',
-              text: '添加成员成功'
+              text: '添加成员成功',
+              position: 'top-center'
             })
+            this.newKnowledgeMemberName = ''
             this.getMemberList()
+          } else {
+            this.$vs.notify({
+              color: 'warning',
+              title: '错误',
+              text: `${res.data.msg}`,
+              position: 'top-center'
+            })
           }
         })
       }

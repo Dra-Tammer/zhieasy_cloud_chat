@@ -72,15 +72,10 @@ export default {
     return {
       knowledgeId: '',
       userInputMessage: '',
-      chatIds: [
-      ],
-      questionsArray: [
-      ],
-      responseArray: [
-      ],
-      summaryArray: [
-
-      ],
+      chatIds: [],
+      questionsArray: [],
+      responseArray: [],
+      summaryArray: [],
       loading: false,
       prompt: {
         query: null,
@@ -141,7 +136,14 @@ export default {
         },
         body: JSON.stringify(this.prompt),
       });
-      if (!res.body) console.log("返回的结果为空")
+      if (!res.body) {
+        this.$vs.notify({
+          color: 'warning',
+          title: '错误',
+          text: '网络错误',
+          position:'top-center'
+        })
+      }
       const reader = res.body.pipeThrough(new TextDecoderStream()).getReader();
       let is_true = true
       this.responseArray.push('')
@@ -155,13 +157,23 @@ export default {
         var {value, done} = await reader.read()
         if (done) break;
         let resData = JSON.parse(value)
-        if (!resData.data.isSummary) typewriter.add(JSON.parse(value).data.reply)
-        else if (resData.data.isSummary) {
-          console.log('调用函数')
-          this.summaryArray.push(resData.data.summary)
-          console.log(resData.data.summary)
-          console.log(this.summaryArray)
+        if (resData.code === 200) {
+          if (!resData.data.isSummary) typewriter.add(JSON.parse(value).data.reply)
+          else if (resData.data.isSummary) {
+            this.summaryArray.push(resData.data.summary)
+          }
+        } else {
+          this.$vs.notify({
+            color: 'warning',
+            title: '错误',
+            text: `${resData.msg}`,
+            position:'top-center'
+          })
+          this.responseArray.pop()
+          this.questionsArray.pop()
+          this.chatIds.pop()
         }
+
         // typewriter.add(resData.message.content)
       }
       typewriter.done()
