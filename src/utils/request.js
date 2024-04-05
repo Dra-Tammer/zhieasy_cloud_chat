@@ -1,8 +1,8 @@
 import axios from 'axios'
 
 const service = axios.create({
-    // baseURL: 'http://zerb36.natappfree.cc',
-    baseURL: 'http://127.0.0.1:8081',
+    baseURL: 'http://nmscut.natappfree.cc',
+    // baseURL: 'http://127.0.0.1:8081',
 
     timeout: 500000
 })

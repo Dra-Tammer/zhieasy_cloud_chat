@@ -93,7 +93,7 @@ export default {
       })
       if (this.userMessage.trim() === '') return;
       this.messages.push({text: this.userMessage, type: 'sent'});
-      let URL = 'http://zerb36.natappfree.cc/chat'
+      let URL = 'http://nmscut.natappfree.cc/chat'
       // if (this.chat_mode_select) {
       //   URL = 'http://127.0.0.1:4523/m1/4197185-0-default/knowledge_base/chat'
       // }

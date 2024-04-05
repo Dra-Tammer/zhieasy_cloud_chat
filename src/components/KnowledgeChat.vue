@@ -1,6 +1,7 @@
 <template>
   <div class="KnowledgeChatContainer">
-    <div class="knowledgeTopEmptyBox"></div>
+    <div class="knowledgeTopEmptyBox">
+    </div>
     <div class="charBoxContainer" id="chat-container" ref="chatContainer">
 
       <div class="chatBox" v-for="(item,index) in chatIds" :key="index">
@@ -23,23 +24,24 @@
             <div class="chatBoxResponseRightContainer">
               <div class="chatResponseFromKnowledge">
                 <pre>{{ responseArray[item.index] }}</pre>
+                <div class="loadingShowBox" id="load"></div>
               </div>
             </div>
           </div>
-          <div v-if="item.index + 1 === summaryArray.length">
+          <div>
             <div class="dividerBox">
               <vs-divider position="left" color="#888">
                 <vs-icon icon="done_all" class="spanCite"></vs-icon>
                 <span style="color: #888888;">引用自</span>
-                {{ item.index }}
               </vs-divider>
             </div>
-            <div class="citeContentBox">
+            <div class="citeContentBox" v-if="item.index === summaryArray.length - 1">
               <cite-file :summary="summaryArray[item.index]"></cite-file>
             </div>
           </div>
         </div>
       </div>
+      <div class="noMoreFile">没有更多了</div>
 
 
     </div>
@@ -70,20 +72,18 @@ export default {
   data() {
     return {
       knowledgeId: '',
-      userInputMessage: 'dfsfsdfsf',
+      userInputMessage: '',
       chatIds: [
         {index: 0, createTime: '2027-03-24 21:41:30'},
       ],
       questionsArray: [
         '写出这份文件摘要这份文件的摘要这份文件的摘要这份文件的摘要这份文件的摘要这份文这份文件的摘要件的摘要这份文件的摘要这份文件的摘要件的摘要',
       ],
-      responseArray: [
-        '中国大学生计算机设计大赛的参赛要求包括：参赛对象为全国高等院校在籍的本科生，也包括港、澳、台学生和留学生[1a]；指导教师应是在高校担任本科生教学任务的教师[2]；大赛作品须符合相关章程要求[1b]；作品内容分为软件应用与开发、微课与教学辅助、物联网应用、大数据应用、人工智能应用等类别[16]。'
-      ],
+      responseArray: [],
       summaryArray: [
         [
           {
-            "source": "3/开发进度日报-2024.1.3.doc",
+            "source": "/gdafg/asdg/3/开发进度日报-2024.1.3.doc",
             "content": "开发进度日报\n\n工程进度与状态\n\n进度\n\n提交《项目开发计划》文档 – 陆骏凯\n\n提交《项目可行性研究报告》文档 – 陆骏凯\n\n提交《项目需求规格说明》文档 – 周建慧\n\n提交《项目数据库设计》文档 – 周建慧\n\n提交《项目概要设计》文档 – 周建慧\n\n状态\n\n昨日的实际工作进度与计划相比，推迟了。如果与计划不一致，小组部分人员昨日有事情，较忙，今日加急修改提交。\n\n今天的工作计划\n\n提交《项目原型UI设计》文档 – 王娜\n\n提交《项目测试计划》文档 – 王航"
           },
           {
@@ -95,7 +95,7 @@ export default {
       loading: false,
       prompt: {
         query: null,
-        sessionId: 0
+        session_id: 0
       },
       aiPrompt: {
         "model": "qwen:4b",
@@ -106,7 +106,8 @@ export default {
           }
         ]
       },
-      adjunct: ''
+      adjunct: '',
+      loadingStyleShow: false
     }
   },
   created() {
@@ -137,18 +138,19 @@ export default {
       let chatIdsIndex = this.chatIds.length
       this.chatIds.push({index: chatIdsIndex, createTime: getTimeNow()})
       this.questionsArray.push(this.userInputMessage);
-      let URL = 'http://127.0.0.1:11434/api/chat'
+      // let URL = 'http://127.0.0.1:11434/api/chat'
+      let URL = 'http://nmscut.natappfree.cc/knowledge_base/chat'
       this.prompt.query = this.userInputMessage
-      this.prompt.sessionId = localStorage.getItem('sessionId')
+      this.prompt.session_id = localStorage.getItem('sessionId')
       this.userInputMessage = ' '
 
       const res = await fetch(URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // "token": localStorage.getItem('token')
+          "token": localStorage.getItem('token')
         },
-        body: JSON.stringify(this.aiPrompt),
+        body: JSON.stringify(this.prompt),
       });
       if (!res.body) console.log("返回的结果为空")
       const reader = res.body.pipeThrough(new TextDecoderStream()).getReader();
@@ -164,9 +166,14 @@ export default {
         var {value, done} = await reader.read()
         if (done) break;
         let resData = JSON.parse(value)
-        // if (!resData.isSummary) typewriter.add(JSON.parse(value).data.reply)
-        // else if (resData.isSummary) this.summaryArray.push(resData.data.summary)
-        typewriter.add(resData.message.content)
+        if (!resData.data.isSummary) typewriter.add(JSON.parse(value).data.reply)
+        else if (resData.data.isSummary) {
+          console.log('调用函数')
+          this.summaryArray.push(resData.data.summary)
+          console.log(resData.data.summary)
+          console.log(this.summaryArray)
+        }
+        // typewriter.add(resData.message.content)
       }
       typewriter.done()
       this.loading = false
@@ -177,6 +184,15 @@ export default {
         chatContainer.scrollTop = chatContainer.scrollHeight;
       });
     },
+    openLoadingDiv() {
+      this.$vs.loading({
+        container: '#load',
+        scale: 0.6
+      })
+    },
+    closeLoadingDiv() {
+      this.$vs.loading.close('#load')
+    }
   }
 }
 </script>
@@ -247,7 +263,6 @@ export default {
 .chatBoxResponse {
   background-color: #fafafa;
   box-shadow: 0 1px 0 #c7c7c7, 0 -1px 0 #c7c7c7;
-  cursor: pointer;
   padding-bottom: 2px;
 }
 
@@ -315,5 +330,20 @@ pre {
   word-wrap: break-word;
   white-space: break-spaces;
   line-height: 30px;
+}
+
+.noMoreFile {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  font-size: 14px;
+  color: gray;
+}
+
+.loadingShowBox {
+  width: 50px;
+  height: 50px;
+  background-color: #4CAF50;
 }
 </style>

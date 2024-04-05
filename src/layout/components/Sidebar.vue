@@ -216,10 +216,6 @@ export default {
           this.$router.push(`/knowledge/${id}`)
         }
       })
-      // todo: 以下部分是要删除的
-      if (this.$route.path !== `/knowledge/${id}`) {
-        this.$router.push(`/knowledge/${id}`)
-      }
     },
     deleteKnowledge(item) {
       this.deletingKnowledgeId = item.id

@@ -5,10 +5,16 @@
         {{ item.content }}
       </div>
       <div class="citeFromFileContainer">
-        <div class="fileImg">
-          <img :src="setFileImg(formatCiteName(item.source))" alt="" style="width: 30px;height: 30px;">
+        <div class="citeFromFileFrontContainer">
+          <div class="fileImg">
+            <img :src="setFileImg(formatCiteName(item.source))" alt="" style="width: 30px;height: 30px;">
+          </div>
+          <div class="fileName"> {{ formatCiteName(item.source) }}</div>
         </div>
-        <div class="fileName"> {{ formatCiteName(item.source) }}</div>
+        <div class="downloadButton">
+          <vs-icon icon="download" style="cursor: pointer; color: #9f9f9f;"
+                   @click="handleDownload(item.source)"></vs-icon>
+        </div>
       </div>
     </div>
   </div>
@@ -21,13 +27,11 @@ import {downloadFile} from "@/api/file";
 export default {
   name: "CiteFile",
   props: ['summary'],
-  computed: {
-    summaryWithBr() {
-      return this.summary.replace(/\n/g, '<br>');
-    }
-  },
+  computed: {},
   data() {
-    return {}
+    return {
+      showIcon: false
+    }
   },
   mounted() {
   },
@@ -39,35 +43,40 @@ export default {
         return fileImgMap.get(type)
       }
     },
-    async downloadFile(item) {
-      console.log('下载', item.name)
-      await downloadFile(localStorage.getItem('token'), item.name).then((res) => {
-        // 创建一个 Blob 对象
-        const blob = new Blob([res.data], {type: res.headers['content-type']});
+    formatCiteName(str) {
+      return str.substring(str.lastIndexOf('/') + 1, str.length)
+    },
+    async handleDownload(name) {
+      try {
 
-        // 创建一个临时链接
-        const url = window.URL.createObjectURL(blob);
+        // 在这里调用下载文件的函数
+        const response = await downloadFile(localStorage.getItem('token'), name);
 
-        // 创建一个 a 标签
+        // 创建一个Blob对象，并将文件流(response.data)存入其中
+        const blob = new Blob([response.data], {type: response.data.type});
+
+        // 创建一个a标签，设置其href为Blob对象的URL，以及下载文件的名称
         const link = document.createElement('a');
-        link.href = url;
+        link.href = window.URL.createObjectURL(blob);
+        link.download = name.split('/').pop(); // 提取文件名
 
-        // 设置下载的文件名
-        const contentDisposition = res.headers['content-disposition'];
-        const fileName = contentDisposition.split(';')[1].trim().split('=')[1].replace(/"/g, '');
-        link.setAttribute('download', fileName);
-
-        // 触发点击事件，下载文件
+        // 将a标签插入到DOM中，并触发点击事件，开始下载
         document.body.appendChild(link);
         link.click();
 
-        // 清理临时链接
-        window.URL.revokeObjectURL(url);
+        // 下载完成后，移除a标签
+        this.$vs.notify({
+          color: 'success',
+          title: '成功',
+          text: '文件下载成功'
+        })
         document.body.removeChild(link);
-      })
-    },
-    formatCiteName(str) {
-      return str.substring(str.lastIndexOf('/') + 1, str.length)
+
+
+      } catch (error) {
+        console.error('下载文件时发生错误：', error);
+        // 处理错误情况，例如提示用户下载失败等
+      }
     },
   }
 }
@@ -100,9 +109,24 @@ export default {
   margin-bottom: 20px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.citeFromFileFrontContainer {
+  display: flex;
+  align-items: center;
 }
 
 .fileName {
   margin-left: 20px;
+}
+
+.citeFromFileContainer:hover .downloadButton {
+  display: flex;
+}
+
+.downloadButton {
+  display: none;
 }
 </style>

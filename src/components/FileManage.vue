@@ -129,7 +129,6 @@ export default {
           console.log('pre:', preParams)
           this.knowledgeId = toParams.id
           this.activeKnowledgeName = localStorage.getItem('activeKnowledgeName')
-
           this.getFileList()
 
         }
@@ -415,6 +414,7 @@ export default {
 }
 
 .noMoreFile {
+  margin-top: 20px;
   display: flex;
   justify-content: center;
   margin-bottom: 10px;
