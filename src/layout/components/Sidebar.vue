@@ -254,7 +254,7 @@ export default {
       this.addKnowledgeSelect = 0
     },
     getMemberList() {
-      knowledgeMemberList(localStorage.getItem('token')).then((res) => {
+      knowledgeMemberList(localStorage.getItem('token'),this.manageGroupHandleId).then((res) => {
         this.manageGroupUserList = res.data.data.map(member => {
           return {
             id: member.id,

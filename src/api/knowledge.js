@@ -84,14 +84,17 @@ export function deleteKnowledge(token, kbId) {
     })
 }
 
-export function knowledgeMemberList(token) {
+export function knowledgeMemberList(token, kbId) {
     return request({
         url: '/knowledge_base/members/list',
         method: 'POST',
         headers: {
             'token': token,
             'Content-Type': 'application/json'
-        }
+        },
+        data: JSON.stringify({
+            "kbId": kbId,
+        })
     })
 }
 

@@ -24,7 +24,6 @@
             <div class="chatBoxResponseRightContainer">
               <div class="chatResponseFromKnowledge">
                 <pre>{{ responseArray[item.index] }}</pre>
-                <div class="loadingShowBox" id="load"></div>
               </div>
             </div>
           </div>
@@ -73,25 +72,10 @@ export default {
     return {
       knowledgeId: '',
       userInputMessage: '',
-      chatIds: [
-        {index: 0, createTime: '2027-03-24 21:41:30'},
-      ],
-      questionsArray: [
-        '写出这份文件摘要这份文件的摘要这份文件的摘要这份文件的摘要这份文件的摘要这份文这份文件的摘要件的摘要这份文件的摘要这份文件的摘要件的摘要',
-      ],
+      chatIds: [],
+      questionsArray: [],
       responseArray: [],
-      summaryArray: [
-        [
-          {
-            "source": "/gdafg/asdg/3/开发进度日报-2024.1.3.doc",
-            "content": "开发进度日报\n\n工程进度与状态\n\n进度\n\n提交《项目开发计划》文档 – 陆骏凯\n\n提交《项目可行性研究报告》文档 – 陆骏凯\n\n提交《项目需求规格说明》文档 – 周建慧\n\n提交《项目数据库设计》文档 – 周建慧\n\n提交《项目概要设计》文档 – 周建慧\n\n状态\n\n昨日的实际工作进度与计划相比，推迟了。如果与计划不一致，小组部分人员昨日有事情，较忙，今日加急修改提交。\n\n今天的工作计划\n\n提交《项目原型UI设计》文档 – 王娜\n\n提交《项目测试计划》文档 – 王航"
-          },
-          {
-            "source": "3/开发进度日报-2024.1.3.doc",
-            "content": "提交《项目概要设计》文档 – 周建慧\n\n状态\n\n昨日的实际工作进度与计划相比，推迟了。如果与计划不一致，小组部分人员昨日有事情，较忙，今日加急修改提交。\n\n今天的工作计划\n\n提交《项目原型UI设计》文档 – 王娜\n\n提交《项目测试计划》文档 – 王航\n\n组织小组成员完成相应功能 – 余家春、陆骏凯、周博宇\n\n组织小组成员完成相应功能 - 余家春、陆骏凯、周博宇\n\nGIT提交源程序代码 - 余家春、陆骏凯、周博宇"
-          }
-        ],
-      ],
+      summaryArray: [],
       loading: false,
       prompt: {
         query: null,
@@ -184,15 +168,6 @@ export default {
         chatContainer.scrollTop = chatContainer.scrollHeight;
       });
     },
-    openLoadingDiv() {
-      this.$vs.loading({
-        container: '#load',
-        scale: 0.6
-      })
-    },
-    closeLoadingDiv() {
-      this.$vs.loading.close('#load')
-    }
   }
 }
 </script>
@@ -341,9 +316,4 @@ pre {
   color: gray;
 }
 
-.loadingShowBox {
-  width: 50px;
-  height: 50px;
-  background-color: #4CAF50;
-}
 </style>
