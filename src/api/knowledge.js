@@ -95,7 +95,7 @@ export function knowledgeMemberList(token) {
     })
 }
 
-export function knowledgeMemberRemove(token, ids) {
+export function knowledgeMemberRemove(token, kbId, ids) {
     return request({
         url: '/knowledge_base/members/remove',
         method: 'POST',
@@ -104,6 +104,7 @@ export function knowledgeMemberRemove(token, ids) {
             'Content-Type': 'application/json'
         },
         data: JSON.stringify({
+            "kbId": kbId,
             "ids": ids
         })
     })

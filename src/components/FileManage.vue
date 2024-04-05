@@ -42,7 +42,7 @@
 
     <div class="fileManageBottomContainer">
       <vs-chip style="font-size: 16px;margin-left: 20px;margin-right: 100px;">
-        知识库： {{ knowledgeId }}
+        知识库： {{ activeKnowledgeName }}
       </vs-chip>
       <div>
         <vs-button size="large" color="primary" type="flat" icon="window" @click="newDirDialogActivePrompt = true;">
@@ -113,20 +113,23 @@ export default {
       ],
       filePath: '/',
       deletingFileName: '',
-      uploadToKnowledgeActivePrompt: false
+      uploadToKnowledgeActivePrompt: false,
+      activeKnowledgeName: null
     }
   },
   computed: {},
   created() {
     let path = this.$route.path.split('/')
     this.knowledgeId = path[path.length - 1]
+    this.activeKnowledgeName = localStorage.getItem('activeKnowledgeName')
     this.$watch(
         () => this.$route.params,
         (toParams, preParams) => {
 
           console.log('pre:', preParams)
           this.knowledgeId = toParams.id
-          console.log('knowledgeId', this.knowledgeId)
+          this.activeKnowledgeName = localStorage.getItem('activeKnowledgeName')
+
           this.getFileList()
 
         }

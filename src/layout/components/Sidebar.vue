@@ -211,6 +211,7 @@ export default {
       switchToKnowledge(localStorage.getItem('token'), id, false).then((res) => {
         localStorage.setItem('sessionId', res.data.data.sessionId)
         localStorage.setItem('token', res.data.data.token)
+        localStorage.setItem('activeKnowledgeName', res.data.data.kbName)
         if (this.$route.path !== `/knowledge/${id}`) {
           this.$router.push(`/knowledge/${id}`)
         }
@@ -264,7 +265,7 @@ export default {
     },
     removePersonFromKnowledge() {
       let ids = this.manageGroupSelected.map(item => item.id)
-      knowledgeMemberRemove(localStorage.getItem('token'), ids).then((res) => {
+      knowledgeMemberRemove(localStorage.getItem('token'), this.manageGroupHandleId, ids).then((res) => {
         if (res.data.code === 200) {
           this.$vs.notify({
             color: 'danger',
@@ -282,6 +283,11 @@ export default {
         knowledgeGroupInvite(localStorage.getItem('token'), this.manageGroupHandleId, this.newKnowledgeMemberName).then((res) => {
           if (res.data.code === 200) {
             this.addMemberActivePrompt = false
+            this.$vs.notify({
+              color: 'success',
+              title: '成功',
+              text: '添加成员成功'
+            })
             this.getMemberList()
           }
         })
