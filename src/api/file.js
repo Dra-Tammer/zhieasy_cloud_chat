@@ -71,3 +71,17 @@ export function newDir(token, dirName) {
         })
     })
 }
+
+export function deleteDir(token, fileName) {
+    return request({
+        url: '/knowledge_base/delete/directory',
+        method: 'POST',
+        headers: {
+            'token': token,
+            'Content-Type': 'application/json'
+        },
+        data: JSON.stringify({
+            "name": fileName
+        })
+    })
+}

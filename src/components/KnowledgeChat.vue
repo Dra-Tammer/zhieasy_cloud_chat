@@ -27,14 +27,14 @@
               </div>
             </div>
           </div>
-          <div>
+          <div v-if="item.index === summaryArray.length - 1">
             <div class="dividerBox">
               <vs-divider position="left" color="#888">
                 <vs-icon icon="done_all" class="spanCite"></vs-icon>
                 <span style="color: #888888;">引用自</span>
               </vs-divider>
             </div>
-            <div class="citeContentBox" v-if="item.index === summaryArray.length - 1">
+            <div class="citeContentBox">
               <cite-file :summary="summaryArray[item.index]"></cite-file>
             </div>
           </div>
@@ -72,10 +72,15 @@ export default {
     return {
       knowledgeId: '',
       userInputMessage: '',
-      chatIds: [],
-      questionsArray: [],
-      responseArray: [],
-      summaryArray: [],
+      chatIds: [
+      ],
+      questionsArray: [
+      ],
+      responseArray: [
+      ],
+      summaryArray: [
+
+      ],
       loading: false,
       prompt: {
         query: null,

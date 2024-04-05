@@ -21,8 +21,9 @@
               <div class="fileName">{{ item.name }}</div>
             </div>
             <div class="fileListItemTopRightContainer">
-              <vs-icon v-if="!item.isDir" icon="download" style="cursor: pointer; color: #9f9f9f;"
-                       @click="handleDownload(item)"></vs-icon>
+              <vs-icon icon="delete" style="cursor: pointer; color: #9f9f9f;"
+                       @click.stop="deleteFile(item)"
+              ></vs-icon>
             </div>
           </div>
           <div class="fileListBottomContainer">
@@ -31,8 +32,8 @@
               <div class="fileCreateTime">{{ item.createTime }}</div>
             </div>
             <div class="fileListBottomRightContainer">
-              <vs-icon v-if="!item.isDir" icon="delete" style="cursor: pointer; color: #9f9f9f;"
-                       @click="deleteFile(item)"></vs-icon>
+              <vs-icon icon="download" style="cursor: pointer; color: #9f9f9f;" v-if="!item.isDir"
+                       @click="handleDownload(item)"></vs-icon>
             </div>
           </div>
         </div>
@@ -79,7 +80,7 @@
 <script>
 
 import {fileImgMap} from '@/utils/imgMap'
-import {downloadFile, fileList, newDir, uploadFile, deleteFile} from "@/api/file";
+import {downloadFile, fileList, newDir, uploadFile, deleteFile, deleteDir} from "@/api/file";
 
 export default {
   name: 'FileManage',
@@ -140,7 +141,10 @@ export default {
   },
   methods: {
     newDir() {
-      newDir(localStorage.getItem('token'), this.filePath + this.newDirName).then((res) => {
+      let dirStr = ''
+      if (this.filePath === '/') dirStr = this.filePath + this.newDirName
+      else dirStr = this.filePath + '/' + this.newDirName
+      newDir(localStorage.getItem('token'), dirStr).then((res) => {
         if (res.data.code === 200) {
           console.log(res.data)
           this.$vs.notify({
@@ -166,6 +170,7 @@ export default {
     },
     async handleDownload(item) {
       try {
+        this.$vs.loading()
         let fileName = this.filePath + item.name
 
         if (this.filePath === '/') fileName = this.filePath + item.name
@@ -192,28 +197,68 @@ export default {
           text: '文件下载成功'
         })
         document.body.removeChild(link);
-
-
+        this.$vs.loading.close()
       } catch (error) {
         console.error('下载文件时发生错误：', error);
+        this.$vs.notify({
+          color: 'warning',
+          title: '错误',
+          text: `${error}`
+        })
         // 处理错误情况，例如提示用户下载失败等
       }
     },
     deleteFile(item) {
-      this.deletingFileName = this.filePath + item.name
-      this.$vs.dialog({
-        accept: this.deleteKnowledgeAccept,
-        type: 'confirm',
-        color: 'danger',
-        title: `删除${item.name}`,
-        text: '请明确删除文件的后果，协作者们将不能再使用此文件！',
-        acceptText: '确定',
-        cancelText: '取消'
+      if (item.isDir) {
+        if (this.filePath === '/') this.deletingFileName = this.filePath + item.name
+        else this.deletingFileName = this.filePath + '/' + item.name
+        this.$vs.dialog({
+          accept: this.deleteDir,
+          type: 'confirm',
+          color: 'danger',
+          title: `删除${item.name}`,
+          text: '请明确删除文件夹的后果，其中的文件将会被一并删除！',
+          acceptText: '确定',
+          cancelText: '取消'
+        })
+      } else {
+        if (this.filePath === '/') this.deletingFileName = this.filePath + item.name
+        else this.deletingFileName = this.filePath + '/' + item.name
+        this.$vs.dialog({
+          accept: this.deleteKnowledgeAccept,
+          type: 'confirm',
+          color: 'danger',
+          title: `删除${item.name}`,
+          text: '请明确删除文件的后果，协作者们将无法使用！',
+          acceptText: '确定',
+          cancelText: '取消'
+        })
+      }
+    },
+    deleteDir() {
+      this.$vs.loading()
+      deleteDir(localStorage.getItem('token'), this.deletingFileName).then((res) => {
+        if (res.data.code === 200) {
+          this.$vs.notify({
+            color: 'danger',
+            title: '删除',
+            text: '文件夹删除成功'
+          })
+          this.getFileList()
+          this.$vs.loading.close()
+        } else {
+          this.$vs.notify({
+            color: 'warning',
+            title: '错误',
+            text: `${res.data.msg}`
+          })
+          this.$vs.loading.close()
+        }
       })
     },
     deleteKnowledgeAccept() {
+      this.$vs.loading()
       deleteFile(localStorage.getItem('token'), this.deletingFileName).then((res) => {
-        console.log(res)
         if (res.data.code === 200) {
           this.$vs.notify({
             color: 'danger',
@@ -221,15 +266,16 @@ export default {
             text: '文件删除成功'
           })
           this.getFileList()
+          this.$vs.loading.close()
         } else {
           this.$vs.notify({
             color: 'warning',
             title: '错误',
             text: `${res.data.msg}`
           })
+          this.$vs.loading.close()
         }
       })
-
     },
     enterDir(item) {
       if (item.isDir) {
@@ -250,6 +296,12 @@ export default {
       fileList(localStorage.getItem('token'), this.filePath).then((res) => {
         if (res.data.code === 200) {
           this.fileList = res.data.data
+        } else {
+          this.$vs.notify({
+            color: 'warning',
+            title: '错误',
+            text: `${res.data.msg}`
+          })
         }
       })
     },
@@ -274,7 +326,6 @@ export default {
       if (this.filePath === '/') pathStr = '/' + this.file.name
       else pathStr = this.filePath + '/' + this.file.name
       uploadFile(localStorage.getItem('token'), pathStr, this.file).then((res) => {
-        console.log(pathStr)
         if (res.data.code === 200) {
           this.$vs.notify({
             color: 'success',
@@ -284,6 +335,12 @@ export default {
           this.uploadToKnowledgeActivePrompt = false
           this.uploadSuccess = false
           this.getFileList()
+        } else {
+          this.$vs.notify({
+            color: 'warning',
+            title: '错误',
+            text: `${res.data.msg}`
+          })
         }
       })
     },

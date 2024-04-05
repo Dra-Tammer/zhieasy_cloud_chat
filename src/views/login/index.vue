@@ -43,7 +43,7 @@
 
 
 <script>
-import {userLogin,userRegister} from "@/api/user";
+import {userLogin, userRegister} from "@/api/user";
 
 export default {
   name: 'UserLogin',
@@ -73,10 +73,10 @@ export default {
       this.$vs.notify({title: '成功', text: '用户注册成功', position: 'top-center'})
     },
     login_reject_randomCenter() {
-      this.$vs.notify({title: '错误', text: '用户名或密码错误', position: 'top-center',color:"warning"})
+      this.$vs.notify({title: '错误', text: '用户名或密码错误', position: 'top-center', color: "warning"})
     },
     regist_reject_randomCenter() {
-      this.$vs.notify({title: '错误', text: '用户名或密码格式错误', position: 'top-center',color:"warning"})
+      this.$vs.notify({title: '错误', text: '用户名或密码格式错误', position: 'top-center', color: "warning"})
     },
     // 阻止按钮的默认行为
     getButtons(e) {
@@ -111,13 +111,17 @@ export default {
       let username = this.form.username;
       let password = this.form.password;
       userLogin(username, password).then((res) => {
-        console.log(res)
         if (res.data.code === 200) {
           localStorage.setItem('token', res.data.data.token);
-          localStorage.setItem('sessionId',res.data.data.sessionId)
+          localStorage.setItem('sessionId', res.data.data.sessionId)
           this.login_randomCenter();
           this.$router.push({path: '/chat'})
         } else {
+          this.$vs.notify({
+            color: 'warning',
+            title: '错误',
+            text: `${res.data.msg}`
+          })
           this.login_reject_randomCenter();
         }
       })
@@ -126,11 +130,16 @@ export default {
       let username = this.$data.form.username;
       let password = this.$data.form.password;
       userRegister(username, password).then((res) => {
-        if(res.data.code === 200) {
+        if (res.data.code === 200) {
           this.regist_randomCenter();
           window.location.reload();
         } else {
           this.regist_reject_randomCenter();
+          this.$vs.notify({
+            color: 'warning',
+            title: '错误',
+            text: `${res.data.msg}`
+          })
         }
       })
     },

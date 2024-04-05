@@ -16,6 +16,8 @@
                    @click="handleDownload(item.source)"></vs-icon>
         </div>
       </div>
+      <vs-divider position="left" color="#888" border-style="dashed" >
+      </vs-divider>
     </div>
   </div>
 </template>
@@ -48,7 +50,7 @@ export default {
     },
     async handleDownload(name) {
       try {
-
+        this.$vs.loading()
         // 在这里调用下载文件的函数
         const response = await downloadFile(localStorage.getItem('token'), name);
 
@@ -71,8 +73,7 @@ export default {
           text: '文件下载成功'
         })
         document.body.removeChild(link);
-
-
+        this.$vs.loading.close()
       } catch (error) {
         console.error('下载文件时发生错误：', error);
         // 处理错误情况，例如提示用户下载失败等

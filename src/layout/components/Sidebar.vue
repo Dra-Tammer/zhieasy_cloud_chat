@@ -46,8 +46,7 @@
       </div>
     </div>
     <div class="create_knowledge" @click="addKnowledgeActivePrompt = true">
-      <vs-icon icon="add" style="margin-right: 10px;"></vs-icon>
-      <div>添加知识库</div>
+      <vs-button style="width: 100%;" type="gradient" icon="add">添加知识库</vs-button>
     </div>
     <vs-popup classContent="addKnowledgePopUP" title="新建知识库" :active.sync="addKnowledgeActivePrompt">
       <div class="addKnowledgePopUP">
@@ -254,7 +253,7 @@ export default {
       this.addKnowledgeSelect = 0
     },
     getMemberList() {
-      knowledgeMemberList(localStorage.getItem('token'),this.manageGroupHandleId).then((res) => {
+      knowledgeMemberList(localStorage.getItem('token'), this.manageGroupHandleId).then((res) => {
         this.manageGroupUserList = res.data.data.map(member => {
           return {
             id: member.id,
@@ -329,7 +328,7 @@ export default {
   padding: 5px;
   border-radius: 4px;
   cursor: pointer;
-  box-shadow: 0 0 0 1px #dcdfe6;
+  box-shadow: 0px 0px 1px 0px #0000001a, 0px 0.5px 5px 0px #0000001a;
 }
 
 .primary_chat:hover:not(.active) {
@@ -367,8 +366,8 @@ export default {
   padding: 6px;
   border-radius: 4px;
   cursor: pointer;
-  box-shadow: 0 0 0 1px #dcdfe6;
   margin-bottom: 10px;
+  box-shadow: 0px 0px 1px 0px #0000001a, 0px 0.5px 5px 0px #0000001a;
 }
 
 .knowledge_list_item:hover:not(.active) {
@@ -417,15 +416,14 @@ export default {
 }
 
 .create_knowledge {
-  padding-left: 8px;
   position: absolute;
   bottom: 0;
   width: 100%;
   height: 6%;
   border-top: 1px solid #c7c7c7;
   display: flex;
-  padding-top: 10px;
   cursor: pointer;
+  background-color: rgb(31, 116, 225);
 }
 
 .addKnowledgePopUP {

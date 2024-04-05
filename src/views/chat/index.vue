@@ -110,7 +110,13 @@ export default {
         },
         body: JSON.stringify(this.prompt),
       });
-      if (!res.body) console.log("返回的结果为空")
+      if (!res.body) {
+        this.$vs.notify({
+          color: 'warning',
+          title: '错误',
+          text: '网络问题'
+        })
+      }
       const reader = res.body.pipeThrough(new TextDecoderStream()).getReader();
       let is_true = true
       this.messages.push({text: '', type: 'received'})

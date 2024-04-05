@@ -1,10 +1,10 @@
 <template>
   <div class="navbar">
-    <div class="left_item_container">
+    <div class="left_item_container" @click="navigateToChat">
       <div class="navbar_left_icon">
-        <vs-icon icon="menu"></vs-icon>
+        <vs-icon icon="home"></vs-icon>
       </div>
-      <div class="navbar_title" @click="navigateToChat">ZhieasyCloudChat</div>
+      <div class="navbar_title">ZhieasyCloudChat</div>
     </div>
     <div class="right_item_container">
       <vs-dropdown>
@@ -69,6 +69,7 @@ export default {
   width: 60px;
   text-align: center;
   height: 80%;
+  line-height: 0px;
   border-right: 1px solid #c7c7c7;
 }
 
