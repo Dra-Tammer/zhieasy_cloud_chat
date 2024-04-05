@@ -353,6 +353,9 @@ export default {
               text: `${res.data.msg}`,
               position: 'top-center'
             })
+            this.newKnowledgeMemberName = ''
+            this.addMemberActivePrompt = false
+            this.getMemberList()
           }
         })
       }

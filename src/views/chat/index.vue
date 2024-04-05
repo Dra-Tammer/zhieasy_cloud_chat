@@ -93,7 +93,7 @@ export default {
       })
       if (this.userMessage.trim() === '') return;
       this.messages.push({text: this.userMessage, type: 'sent'});
-      let URL = 'http://nmscut.natappfree.cc/chat'
+      let URL = 'http://8.146.199.214:8080/chat'
       // if (this.chat_mode_select) {
       //   URL = 'http://127.0.0.1:4523/m1/4197185-0-default/knowledge_base/chat'
       // }

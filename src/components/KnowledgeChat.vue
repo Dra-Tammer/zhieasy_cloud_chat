@@ -123,7 +123,7 @@ export default {
       this.chatIds.push({index: chatIdsIndex, createTime: getTimeNow()})
       this.questionsArray.push(this.userInputMessage);
       // let URL = 'http://127.0.0.1:11434/api/chat'
-      let URL = 'http://nmscut.natappfree.cc/knowledge_base/chat'
+      let URL = 'http://8.146.199.214:8080/knowledge_base/chat'
       this.prompt.query = this.userInputMessage
       this.prompt.session_id = localStorage.getItem('sessionId')
       this.userInputMessage = ' '
