@@ -145,7 +145,7 @@ export default {
       //   if (count === 1) typewriter.start()
       //   this.$nextTick(() => {
       //     this.scrollToBottom();
-      //   });
+      //   });`
       //   var {value, done} = await reader.read()
       //   if (done) break;
       //   // const jsonArray = parsePack(value)

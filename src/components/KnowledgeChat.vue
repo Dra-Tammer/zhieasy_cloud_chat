@@ -1,19 +1,18 @@
 <template>
   <div class="KnowledgeChatContainer">
     <div class="knowledgeTopEmptyBox"></div>
-    <div class="charBoxContainer">
+    <div class="charBoxContainer" id="chat-container" ref="chatContainer">
 
-
-      <div class="chatBox">
+      <div class="chatBox" v-for="(item,index) in chatIds" :key="index">
         <div class="chatBoxTop">
           <div class="chatBoxTopLeftContainer">
             <vs-avatar/>
           </div>
           <div class="chatBoxTopRightContainer">
             <div class="chatQuestions">
-              写出这份文件摘要这份文件的摘要这份文件的摘要这份文件的摘要这份文件的摘要这份文这份文件的摘要件的摘要这份文件的摘要这份文件的摘要件的摘要
+              {{ questionsArray[item.index] }}
             </div>
-            <div class="chatBottomDetailTime">2024-03-24 21:41:30</div>
+            <div class="chatBottomDetailTime">{{ item.createTime }}</div>
           </div>
         </div>
         <div class="chatBoxResponse">
@@ -23,67 +22,38 @@
             </div>
             <div class="chatBoxResponseRightContainer">
               <div class="chatResponseFromKnowledge">
-                中国大学生计算机设计大赛的参赛要求包括：参赛对象为全国高等院校在籍的本科生，也包括港、澳、台学生和留学生[1a]；指导教师应是在高校担任本科生教学任务的教师[2]；大赛作品须符合相关章程要求[1b]；作品内容分为软件应用与开发、微课与教学辅助、物联网应用、大数据应用、人工智能应用等类别[16]。
+                <pre>{{ responseArray[item.index] }}</pre>
               </div>
             </div>
           </div>
-          <div class="dividerBox">
-            <vs-divider position="left" color="#888">
-              <vs-icon icon="done_all" class="spanCite"></vs-icon>
-              <span style="color: #888888;">引用自</span>
-            </vs-divider>
-          </div>
-          <div class="citeContentBox">
-            <cite-file :summary="summary[0]"></cite-file>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="chatBox">
-        <div class="chatBoxTop">
-          <div class="chatBoxTopLeftContainer">
-            <vs-avatar/>
-          </div>
-          <div class="chatBoxTopRightContainer">
-            <div class="chatQuestions">
-              写出这份文件摘要这份文件的摘要这份文件的摘要这份文件的摘要这份文件的摘要这份文这份文件的摘要件的摘要这份文件的摘要这份文件的摘要件的摘要
+          <div v-if="item.index + 1 === summaryArray.length">
+            <div class="dividerBox">
+              <vs-divider position="left" color="#888">
+                <vs-icon icon="done_all" class="spanCite"></vs-icon>
+                <span style="color: #888888;">引用自</span>
+                {{ item.index }}
+              </vs-divider>
             </div>
-            <div class="chatBottomDetailTime">2024-03-24 21:41:30</div>
-          </div>
-        </div>
-        <div class="chatBoxResponse">
-          <div class="streamResponse">
-            <div class="chatBoxResponseLeftContainer">
-              <vs-avatar text="AI" color="lightgreen"></vs-avatar>
-            </div>
-            <div class="chatBoxResponseRightContainer">
-              <div class="chatResponseFromKnowledge">
-                中国大学生计算机设计大赛的参赛要求包括：参赛对象为全国高等院校在籍的本科生，也包括港、澳、台学生和留学生[1a]；指导教师应是在高校担任本科生教学任务的教师[2]；大赛作品须符合相关章程要求[1b]；作品内容分为软件应用与开发、微课与教学辅助、物联网应用、大数据应用、人工智能应用等类别[16]。
-              </div>
+            <div class="citeContentBox">
+              <cite-file :summary="summaryArray[item.index]"></cite-file>
             </div>
           </div>
-          <div class="dividerBox">
-            <vs-divider position="left" color="#888">
-              <vs-icon icon="done_all" class="spanCite"></vs-icon>
-              <span style="color: #888888;">引用自</span>
-            </vs-divider>
-          </div>
-          <div class="citeContentBox">
-            <cite-file :summary="summary[0]"></cite-file>
-          </div>
         </div>
-
       </div>
 
 
     </div>
     <div class="bottomInputBox">
       <div class="contentBox">
-        <vs-input size="large" style="width: 86%;margin-left: 20px;" placeholder="type your question"
-                  v-model="userInputMessage"/>
-        <vs-button color="primary" icon="send" style="margin-left: 20px;margin-top: 2px;"></vs-button>
+        <vs-input size="large" style="width: 86%;margin-left: 20px;" :disabled="loading"
+                  placeholder="type your question"
+                  v-model="userInputMessage" @keyup.enter="sendQuestion"/>
+        <vs-button color="primary" icon="send" style="margin-left: 20px;margin-top: 2px;" @click="sendQuestion"
+                   :disabled="loading"></vs-button>
       </div>
+    </div>
+    <div style="display: none;">
+      {{ adjunct }}
     </div>
   </div>
 </template>
@@ -91,6 +61,8 @@
 
 <script>
 import CiteFile from "@/components/citeFile.vue";
+import {createTypewriter} from "@/utils/typeWriter";
+import {getTimeNow} from "@/utils/getTimeNow";
 
 export default {
   name: 'KnowledgeChat',
@@ -98,8 +70,17 @@ export default {
   data() {
     return {
       knowledgeId: '',
-      userInputMessage: '',
-      summary: [
+      userInputMessage: 'dfsfsdfsf',
+      chatIds: [
+        {index: 0, createTime: '2027-03-24 21:41:30'},
+      ],
+      questionsArray: [
+        '写出这份文件摘要这份文件的摘要这份文件的摘要这份文件的摘要这份文件的摘要这份文这份文件的摘要件的摘要这份文件的摘要这份文件的摘要件的摘要',
+      ],
+      responseArray: [
+        '中国大学生计算机设计大赛的参赛要求包括：参赛对象为全国高等院校在籍的本科生，也包括港、澳、台学生和留学生[1a]；指导教师应是在高校担任本科生教学任务的教师[2]；大赛作品须符合相关章程要求[1b]；作品内容分为软件应用与开发、微课与教学辅助、物联网应用、大数据应用、人工智能应用等类别[16]。'
+      ],
+      summaryArray: [
         [
           {
             "source": "3/开发进度日报-2024.1.3.doc",
@@ -110,17 +91,22 @@ export default {
             "content": "提交《项目概要设计》文档 – 周建慧\n\n状态\n\n昨日的实际工作进度与计划相比，推迟了。如果与计划不一致，小组部分人员昨日有事情，较忙，今日加急修改提交。\n\n今天的工作计划\n\n提交《项目原型UI设计》文档 – 王娜\n\n提交《项目测试计划》文档 – 王航\n\n组织小组成员完成相应功能 – 余家春、陆骏凯、周博宇\n\n组织小组成员完成相应功能 - 余家春、陆骏凯、周博宇\n\nGIT提交源程序代码 - 余家春、陆骏凯、周博宇"
           }
         ],
-        [
+      ],
+      loading: false,
+      prompt: {
+        query: null,
+        sessionId: 0
+      },
+      aiPrompt: {
+        "model": "qwen:4b",
+        "messages": [
           {
-            "source": "3/开发进度日报-2024.1.3.doc",
-            "content": "开发进度日报\n\n工程进度与状态\n\n进度\n\n提交《项目开发计划》文档 – 陆骏凯\n\n提交《项目可行性研究报告》文档 – 陆骏凯\n\n提交《项目需求规格说明》文档 – 周建慧\n\n提交《项目数据库设计》文档 – 周建慧\n\n提交《项目概要设计》文档 – 周建慧\n\n状态\n\n昨日的实际工作进度与计划相比，推迟了。如果与计划不一致，小组部分人员昨日有事情，较忙，今日加急修改提交。\n\n今天的工作计划\n\n提交《项目原型UI设计》文档 – 王娜\n\n提交《项目测试计划》文档 – 王航"
-          },
-          {
-            "source": "3/开发进度日报-2024.1.3.doc",
-            "content": "提交《项目概要设计》文档 – 周建慧\n\n状态\n\n昨日的实际工作进度与计划相比，推迟了。如果与计划不一致，小组部分人员昨日有事情，较忙，今日加急修改提交。\n\n今天的工作计划\n\n提交《项目原型UI设计》文档 – 王娜\n\n提交《项目测试计划》文档 – 王航\n\n组织小组成员完成相应功能 – 余家春、陆骏凯、周博宇\n\n组织小组成员完成相应功能 - 余家春、陆骏凯、周博宇\n\nGIT提交源程序代码 - 余家春、陆骏凯、周博宇"
+            "role": "user",
+            "content": '你是谁'
           }
         ]
-      ],
+      },
+      adjunct: ''
     }
   },
   created() {
@@ -134,7 +120,64 @@ export default {
         }
     )
   },
-  methods: {}
+  mounted() {
+  },
+  methods: {
+    async sendQuestion() {
+      this.loading = true
+      const typewriter = createTypewriter((str) => {
+        this.responseArray[this.responseArray.length - 1] += str || ''
+        this.adjunct += str || ''
+        this.adjunct = ''
+      })
+      if (this.userInputMessage.trim() === '') {
+        this.loading = false
+        return;
+      }
+      let chatIdsIndex = this.chatIds.length
+      this.chatIds.push({index: chatIdsIndex, createTime: getTimeNow()})
+      this.questionsArray.push(this.userInputMessage);
+      let URL = 'http://127.0.0.1:11434/api/chat'
+      this.prompt.query = this.userInputMessage
+      this.prompt.sessionId = localStorage.getItem('sessionId')
+      this.userInputMessage = ' '
+
+      const res = await fetch(URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          // "token": localStorage.getItem('token')
+        },
+        body: JSON.stringify(this.aiPrompt),
+      });
+      if (!res.body) console.log("返回的结果为空")
+      const reader = res.body.pipeThrough(new TextDecoderStream()).getReader();
+      let is_true = true
+      this.responseArray.push('')
+      let count = 0
+      while (is_true) {
+        count++
+        if (count === 1) typewriter.start()
+        this.$nextTick(() => {
+          this.scrollToBottom();
+        });
+        var {value, done} = await reader.read()
+        if (done) break;
+        let resData = JSON.parse(value)
+        // if (!resData.isSummary) typewriter.add(JSON.parse(value).data.reply)
+        // else if (resData.isSummary) this.summaryArray.push(resData.data.summary)
+        typewriter.add(resData.message.content)
+      }
+      typewriter.done()
+      this.loading = false
+    },
+    scrollToBottom() {
+      this.$nextTick(() => {
+        const chatContainer = this.$refs.chatContainer;
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      });
+    },
+  }
 }
 </script>
 
@@ -262,5 +305,15 @@ export default {
   width: 40%;
   display: flex;
   justify-content: space-between;
+}
+
+pre {
+  font-family: PingFang, Noto Sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+  white-space: break-spaces;
+  line-height: 30px;
 }
 </style>
