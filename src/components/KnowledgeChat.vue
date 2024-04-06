@@ -64,7 +64,6 @@ import CiteFile from "@/components/citeFile.vue";
 import {createTypewriter} from "@/utils/typeWriter";
 import {getTimeNow} from "@/utils/getTimeNow";
 import {marked} from "marked";
-// import { marked } from 'marked';
 export default {
   name: 'KnowledgeChat',
   components: {CiteFile},
@@ -166,11 +165,7 @@ export default {
           this.questionsArray.pop()
           this.chatIds.pop()
         }
-
-        // typewriter.add(resData.message.content)
       }
-
-
       typewriter.done()
       this.loading = false
     },
