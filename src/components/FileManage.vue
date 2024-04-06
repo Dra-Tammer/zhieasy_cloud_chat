@@ -6,7 +6,7 @@
                @click="goBackward"></vs-icon>
       <div class="breadCrumbContainer">
         <vs-chip style="font-size: 16px;color: gray;" v-if="filePath.length !== 0">
-          {{ this.filePath }}
+          <span style="font-size: 14px;margin-right: 6px;">此知识库</span>{{ this.filePath }}
         </vs-chip>
       </div>
     </div>
@@ -467,5 +467,9 @@ export default {
   margin-bottom: 10px;
   font-size: 14px;
   color: gray;
+}
+
+.breadCrumbContainer {
+  margin-left: 10px;
 }
 </style>
