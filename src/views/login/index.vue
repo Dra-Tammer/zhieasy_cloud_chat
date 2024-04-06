@@ -7,7 +7,7 @@
           <h2 class="form_title title">登入账号</h2>
           <span class="form_span">请使用用户名和密码登录</span>
           <input type="text" class="form_input" placeholder="Username" v-model="form.username">
-          <input type="text" class="form_input" placeholder="Password" v-model="form.password">
+          <input type="password" class="form_input" placeholder="Password" v-model="form.password">
           <button class="form_button button submit" @click="acceptLogin()">登录</button>
         </form>
       </div>
@@ -17,7 +17,7 @@
           <h2 class="form_title title">创建账号</h2>
           <span class="form_span">请使用用户名和密码登录</span>
           <input type="text" class="form_input" placeholder="Username" v-model="form.username">
-          <input type="text" class="form_input" placeholder="Password" v-model="form.password">
+          <input type="password" class="form_input" placeholder="Password" v-model="form.password">
           <button class="form_button button submit" @click="acceptRegister()">注册</button>
         </form>
       </div>
@@ -26,8 +26,10 @@
         <div class="switch_circle"></div>
         <div class="switch_circle switch_circle-t"></div>
         <div class="switch_container" id="switch-c1">
-          <h2 class="switch_title title" style="letter-spacing: 0;">致易-团队AI助手</h2>
-          <p class="switch_description description">使用全部功能需要登录账号</p>
+          <h2 class="switch_title title" style="letter-spacing: 0;">致易</h2>
+          <p class="switch_description description">提供知识理解和搜索能力的知识库问答服务</p>
+          <p class="switch_description description">智能AI对话与传统知识库耦合</p>
+          <p class="switch_description description">对象化文件存储，网盘功能</p>
           <button class="switch_button button switch-btn" @click="changeForm">注册</button>
         </div>
 
@@ -50,8 +52,8 @@ export default {
   data() {
     return {
       form: {
-        username: 'userygwh',
-        password: '200306'
+        username: '',
+        password: ''
       },
       login_sign: false,
       regist_sign: false,
@@ -294,6 +296,7 @@ export default {
   letter-spacing: 0.25px;
   text-align: center;
   line-height: 1.6;
+  margin-bottom: 10px;
 }
 
 .button {
