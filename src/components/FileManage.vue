@@ -90,28 +90,7 @@ export default {
       uploadSuccess: false,
       newDirDialogActivePrompt: false,
       newDirName: '',
-      fileList: [
-        {
-          name: 'chat_doc_user_guide.png',
-          isDir: false,
-          createTime: '2024-03-24'
-        },
-        {
-          name: 'chat_doc_user_guide.jpg',
-          isDir: false,
-          createTime: '2024-03-24'
-        },
-        {
-          name: 'chat_doc_user_guide.doc',
-          isDir: false,
-          createTime: '2024-03-24'
-        },
-        {
-          name: 'chat_doc_user_guide.pdf',
-          isDir: false,
-          createTime: '2024-03-24'
-        }
-      ],
+      fileList: [],
       filePath: '/',
       deletingFileName: '',
       uploadToKnowledgeActivePrompt: false,
@@ -150,7 +129,7 @@ export default {
             color: 'success',
             title: '新建文件夹成功',
             text: `成功新建：${this.newDirName}`,
-            position:'top-center'
+            position: 'top-center'
           })
           this.getFileList()
           this.newDirName = ''
@@ -159,7 +138,7 @@ export default {
             color: 'warning',
             title: '错误',
             text: `${res.data.msg}`,
-            position:'top-center'
+            position: 'top-center'
           })
           this.newDirName = ''
         }
@@ -167,7 +146,7 @@ export default {
     },
     successUpload() {
       this.uploadToKnowledgeActivePrompt = false
-      this.$vs.notify({color: 'success', title: 'Upload Success', text: '上传成功',position:'top-center'})
+      this.$vs.notify({color: 'success', title: 'Upload Success', text: '上传成功', position: 'top-center'})
     },
     async handleDownload(item) {
       try {
@@ -196,7 +175,7 @@ export default {
           color: 'success',
           title: '成功',
           text: '文件下载成功',
-          position:'top-center'
+          position: 'top-center'
         })
         document.body.removeChild(link);
         this.$vs.loading.close()
@@ -206,7 +185,7 @@ export default {
           color: 'warning',
           title: '错误',
           text: `${error}`,
-          position:'top-center'
+          position: 'top-center'
         })
         // 处理错误情况，例如提示用户下载失败等
       }
@@ -246,7 +225,7 @@ export default {
             color: 'danger',
             title: '删除',
             text: '文件夹删除成功',
-            position:'top-center'
+            position: 'top-center'
           })
           this.getFileList()
           this.$vs.loading.close()
@@ -255,7 +234,7 @@ export default {
             color: 'warning',
             title: '错误',
             text: `${res.data.msg}`,
-            position:'top-center'
+            position: 'top-center'
           })
           this.$vs.loading.close()
         }
@@ -269,7 +248,7 @@ export default {
             color: 'danger',
             title: '删除',
             text: '文件删除成功',
-            position:'top-center'
+            position: 'top-center'
           })
           this.getFileList()
           this.$vs.loading.close()
@@ -278,7 +257,7 @@ export default {
             color: 'warning',
             title: '错误',
             text: `${res.data.msg}`,
-            position:'top-center'
+            position: 'top-center'
           })
           this.$vs.loading.close()
         }
@@ -308,7 +287,7 @@ export default {
             color: 'warning',
             title: '错误',
             text: `${res.data.msg}`,
-            position:'top-center'
+            position: 'top-center'
           })
         }
       })
@@ -339,7 +318,7 @@ export default {
             color: 'success',
             title: '文件上传成功',
             text: `成功上传：${this.file.name}`,
-            position:'top-center'
+            position: 'top-center'
           })
           this.uploadToKnowledgeActivePrompt = false
           this.uploadSuccess = false
@@ -349,8 +328,9 @@ export default {
             color: 'warning',
             title: '错误',
             text: `${res.data.msg}`,
-            position:'top-center'
+            position: 'top-center'
           })
+          this.file.name = ''
         }
       })
     },

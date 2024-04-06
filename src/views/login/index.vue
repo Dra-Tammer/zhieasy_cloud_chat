@@ -26,15 +26,15 @@
         <div class="switch_circle"></div>
         <div class="switch_circle switch_circle-t"></div>
         <div class="switch_container" id="switch-c1">
-          <h2 class="switch_title title" style="letter-spacing: 0;">Welcome to Zhieasy!</h2>
-          <p class="switch_description description">Start to communicate with Zhieasy</p>
-          <button class="switch_button button switch-btn" @click="changeForm">SIGN UP</button>
+          <h2 class="switch_title title" style="letter-spacing: 0;">致易-团队AI助手</h2>
+          <p class="switch_description description">使用全部功能需要登录账号</p>
+          <button class="switch_button button switch-btn" @click="changeForm">注册</button>
         </div>
 
         <div class="switch_container is-hidden" id="switch-c2">
-          <h2 class="switch_title title" style="letter-spacing: 0;">Join Zhieasy</h2>
-          <p class="switch_description description">Already have an account？</p>
-          <button class="switch_button button switch-btn" @click="changeForm">SIGN IN</button>
+          <h2 class="switch_title title" style="letter-spacing: 0;">注册账号</h2>
+          <p class="switch_description description">已经创建账号？</p>
+          <button class="switch_button button switch-btn" @click="changeForm">登录</button>
         </div>
       </div>
     </div>

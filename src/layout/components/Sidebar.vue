@@ -2,9 +2,8 @@
   <div class="side_bar">
     <div class="view_content">
       <div class="primary_chat" :class="{active:$route.path === '/chat'}" @click="switchToPrimaryChat">
-        <vs-avatar text="AI" color="lightgreen"></vs-avatar>
-        普通 AI 对话
-        <vs-icon icon="ios_share" style="margin-left: 20px;margin-right:6px;color: gray"></vs-icon>
+        <vs-avatar text="AI"></vs-avatar>
+        <div style="display: flex;justify-content: center;width: 70%;">个人 AI 助手</div>
       </div>
       <vs-divider position="left">
         知识库
@@ -19,7 +18,8 @@
               <div class="knowledge_base_title">{{ item.space_name }}</div>
             </div>
             <div class="knowledge_limits">
-              <vs-chip transparent color="primary">
+              <vs-chip transparent color="primary"
+                       :style="{'color': $route.path === `/knowledge/${item.id}` ? 'white' : ''}">
                 {{ item.rule === 'GROUP' ? '协作' : '私有' }}
               </vs-chip>
             </div>
@@ -27,16 +27,18 @@
           <div class="knowledge_list_item_bottom_container">
             <div class="knowledge_list_item_bottom_group_count">
               <vs-icon icon="browse_gallery"
-                       style="color: gray;font-size: 16px;margin-right: 10px;margin-left: 6px;"></vs-icon>
-              {{ item.update_time }}
+                       style="color:gray;font-size: 16px;margin-right: 10px;margin-left: 6px;"
+                       :style="{'color': $route.path === `/knowledge/${item.id}` ? 'white' : ''}"
+                       :class="{icon_active:$route.path === `/knowledge/${item.id}`}"></vs-icon>
+              <span :class="{icon_active:$route.path === `/knowledge/${item.id}`}">{{ item.update_time }}</span>
             </div>
             <div class="knowledge_list_item_bottom_button_container" v-if="item.space_name!=='个人空间'">
               <vs-button size="small" line-position="top" line-origin="right" color="dark" type="line"
-                         style="width: 50%;"
+                         style="width: 50%;" :style="{'color': $route.path === `/knowledge/${item.id}` ? 'white' : ''}"
                          @click.stop="deleteKnowledge(item)">删除
               </vs-button>
               <vs-button size="small" line-position="top" line-origin="left" color="dark" type="line"
-                         style="width: 50%;"
+                         style="width: 50%;" :style="{'color': $route.path === `/knowledge/${item.id}` ? 'white' : ''}"
                          @click.stop="manageGroup(item.id)">管理成员
               </vs-button>
             </div>
@@ -130,8 +132,7 @@ export default {
   name: 'SideBar',
   data() {
     return {
-      knowledgeList: [
-        {id: 1, space_name: '个人知识库', rule: 'PRIVATE', update_time: '2024-03-31 11:18:46'},
+      knowledgeList: [{id: 1, space_name: '个人知识库', rule: 'PRIVATE', update_time: '2024-03-31 11:18:46'},
         {id: 2, space_name: 'marks的知识库', rule: 'GROUP', update_time: '2024-03-31 11:18:46'},
         {id: 3, space_name: 'mike的知识库', rule: 'GROUP', update_time: '2024-03-31 11:18:46'},
         {id: 4, space_name: 'java知识库', rule: 'GROUP', update_time: '2024-03-31 11:18:46'},
@@ -319,7 +320,8 @@ export default {
           this.$vs.notify({
             color: 'danger',
             title: '移出成员',
-            text: '已经将成员移出知识库'
+            text: '已经将成员移出知识库',
+            position: 'top-center'
           })
           this.manageGroupSelected = []
           this.getMemberList()
@@ -390,7 +392,6 @@ export default {
   margin-top: 2px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   height: 54px;
   width: 98%;
   padding: 5px;
@@ -405,8 +406,9 @@ export default {
 }
 
 .active {
-  background: rgba(107, 108, 111, .1490196078);
-  box-shadow: 0 0 0 1px rgba(107, 108, 111, .1490196078);
+  background: rgb(31, 116, 255);
+  color: white;
+  box-shadow: rgba(31, 116, 255, 0.4) 0px 3px 8px;
 }
 
 .icon {
@@ -414,7 +416,7 @@ export default {
 }
 
 .icon_active {
-  color: rgb(23, 201, 100);
+  color: white;
 }
 
 .knowledge_base_chat {
@@ -475,8 +477,8 @@ export default {
 .knowledge_list_item_bottom_group_count {
   display: flex;
   align-items: center;
-  color: gray;
   font-size: 14px;
+  color: gray;
   margin-bottom: 6px;
 }
 

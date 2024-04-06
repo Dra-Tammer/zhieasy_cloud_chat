@@ -78,7 +78,7 @@ export default {
   text-align: center;
   height: 80%;
   line-height: 0px;
-  border-right: 1px solid #c7c7c7;
+  border-right: 1px solid #000000;
 }
 
 .navbar_title {

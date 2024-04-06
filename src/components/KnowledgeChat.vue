@@ -113,7 +113,7 @@ export default {
       let chatIdsIndex = this.chatIds.length
       this.chatIds.push({index: chatIdsIndex, createTime: getTimeNow()})
       this.questionsArray.push(this.userInputMessage);
-      let URL = process.env.VUE_APP_BASE_URL
+      let URL = process.env.VUE_APP_BASE_URL + '/knowledge_base/chat'
       this.prompt.query = this.userInputMessage
       this.prompt.session_id = localStorage.getItem('sessionId')
       this.userInputMessage = ' '
@@ -131,7 +131,7 @@ export default {
           color: 'warning',
           title: '错误',
           text: '网络错误',
-          position:'top-center'
+          position: 'top-center'
         })
       }
       const reader = res.body.pipeThrough(new TextDecoderStream()).getReader();
@@ -157,7 +157,7 @@ export default {
             color: 'warning',
             title: '错误',
             text: `${resData.msg}`,
-            position:'top-center'
+            position: 'top-center'
           })
           this.responseArray.pop()
           this.questionsArray.pop()

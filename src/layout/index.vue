@@ -7,9 +7,7 @@
       <side-bar></side-bar>
     </div>
     <div class="app_main_container">
-      <transition name="slide-fade" :key="key">
-        <router-view/>
-      </transition>
+      <router-view/>
     </div>
   </div>
 </template>
@@ -21,15 +19,14 @@ import NavBar from "@/layout/components/Navbar.vue";
 export default {
   name: 'AppLayout',
   components: {NavBar, SideBar},
-  computed: {
-    key() {
-      return this.$route.path
-    }
-  },
   data() {
     return {}
   },
   mounted() {
+    this.$vs.loading({background: 'rgba(255, 255, 255, 0.8)'})
+    setTimeout(() => {
+      this.$vs.loading.close()
+    }, 700)
   },
   methods: {}
 }
@@ -58,30 +55,11 @@ export default {
   grid-column: 1 / 2;
   border-right: 1px solid #c7c7c7;
   background-color: #ffffff;
+
 }
 
 .app_main_container {
   grid-row: 2 / -1;
   grid-column: 2 / -1;
 }
-
-.slide-fade-enter-active {
-  transition: all .6s ease
-}
-
-.slide-fade-leave-active {
-  transition: all .6s ease
-}
-
-.slide-fade-leave {
-  transform: translateX(-1920px);
-  opacity: 0.5;
-}
-
-.slide-fade-enter {
-  transform: translateX(1920px);
-  opacity: 0.5;
-}
-
-
 </style>

@@ -1,13 +1,14 @@
 <template>
   <div class="main_container">
     <div id="chat-container" ref="chatContainer">
+      <div class="adContainer" v-if="messages.length === 0"></div>
       <div :class="[msg.type === 'sent' ? 'message sent' : 'message received']" v-for="(msg, index) in messages"
            :key="index">
         <template v-if="loading && index === messages.length">
           <span class="flash_cursor"></span>
         </template>
         <template v-else>
-          <pre>{{ msg.text }}</pre>
+         <pre>{{ msg.text }}</pre>
         </template>
       </div>
     </div>
@@ -53,7 +54,7 @@ export default {
     return {
       userMessage: '',
       messages: [
-        {text: '有什么可以帮您', type: 'received'},
+
       ],
       loading: false,
       // prompt: {
@@ -93,7 +94,7 @@ export default {
       })
       if (this.userMessage.trim() === '') return;
       this.messages.push({text: this.userMessage, type: 'sent'});
-      let URL = process.env.VUE_APP_BASE_URL
+      let URL = process.env.VUE_APP_BASE_URL +'/chat'
       // if (this.chat_mode_select) {
       //   URL = 'http://127.0.0.1:4523/m1/4197185-0-default/knowledge_base/chat'
       // }
@@ -115,7 +116,7 @@ export default {
           color: 'warning',
           title: '错误',
           text: '网络问题',
-          position:'top-center'
+          position: 'top-center'
         })
       }
       const reader = res.body.pipeThrough(new TextDecoderStream()).getReader();
@@ -209,7 +210,7 @@ export default {
 .sent {
   background-color: rgb(99, 159, 255);
   align-self: flex-end;
-  color: black;
+  color: white;
 }
 
 .received {
@@ -286,5 +287,12 @@ pre {
   word-wrap: break-word;
   white-space: break-spaces;
   line-height: 30px;
+}
+
+.adContainer {
+  margin: auto;
+  width: 100%;
+  height: 100%;
+  background-color: #4CAF50;
 }
 </style>
