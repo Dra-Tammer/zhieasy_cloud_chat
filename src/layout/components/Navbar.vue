@@ -12,9 +12,6 @@
         <!--        <vs-avatar color="#26302a" text-color="rgb(246, 190, 16)"/>-->
         <vs-avatar color="rgb(31, 116, 255)" text-color="white"/>
         <vs-dropdown-menu>
-          <vs-dropdown-item style="width: 60px;" @click="demo">
-            测试
-          </vs-dropdown-item>
           <vs-dropdown-item style="width: 60px;" @click="logout">
             退出
           </vs-dropdown-item>
@@ -48,10 +45,6 @@ export default {
     },
     acceptLogout() {
       this.$router.push({path: '/login'})
-    },
-    demo() {
-      const baseUrl = process.env.VUE_APP_BASE_URL
-      console.log(baseUrl)
     }
   }
 }
