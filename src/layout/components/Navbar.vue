@@ -35,6 +35,7 @@ export default {
       }
     },
     logout() {
+      localStorage.removeItem('token')
       this.$vs.dialog({
         color: 'primary',
         title: 'Logout',

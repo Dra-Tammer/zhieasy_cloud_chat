@@ -49,5 +49,12 @@ router.beforeEach((to, from, next) => {
     } else {
         next();
     }
+    if (localStorage.getItem('token')) {
+        next()
+    } else {
+        next({
+            path: '/login'
+        })
+    }
 });
 export default router
