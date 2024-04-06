@@ -23,7 +23,8 @@
             </div>
             <div class="chatBoxResponseRightContainer">
               <div class="chatResponseFromKnowledge">
-                <pre>{{ responseArray[item.index] }}</pre>
+<!--                <div id="markdown">{{ responseArray[item.index] }}</div>-->
+                <div id="markdown"></div>
               </div>
             </div>
           </div>
@@ -58,13 +59,12 @@
     </div>
   </div>
 </template>
-
-
 <script>
 import CiteFile from "@/components/citeFile.vue";
 import {createTypewriter} from "@/utils/typeWriter";
 import {getTimeNow} from "@/utils/getTimeNow";
-
+import {marked} from "marked";
+// import { marked } from 'marked';
 export default {
   name: 'KnowledgeChat',
   components: {CiteFile},
@@ -75,6 +75,7 @@ export default {
       chatIds: [],
       questionsArray: [],
       responseArray: [],
+      sourceArray: [],
       summaryArray: [],
       loading: false,
       prompt: {
@@ -103,6 +104,8 @@ export default {
       this.loading = true
       const typewriter = createTypewriter((str) => {
         this.responseArray[this.responseArray.length - 1] += str || ''
+        this.sourceArray[this.sourceArray.length - 1] += str || ''
+        document.getElementById('markdown').innerHTML = marked.parse(this.responseArray[this.responseArray.length - 1] + str)
         this.adjunct += str || ''
         this.adjunct = ''
       })
@@ -166,6 +169,8 @@ export default {
 
         // typewriter.add(resData.message.content)
       }
+
+
       typewriter.done()
       this.loading = false
     },

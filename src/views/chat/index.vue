@@ -1,14 +1,16 @@
 <template>
   <div class="main_container">
     <div id="chat-container" ref="chatContainer">
-      <div class="adContainer" v-if="messages.length === 0"></div>
+      <div class="adContainer" v-if="messages.length === 0">
+        <primary-chat-ad></primary-chat-ad>
+      </div>
       <div :class="[msg.type === 'sent' ? 'message sent' : 'message received']" v-for="(msg, index) in messages"
            :key="index">
         <template v-if="loading && index === messages.length">
           <span class="flash_cursor"></span>
         </template>
         <template v-else>
-         <pre>{{ msg.text }}</pre>
+          <pre>{{ msg.text }}</pre>
         </template>
       </div>
     </div>
@@ -26,6 +28,7 @@ import {createTypewriter} from "@/utils/typeWriter"
 import markdownit from 'markdown-it'
 import hljs from "highlight.js";
 import "highlight.js/styles/atom-one-dark-reasonable.css"
+import PrimaryChatAd from "@/components/PrimaryChatAd.vue";
 
 const md = markdownit({
   html: true,
@@ -50,12 +53,11 @@ const md = markdownit({
 })
 export default {
   name: 'PrimaryChat',
+  components: {PrimaryChatAd},
   data() {
     return {
       userMessage: '',
-      messages: [
-
-      ],
+      messages: [],
       loading: false,
       // prompt: {
       //   "model": "qwen:4b",
@@ -94,7 +96,7 @@ export default {
       })
       if (this.userMessage.trim() === '') return;
       this.messages.push({text: this.userMessage, type: 'sent'});
-      let URL = process.env.VUE_APP_BASE_URL +'/chat'
+      let URL = process.env.VUE_APP_BASE_URL + '/chat'
       // if (this.chat_mode_select) {
       //   URL = 'http://127.0.0.1:4523/m1/4197185-0-default/knowledge_base/chat'
       // }
@@ -293,6 +295,5 @@ pre {
   margin: auto;
   width: 100%;
   height: 100%;
-  background-color: #4CAF50;
 }
 </style>
