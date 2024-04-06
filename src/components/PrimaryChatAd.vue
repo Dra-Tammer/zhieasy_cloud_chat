@@ -175,12 +175,11 @@ export default {
   justify-content: center;
 }
 
-
-
 .cardFont {
   font-size: 14px;
   line-height: 36px;
   color: gray;
+  height: 180px;
 }
 
 .cardFooter {

@@ -10,7 +10,7 @@
           <span class="flash_cursor"></span>
         </template>
         <template v-else>
-          <pre>{{ msg.text }}</pre>
+          <pre :id="'markdown'+index">{{ msg.type === 'sent' ? msg.text : '' }}</pre>
         </template>
       </div>
     </div>
@@ -28,6 +28,7 @@ import {createTypewriter} from "@/utils/typeWriter"
 import markdownit from 'markdown-it'
 import hljs from "highlight.js";
 import "highlight.js/styles/atom-one-dark-reasonable.css"
+import {marked} from "marked";
 import PrimaryChatAd from "@/components/PrimaryChatAd.vue";
 
 const md = markdownit({
@@ -93,6 +94,7 @@ export default {
       this.loading = true
       const typewriter = createTypewriter((str) => {
         this.messages[this.messages.length - 1].text += str || ''
+        document.getElementById(`markdown${this.messages.length - 1}`).innerHTML = marked.parse(this.messages[this.messages.length - 1].text)
       })
       if (this.userMessage.trim() === '') return;
       this.messages.push({text: this.userMessage, type: 'sent'});
@@ -164,6 +166,7 @@ export default {
       //
       // }
       typewriter.done()
+      console.log(this.messages)
       this.loading = false
     }
   },

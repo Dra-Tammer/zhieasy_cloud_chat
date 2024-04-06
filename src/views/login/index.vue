@@ -52,8 +52,8 @@ export default {
   data() {
     return {
       form: {
-        username: '',
-        password: ''
+        username: 'userygwh',
+        password: '200306'
       },
       login_sign: false,
       regist_sign: false,
