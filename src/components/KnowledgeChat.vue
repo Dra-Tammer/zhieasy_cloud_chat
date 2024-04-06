@@ -23,7 +23,7 @@
             </div>
             <div class="chatBoxResponseRightContainer">
               <div class="chatResponseFromKnowledge">
-<!--                <div id="markdown">{{ responseArray[item.index] }}</div>-->
+                <!--                <div id="markdown">{{ responseArray[item.index] }}</div>-->
                 <div id="markdown"></div>
               </div>
             </div>
@@ -64,6 +64,7 @@ import CiteFile from "@/components/citeFile.vue";
 import {createTypewriter} from "@/utils/typeWriter";
 import {getTimeNow} from "@/utils/getTimeNow";
 import {marked} from "marked";
+
 export default {
   name: 'KnowledgeChat',
   components: {CiteFile},
@@ -100,74 +101,92 @@ export default {
   },
   methods: {
     async sendQuestion() {
-      this.loading = true
-      const typewriter = createTypewriter((str) => {
-        this.responseArray[this.responseArray.length - 1] += str || ''
-        this.sourceArray[this.sourceArray.length - 1] += str || ''
-        document.getElementById('markdown').innerHTML = marked.parse(this.responseArray[this.responseArray.length - 1] + str)
-        this.adjunct += str || ''
-        this.adjunct = ''
-      })
-      if (this.userInputMessage.trim() === '') {
-        this.loading = false
-        return;
-      }
-      let chatIdsIndex = this.chatIds.length
-      this.chatIds.push({index: chatIdsIndex, createTime: getTimeNow()})
-      this.questionsArray.push(this.userInputMessage);
-      let URL = process.env.VUE_APP_BASE_URL + '/knowledge_base/chat'
-      this.prompt.query = this.userInputMessage
-      this.prompt.session_id = localStorage.getItem('sessionId')
-      this.userInputMessage = ' '
-
-      const res = await fetch(URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "token": localStorage.getItem('token')
-        },
-        body: JSON.stringify(this.prompt),
-      });
-      if (!res.body) {
-        this.$vs.notify({
-          color: 'warning',
-          title: '错误',
-          text: '网络错误',
-          position: 'top-center'
+      try {
+        this.loading = true
+        const typewriter = createTypewriter((str) => {
+          this.responseArray[this.responseArray.length - 1] += str || ''
+          this.sourceArray[this.sourceArray.length - 1] += str || ''
+          document.getElementById('markdown').innerHTML = marked.parse(this.responseArray[this.responseArray.length - 1] + str)
+          this.adjunct += str || ''
+          this.adjunct = ''
         })
-      }
-      const reader = res.body.pipeThrough(new TextDecoderStream()).getReader();
-      let is_true = true
-      this.responseArray.push('')
-      let count = 0
-      while (is_true) {
-        count++
-        if (count === 1) typewriter.start()
-        this.$nextTick(() => {
-          this.scrollToBottom();
+        if (this.userInputMessage.trim() === '') {
+          this.loading = false
+          return;
+        }
+        let chatIdsIndex = this.chatIds.length
+        this.chatIds.push({index: chatIdsIndex, createTime: getTimeNow()})
+        this.questionsArray.push(this.userInputMessage);
+        let URL = process.env.VUE_APP_BASE_URL + '/knowledge_base/chat'
+        this.prompt.query = this.userInputMessage
+        this.prompt.session_id = localStorage.getItem('sessionId')
+        this.userInputMessage = ' '
+
+        const res = await fetch(URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "token": localStorage.getItem('token')
+          },
+          body: JSON.stringify(this.prompt),
         });
-        var {value, done} = await reader.read()
-        if (done) break;
-        let resData = JSON.parse(value)
-        if (resData.code === 200) {
-          if (!resData.data.isSummary) typewriter.add(JSON.parse(value).data.reply)
-          else if (resData.data.isSummary) {
-            this.summaryArray.push(resData.data.summary)
-          }
-        } else {
+        if (!res.body) {
           this.$vs.notify({
             color: 'warning',
             title: '错误',
-            text: `${resData.msg}`,
+            text: '网络错误',
             position: 'top-center'
           })
-          this.responseArray.pop()
-          this.questionsArray.pop()
+          this.loading = false
           this.chatIds.pop()
+          this.questionsArray.pop()
         }
+        const reader = res.body.pipeThrough(new TextDecoderStream()).getReader();
+        let is_true = true
+        this.responseArray.push('')
+        let count = 0
+        while (is_true) {
+          count++
+          if (count === 1) typewriter.start()
+          this.$nextTick(() => {
+            this.scrollToBottom();
+          });
+          var {value, done} = await reader.read()
+          if (done) break;
+          let resData = JSON.parse(value)
+          if (resData.code === 200) {
+            if (!resData.data.isSummary) typewriter.add(JSON.parse(value).data.reply)
+            else if (resData.data.isSummary) {
+              this.summaryArray.push(resData.data.summary)
+            }
+          } else {
+            this.$vs.notify({
+              color: 'warning',
+              title: '错误',
+              text: `${resData.msg}`,
+              position: 'top-center'
+            })
+            this.responseArray.pop()
+            this.questionsArray.pop()
+            this.chatIds.pop()
+            this.loading = false
+          }
+        }
+        typewriter.done()
+        this.loading = false
+      } catch (error) {
+        console.log(error)
+        this.$vs.notify({
+          color: 'danger',
+          title: '错误',
+          text: '服务器问题，提问速度过快，请稍后提问',
+          position: 'top-center'
+        })
+        this.responseArray.pop()
+        this.questionsArray.pop()
+        this.chatIds.pop()
+        this.loading = false
       }
-      typewriter.done()
-      this.loading = false
     },
     scrollToBottom() {
       this.$nextTick(() => {

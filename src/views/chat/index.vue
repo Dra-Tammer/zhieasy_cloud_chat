@@ -91,50 +91,67 @@ export default {
       this.loading = !this.loading;
     },
     async getJsonData() {
-      this.loading = true
-      const typewriter = createTypewriter((str) => {
-        this.messages[this.messages.length - 1].text += str || ''
-        document.getElementById(`markdown${this.messages.length - 1}`).innerHTML = marked.parse(this.messages[this.messages.length - 1].text)
-      })
-      if (this.userMessage.trim() === '') return;
-      this.messages.push({text: this.userMessage, type: 'sent'});
-      let URL = process.env.VUE_APP_BASE_URL + '/chat'
-      this.prompt.query = this.userMessage
-      this.prompt.sessionId = localStorage.getItem('sessionId')
-      this.userMessage = ''
-      const res = await fetch(URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "token": localStorage.getItem('token')
-        },
-        body: JSON.stringify(this.prompt),
-      });
-      if (!res.body) {
+      try {
+        this.loading = true
+        const typewriter = createTypewriter((str) => {
+          this.messages[this.messages.length - 1].text += str || ''
+          document.getElementById(`markdown${this.messages.length - 1}`).innerHTML = marked.parse(this.messages[this.messages.length - 1].text)
+        })
+        if (this.userMessage.trim() === '') {
+          this.loading = false
+          return;
+        }
+        this.messages.push({text: this.userMessage, type: 'sent'});
+        let URL = process.env.VUE_APP_BASE_URL + '/chat'
+        this.prompt.query = this.userMessage
+        this.prompt.sessionId = localStorage.getItem('sessionId')
+        this.userMessage = ''
+        const res = await fetch(URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "token": localStorage.getItem('token')
+          },
+          body: JSON.stringify(this.prompt),
+        });
+        if (!res.body) {
+          this.$vs.notify({
+            color: 'warning',
+            title: '错误',
+            text: '网络问题',
+            position: 'top-center'
+          })
+          this.loading = false
+          this.messages.pop()
+        }
+        const reader = res.body.pipeThrough(new TextDecoderStream()).getReader();
+        let is_true = true
+        this.messages.push({text: '', type: 'received'})
+        let count = 0
+        while (is_true) {
+          count++
+          if (count === 1) typewriter.start()
+          this.$nextTick(() => {
+            this.scrollToBottom();
+          });
+          var {value, done} = await reader.read()
+          if (done) break;
+          typewriter.add(JSON.parse(value).data)
+        }
+        typewriter.done()
+        this.loading = false
+      } catch (error) {
+        console.log(error)
         this.$vs.notify({
-          color: 'warning',
+          color: 'danger',
           title: '错误',
-          text: '网络问题',
+          text: '服务器问题，提问速度过快，请稍后提问',
           position: 'top-center'
         })
+        this.messages.pop()
+        this.messages.pop()
+        this.loading = false
       }
-      const reader = res.body.pipeThrough(new TextDecoderStream()).getReader();
-      let is_true = true
-      this.messages.push({text: '', type: 'received'})
-      let count = 0
-      while (is_true) {
-        count++
-        if (count === 1) typewriter.start()
-        this.$nextTick(() => {
-          this.scrollToBottom();
-        });
-        var {value, done} = await reader.read()
-        if (done) break;
-        typewriter.add(JSON.parse(value).data)
-      }
-      typewriter.done()
-      console.log(this.messages)
-      this.loading = false
     }
   },
 }
