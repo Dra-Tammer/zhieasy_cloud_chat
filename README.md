@@ -1,4 +1,4 @@
-<h1 align="center">Zhiyieasy-羲和智源</h1>
+<h1 align="center">Zhieasy-羲和智源</h1>
 
 <p align="center">
   <a href="https://github.com/vuejs/vue">
