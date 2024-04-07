@@ -4,6 +4,7 @@
   <a href="https://github.com/vuejs/vue">
     <img src="https://img.shields.io/badge/vue-2.6.14-brightgreen.svg" alt="vue">
   </a>
+
   <a href="https://github.com/Brugarolas/vuesax">
     <img src="https://img.shields.io/badge/%40brugarolas%2Fvuesax-3.12.2-brightgreen.svg" alt="@Brugarolas/vuesax">
   </a>

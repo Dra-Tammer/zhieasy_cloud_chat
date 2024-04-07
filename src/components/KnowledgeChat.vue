@@ -181,7 +181,7 @@ export default {
         this.loading = false
       } catch (error) {
         console.log(error.message)
-        if(error.message !== 'Cannot set properties of null (setting \'innerHTML\')') {
+        if (error.message !== 'Cannot set properties of null (setting \'innerHTML\')') {
           this.$vs.notify({
             color: 'danger',
             title: '错误',
