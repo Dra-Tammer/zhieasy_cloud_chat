@@ -105,12 +105,13 @@ export default {
     this.$watch(
         () => this.$route.params,
         (toParams, preParams) => {
-
-          console.log('pre:', preParams)
-          this.knowledgeId = toParams.id
-          this.activeKnowledgeName = localStorage.getItem('activeKnowledgeName')
-          this.getFileList()
-
+          if(toParams !== '/login') {
+            console.log('pre:', preParams)
+            this.knowledgeId = toParams.id
+            this.filePath = '/'
+            this.activeKnowledgeName = localStorage.getItem('activeKnowledgeName')
+            this.getFileList()
+          }
         }
     )
   },

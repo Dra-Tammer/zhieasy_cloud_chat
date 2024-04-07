@@ -94,6 +94,11 @@ export default {
         (toParams, preParams) => {
           console.log(preParams)
           this.knowledgeId = toParams.id
+          this.chatIds = []
+          this.questionsArray = []
+          this.responseArray = []
+          this.sourceArray = []
+          this.summaryArray = []
         }
     )
   },
