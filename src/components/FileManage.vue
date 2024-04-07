@@ -51,7 +51,7 @@
         </vs-button>
         <vs-button size="large" color="success" type="flat" icon="upload" @click="uploadToKnowledgeActivePrompt = true"
                    style="margin-right: 10px;">
-          上传文件到知识库
+          上传文件
         </vs-button>
         <vs-prompt
             @cancel="newDirName=''"
@@ -105,13 +105,12 @@ export default {
     this.$watch(
         () => this.$route.params,
         (toParams, preParams) => {
-          if(toParams !== '/login') {
-            console.log('pre:', preParams)
-            this.knowledgeId = toParams.id
-            this.filePath = '/'
-            this.activeKnowledgeName = localStorage.getItem('activeKnowledgeName')
-            this.getFileList()
-          }
+          console.log(toParams)
+          console.log('pre:', preParams)
+          this.knowledgeId = toParams.id
+          this.filePath = '/'
+          this.activeKnowledgeName = localStorage.getItem('activeKnowledgeName')
+          this.getFileList()
         }
     )
   },
