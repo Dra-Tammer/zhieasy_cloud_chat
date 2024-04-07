@@ -472,4 +472,8 @@ export default {
 .breadCrumbContainer {
   margin-left: 10px;
 }
+
+.fileName {
+  overflow: hidden;
+}
 </style>

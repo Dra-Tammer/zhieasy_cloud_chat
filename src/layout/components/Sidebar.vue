@@ -2,7 +2,8 @@
   <div class="side_bar">
     <div class="view_content">
       <div class="primary_chat" :class="{active:$route.path === '/chat'}" @click="switchToPrimaryChat">
-        <vs-icon icon="smart_toy" style="margin-left: 20px;color: gray;" :style="{'color': $route.path === '/chat' ? 'white' : ''}"></vs-icon>
+        <vs-icon icon="smart_toy" style="margin-left: 20px;color: gray;"
+                 :style="{'color': $route.path === '/chat' ? 'white' : ''}"></vs-icon>
         <div style="display: flex;justify-content: center;width: 68%; font-weight: bold;">个人 AI 助手</div>
       </div>
       <vs-divider position="left" style="font-weight: bold;">
@@ -198,6 +199,7 @@ export default {
       })
     },
     addKnowledge() {
+      if (this.newKnowledgeName === '') return;
       let knowledgeLimit = null
       if (this.addKnowledgeSelect) knowledgeLimit = "GROUP"
       else knowledgeLimit = 'PRIVATE'
@@ -271,7 +273,7 @@ export default {
             position: 'top-center'
           })
           this.getKnowledgeList()
-          if(this.$route.path !== '/chat') {
+          if (this.$route.path !== '/chat') {
             this.switchKnowledge(this.personalKnowledgeId)
           }
           this.$vs.loading.close()
