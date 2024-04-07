@@ -26,7 +26,8 @@
         <div class="switch_circle"></div>
         <div class="switch_circle switch_circle-t"></div>
         <div class="switch_container" id="switch-c1">
-          <h2 class="switch_title title" style="letter-spacing: 0;">致易</h2>
+          <h2 class="switch_title title" style="letter-spacing: 0;">Zhieasy Artemis</h2>
+          <h2 class="switch_title title" style="letter-spacing: 0;">羲和智源</h2>
           <p class="switch_description description">提供知识理解和搜索能力的知识库问答服务</p>
           <p class="switch_description description">智能AI对话与传统知识库耦合</p>
           <p class="switch_description description">对象化文件存储，网盘功能</p>
@@ -52,8 +53,8 @@ export default {
   data() {
     return {
       form: {
-        username: 'userygwh',
-        password: '200306'
+        username: '',
+        password: ''
       },
       login_sign: false,
       regist_sign: false,
