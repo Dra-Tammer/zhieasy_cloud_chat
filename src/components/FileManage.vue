@@ -308,6 +308,15 @@ export default {
       this.file = file;
     },
     upload() {
+      if (!this.file) {
+        this.$vs.notify({
+          color: 'warning',
+          title: '错误',
+          text: '您还未选择文件！',
+          position: 'top-center'
+        })
+        return;
+      }
       this.uploadSuccess = true
       let pathStr = ''
       if (this.filePath === '/') pathStr = '/' + this.file.name
@@ -330,7 +339,6 @@ export default {
             text: `${res.data.msg}`,
             position: 'top-center'
           })
-          this.file.name = ''
         }
       })
     },
