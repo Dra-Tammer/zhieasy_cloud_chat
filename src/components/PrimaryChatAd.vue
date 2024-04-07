@@ -3,9 +3,7 @@
     <div class="mainContainer">
       <div class="titleBox">
         <div class="title">
-          <span>Zhieasy</span>
-          <span style="color: #4B70E2;"> Knowledge</span>
-          <span> Assistant </span>
+          <span style="color: #4B70E2;">羲和智源</span>
         </div>
         <div class="titleContent">构建文档知识库，高效检索信息，精确回答问题</div>
       </div>

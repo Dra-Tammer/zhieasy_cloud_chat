@@ -4,7 +4,7 @@
       <div class="navbar_left_icon">
         <vs-icon icon="home"></vs-icon>
       </div>
-      <div class="navbar_title">ZhieasyCloudChat</div>
+      <div class="navbar_title">Zhieasy Artemis</div>
 
     </div>
     <div class="right_item_container">
@@ -35,7 +35,6 @@ export default {
       }
     },
     logout() {
-      localStorage.removeItem('token')
       this.$vs.dialog({
         color: 'primary',
         title: 'Logout',
@@ -45,8 +44,18 @@ export default {
       })
     },
     acceptLogout() {
+      localStorage.removeItem('token')
+      localStorage.removeItem('activeKnowledgeName')
+      localStorage.removeItem('sessionId')
       this.$router.push({path: '/login'})
+      this.$vs.notify({
+        color: 'primary',
+        title: '退出',
+        text: `用户退出登录`,
+        position: 'top-center'
+      })
     }
+
   }
 }
 </script>
@@ -75,6 +84,7 @@ export default {
 }
 
 .navbar_title {
+  color: #00269a;
   margin-left: 20px;
   font-weight: 700;
   font-size: 20px;
