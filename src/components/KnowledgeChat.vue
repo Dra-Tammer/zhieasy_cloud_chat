@@ -106,27 +106,27 @@ export default {
   },
   methods: {
     async sendQuestion() {
-      try {
-        this.loading = true
-        const typewriter = createTypewriter((str) => {
-          this.responseArray[this.responseArray.length - 1] += str || ''
-          this.sourceArray[this.sourceArray.length - 1] += str || ''
-          document.getElementById('markdown').innerHTML = marked.parse(this.responseArray[this.responseArray.length - 1] + str)
-          this.adjunct += str || ''
-          this.adjunct = ''
-        })
-        if (this.userInputMessage.trim() === '') {
-          this.loading = false
-          return;
-        }
-        let chatIdsIndex = this.chatIds.length
-        this.chatIds.push({index: chatIdsIndex, createTime: getTimeNow()})
-        this.questionsArray.push(this.userInputMessage);
-        let URL = process.env.VUE_APP_BASE_URL + '/knowledge_base/chat'
-        this.prompt.query = this.userInputMessage
-        this.prompt.session_id = localStorage.getItem('sessionId')
-        this.userInputMessage = ' '
 
+      this.loading = true
+      const typewriter = createTypewriter((str) => {
+        this.responseArray[this.responseArray.length - 1] += str || ''
+        this.sourceArray[this.sourceArray.length - 1] += str || ''
+        document.getElementById('markdown').innerHTML = marked.parse(this.responseArray[this.responseArray.length - 1] + str)
+        this.adjunct += str || ''
+        this.adjunct = ''
+      })
+      if (this.userInputMessage.trim() === '') {
+        this.loading = false
+        return;
+      }
+      let chatIdsIndex = this.chatIds.length
+      this.chatIds.push({index: chatIdsIndex, createTime: getTimeNow()})
+      this.questionsArray.push(this.userInputMessage);
+      let URL = process.env.VUE_APP_BASE_URL + '/knowledge_base/chat'
+      this.prompt.query = this.userInputMessage
+      this.prompt.session_id = localStorage.getItem('sessionId')
+      this.userInputMessage = ' '
+      try {
         const res = await fetch(URL, {
           method: "POST",
           headers: {
@@ -180,13 +180,15 @@ export default {
         typewriter.done()
         this.loading = false
       } catch (error) {
-        console.log(error)
-        this.$vs.notify({
-          color: 'danger',
-          title: '错误',
-          text: '服务器问题，提问速度过快，请稍后提问',
-          position: 'top-center'
-        })
+        console.log(error.message)
+        if(error.message !== 'Cannot set properties of null (setting \'innerHTML\')') {
+          this.$vs.notify({
+            color: 'danger',
+            title: '错误',
+            text: '服务器问题，请检查网络或者稍后提问',
+            position: 'top-center'
+          })
+        }
         this.responseArray.pop()
         this.questionsArray.pop()
         this.chatIds.pop()

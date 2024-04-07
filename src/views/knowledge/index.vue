@@ -20,10 +20,6 @@ export default {
     return {}
   },
   mounted() {
-    this.$router.afterEach(() => {
-      const fileMangeComponent = this.$refs.fileManage
-      if (fileMangeComponent) fileMangeComponent.getFileList()
-    })
   }
 }
 </script>
