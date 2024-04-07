@@ -25,33 +25,9 @@
 
 <script>
 import {createTypewriter} from "@/utils/typeWriter"
-import markdownit from 'markdown-it'
-import hljs from "highlight.js";
-import "highlight.js/styles/atom-one-dark-reasonable.css"
 import {marked} from "marked";
 import PrimaryChatAd from "@/components/PrimaryChatAd.vue";
 
-const md = markdownit({
-  html: true,
-  linkify: true,
-  typographer: true,
-  breaks: true,
-  langPrefix: "language-",
-  highlight(str, lang) {
-    if (lang && hljs.getLanguage(lang)) {
-      try {
-        return (
-            '<pre class="code"><code>' +
-            hljs.highlight(lang, str, true).value +
-            "</code></pre>"
-        );
-      } catch (__) {
-        console.log(md)
-      }
-    }
-    return "";
-  },
-})
 export default {
   name: 'PrimaryChat',
   components: {PrimaryChatAd},
