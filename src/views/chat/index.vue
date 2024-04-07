@@ -276,6 +276,7 @@ pre {
   word-wrap: break-word;
   white-space: break-spaces;
   line-height: 30px;
+  overflow: auto;
 }
 
 .adContainer {

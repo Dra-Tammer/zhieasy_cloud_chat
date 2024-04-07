@@ -120,11 +120,6 @@ export default {
           this.login_randomCenter();
           this.$router.push({path: '/chat'})
         } else {
-          this.$vs.notify({
-            color: 'warning',
-            title: '错误',
-            text: `${res.data.msg}`
-          })
           this.login_reject_randomCenter();
         }
       })
