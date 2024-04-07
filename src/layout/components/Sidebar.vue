@@ -271,7 +271,9 @@ export default {
             position: 'top-center'
           })
           this.getKnowledgeList()
-          this.switchKnowledge(this.personalKnowledgeId)
+          if(this.$route.path !== '/chat') {
+            this.switchKnowledge(this.personalKnowledgeId)
+          }
           this.$vs.loading.close()
         } else {
           this.$vs.notify({
