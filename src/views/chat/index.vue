@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="input-container">
-      <vs-input class="input_box" :disabled="loading" @keyup.enter="getJsonData" placeholder="Type your message..."
+      <vs-input class="input_box" :disabled="loading" @keyup.enter="getJsonData" placeholder="输入您的问题："
                 v-model="userMessage" size="large"/>
       <vs-button color="primary" type="filled" icon="arrow_upward" @click="getJsonData" :disabled="loading"
                  style="margin-left: 20px"></vs-button>

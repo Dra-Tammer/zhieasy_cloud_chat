@@ -24,7 +24,7 @@
             <div class="chatBoxResponseRightContainer">
               <div class="chatResponseFromKnowledge">
                 <!--                <div id="markdown">{{ responseArray[item.index] }}</div>-->
-                <div id="markdown"></div>
+                <div :id="'markdown'+index"></div>
               </div>
             </div>
           </div>
@@ -48,7 +48,7 @@
     <div class="bottomInputBox">
       <div class="contentBox">
         <vs-input size="large" style="width: 86%;margin-left: 20px;" :disabled="loading"
-                  placeholder="type your question"
+                  placeholder="输入您的问题："
                   v-model="userInputMessage" @keyup.enter="sendQuestion"/>
         <vs-button color="primary" icon="send" style="margin-left: 20px;margin-top: 2px;" @click="sendQuestion"
                    :disabled="loading"></vs-button>
@@ -111,7 +111,7 @@ export default {
       const typewriter = createTypewriter((str) => {
         this.responseArray[this.responseArray.length - 1] += str || ''
         this.sourceArray[this.sourceArray.length - 1] += str || ''
-        document.getElementById('markdown').innerHTML = marked.parse(this.responseArray[this.responseArray.length - 1] + str)
+        document.getElementById(`markdown${this.responseArray.length - 1}`).innerHTML = marked.parse(this.responseArray[this.responseArray.length - 1] + str)
         this.adjunct += str || ''
         this.adjunct = ''
       })

@@ -28,9 +28,10 @@
         <div class="switch_container" id="switch-c1">
           <h2 class="switch_title title" style="letter-spacing: 0;">Zhieasy Artemis</h2>
           <h2 class="switch_title title" style="letter-spacing: 0;">羲和智源</h2>
+          <p class="switch_description description">基于NLU+NLG的智能AI助手</p>
+          <p class="switch_description description">基于LLM，具备知识理解和检索能力</p>
+          <p class="switch_description description">对象化文件存储</p>
           <p class="switch_description description">提供知识理解和搜索能力的知识库问答服务</p>
-          <p class="switch_description description">智能AI对话与传统知识库耦合</p>
-          <p class="switch_description description">对象化文件存储，网盘功能</p>
           <button class="switch_button button switch-btn" @click="changeForm">注册</button>
         </div>
 

@@ -133,12 +133,7 @@ export default {
   name: 'SideBar',
   data() {
     return {
-      knowledgeList: [{id: 1, space_name: '个人知识库', rule: 'PRIVATE', update_time: '2024-03-31 11:18:46'},
-        {id: 2, space_name: 'marks的知识库', rule: 'GROUP', update_time: '2024-03-31 11:18:46'},
-        {id: 3, space_name: 'mike的知识库', rule: 'GROUP', update_time: '2024-03-31 11:18:46'},
-        {id: 4, space_name: 'java知识库', rule: 'GROUP', update_time: '2024-03-31 11:18:46'},
-        {id: 5, space_name: '公司人事知识库', rule: 'GROUP', update_time: '2024-03-31 11:18:46'},
-        {id: 6, space_name: '公司财务知识库', rule: 'GROUP', update_time: '2024-03-31 11:18:46'},
+      knowledgeList: [
       ],
       // knowledgeList: null,
       addKnowledgeActivePrompt: false,
