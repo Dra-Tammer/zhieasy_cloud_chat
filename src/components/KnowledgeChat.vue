@@ -29,7 +29,7 @@
             </div>
           </div>
           <div v-if="item.index === summaryArray.length - 1">
-            <div class="dividerBox">
+            <div class="dividerBox" v-if="summaryArray[item.index].length !== 0">
               <vs-divider position="left" color="#888">
                 <vs-icon icon="done_all" class="spanCite"></vs-icon>
                 <span style="color: #888888;">引用自</span>
@@ -111,7 +111,7 @@ export default {
       const typewriter = createTypewriter((str) => {
         this.responseArray[this.responseArray.length - 1] += str || ''
         this.sourceArray[this.sourceArray.length - 1] += str || ''
-        document.getElementById(`markdown${this.responseArray.length - 1}`).innerHTML = marked.parse(this.responseArray[this.responseArray.length - 1] + str)
+        document.getElementById(`markdown${this.responseArray.length - 1}`).innerHTML = marked.parse(this.responseArray[this.responseArray.length - 1])
         this.adjunct += str || ''
         this.adjunct = ''
       })
