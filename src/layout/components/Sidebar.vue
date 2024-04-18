@@ -9,7 +9,7 @@
       <vs-divider position="left" style="font-weight: bold;">
         知识库
       </vs-divider>
-      <div class="knowledge_base_chat"  data-step="2" data-intro="个人AI助手">
+      <div class="knowledge_base_chat">
         <div class="knowledge_list_item" :class="{active:$route.path === `/knowledge/${item.id}`}"
              v-for="item in knowledgeList" :key="item.id" @click="switchKnowledge(item.id)">
           <div class="knowledge_list_item_top_container">
@@ -48,7 +48,7 @@
         <div style="margin-bottom: 10px;font-size: 14px;color: gray;">没有更多了</div>
       </div>
     </div>
-    <div class="create_knowledge" @click="addKnowledgeActivePrompt = true" data-step="1" data-intro="添加知识库">
+    <div class="create_knowledge" @click="addKnowledgeActivePrompt = true">
       <vs-button style="width: 100%;" type="gradient" icon="add">添加知识库</vs-button>
     </div>
     <vs-popup classContent="addKnowledgePopUP" title="新建知识库" :active.sync="addKnowledgeActivePrompt">
@@ -128,8 +128,6 @@ import {
   knowledgeMemberList,
   knowledgeGroupInvite, switchToKnowledge, knowledgeMemberRemove
 } from "@/api/knowledge";
-import introJs from "intro.js";
-import 'intro.js/introjs.css'
 
 export default {
   name: 'SideBar',
@@ -158,7 +156,6 @@ export default {
   watch: {},
   mounted() {
     this.getKnowledgeList()
-    this.guide()
   },
   methods: {
     getKnowledgeList() {
@@ -364,21 +361,7 @@ export default {
         })
       }
     },
-    guide() {
-      introJs()
-          .setOptions({
-            nextLabel: '下一个',  // 下一个按钮文字
-            prevLabel: '上一个',  // 上一个按钮文字
-            skipLabel: '跳过',    // 跳过按钮文字
-            doneLabel: '立即体验',// 完成按钮文字
-            hidePrev: true,       // 在第一步中是否隐藏上一个按钮
-            hideNext: true,       // 在最后一步中是否隐藏下一个按钮
-            exitOnOverlayClick: false,  // 点击叠加层时是否退出介绍
-            showStepNumbers: false,     // 是否显示红色圆圈的步骤编号
-            disableInteraction: true,   // 是否禁用与突出显示的框内的元素的交互，就是禁止点击
-            showBullets: false          // 是否显示面板指示点
-          }).start()
-    }
+
   }
 }
 </script>

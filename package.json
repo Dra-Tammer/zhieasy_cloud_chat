@@ -13,6 +13,7 @@
     "axios": "^1.6.7",
     "core-js": "^3.8.3",
     "highlight.js": "^11.9.0",
+    "intro.js": "^7.2.0",
     "marked": "^12.0.1",
     "material-icons": "^1.13.12",
     "process": "^0.11.10",
