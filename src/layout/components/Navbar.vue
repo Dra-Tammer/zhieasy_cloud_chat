@@ -8,15 +8,18 @@
 
     </div>
     <div class="right_item_container">
-      <vs-dropdown>
-        <!--        <vs-avatar color="#26302a" text-color="rgb(246, 190, 16)"/>-->
-        <vs-avatar color="rgb(31, 116, 255)" text-color="white"/>
-        <vs-dropdown-menu>
-          <vs-dropdown-item style="width: 60px;" @click="logout">
-            退出
-          </vs-dropdown-item>
-        </vs-dropdown-menu>
-      </vs-dropdown>
+      <div class="user_container">{{ username }}</div>
+      <div>
+        <vs-dropdown>
+          <!--        <vs-avatar color="#26302a" text-color="rgb(246, 190, 16)"/>-->
+          <vs-avatar color="rgb(31, 116, 255)" text-color="white"/>
+          <vs-dropdown-menu>
+            <vs-dropdown-item style="width: 60px;" @click="logout">
+              退出
+            </vs-dropdown-item>
+          </vs-dropdown-menu>
+        </vs-dropdown>
+      </div>
     </div>
   </div>
 </template>
@@ -26,7 +29,12 @@
 export default {
   name: 'NavBar',
   data() {
-    return {}
+    return {
+      username: '',
+    }
+  },
+  mounted() {
+    this.username = localStorage.getItem('user')
   },
   methods: {
     navigateToChat() {
@@ -92,6 +100,16 @@ export default {
 }
 
 .right_item_container {
+  display: flex;
+  align-items: center;
   margin-right: 20px;
+}
+
+.user_container {
+  text-align: center;
+  height: 20px;
+  line-height: 16px;
+  margin-right: 20px;
+  font-weight: bold;
 }
 </style>

@@ -118,6 +118,7 @@ export default {
         if (res.data.code === 200) {
           localStorage.setItem('token', res.data.data.token);
           localStorage.setItem('sessionId', res.data.data.sessionId)
+          localStorage.setItem('user', this.form.username)
           this.login_randomCenter();
           this.$router.push({path: '/chat'})
         } else {

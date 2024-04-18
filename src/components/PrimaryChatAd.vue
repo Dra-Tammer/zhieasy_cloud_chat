@@ -27,19 +27,19 @@
               </div>
               <div>还可以创建其他知识库，针对性检索信息！</div>
             </div>
-            <div slot="footer">
-              <vs-row vs-justify="flex-end">
-                <vs-chip color="primary" style="font-size: 14px;">
-                  准确
-                </vs-chip>
-                <vs-chip color="primary" style="font-size: 14px;">
-                  可靠
-                </vs-chip>
-                <vs-chip color="primary" style="font-size: 14px;">
-                  高效
-                </vs-chip>
-              </vs-row>
-            </div>
+<!--            <div slot="footer">-->
+<!--              <vs-row vs-justify="flex-end">-->
+<!--                <vs-chip color="primary" style="font-size: 14px;">-->
+<!--                  准确-->
+<!--                </vs-chip>-->
+<!--                <vs-chip color="primary" style="font-size: 14px;">-->
+<!--                  可靠-->
+<!--                </vs-chip>-->
+<!--                <vs-chip color="primary" style="font-size: 14px;">-->
+<!--                  高效-->
+<!--                </vs-chip>-->
+<!--              </vs-row>-->
+<!--            </div>-->
           </vs-card>
         </div>
         <div class="mainContent">
@@ -61,19 +61,19 @@
                 <div>直接在下方进行问答吧</div>
               </div>
             </div>
-            <div slot="footer">
-              <vs-row vs-justify="flex-end">
-                <vs-chip color="primary" style="font-size: 14px;">
-                  智能
-                </vs-chip>
-                <vs-chip color="primary" style="font-size: 14px;">
-                  迅速
-                </vs-chip>
-                <vs-chip color="primary" style="font-size: 14px;">
-                  全面
-                </vs-chip>
-              </vs-row>
-            </div>
+<!--            <div slot="footer">-->
+<!--              <vs-row vs-justify="flex-end">-->
+<!--                <vs-chip color="primary" style="font-size: 14px;">-->
+<!--                  智能-->
+<!--                </vs-chip>-->
+<!--                <vs-chip color="primary" style="font-size: 14px;">-->
+<!--                  迅速-->
+<!--                </vs-chip>-->
+<!--                <vs-chip color="primary" style="font-size: 14px;">-->
+<!--                  全面-->
+<!--                </vs-chip>-->
+<!--              </vs-row>-->
+<!--            </div>-->
           </vs-card>
         </div>
         <div class="mainContent">
@@ -92,19 +92,19 @@
               <div>点击知识库，上传，下载或者删除</div>
               <div>开始管理个人或者团队文件！</div>
             </div>
-            <div slot="footer">
-              <vs-row vs-justify="flex-end">
-                <vs-chip color="primary" style="font-size: 14px;">
-                  便捷
-                </vs-chip>
-                <vs-chip color="primary" style="font-size: 14px;">
-                  安全
-                </vs-chip>
-                <vs-chip color="primary" style="font-size: 14px;">
-                  协作
-                </vs-chip>
-              </vs-row>
-            </div>
+<!--            <div slot="footer">-->
+<!--              <vs-row vs-justify="flex-end">-->
+<!--                <vs-chip color="primary" style="font-size: 14px;">-->
+<!--                  便捷-->
+<!--                </vs-chip>-->
+<!--                <vs-chip color="primary" style="font-size: 14px;">-->
+<!--                  安全-->
+<!--                </vs-chip>-->
+<!--                <vs-chip color="primary" style="font-size: 14px;">-->
+<!--                  协作-->
+<!--                </vs-chip>-->
+<!--              </vs-row>-->
+<!--            </div>-->
           </vs-card>
         </div>
       </div>
