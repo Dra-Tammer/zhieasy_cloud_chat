@@ -4,26 +4,30 @@
       <div class="adContainer" v-if="messages.length === 0">
         <primary-chat-ad></primary-chat-ad>
       </div>
-      <div :class="[msg.type === 'sent' ? 'message_body sent' : 'message_body received']" v-for="(msg, index) in messages"
+      <div :class="[msg.type === 'sent' ? 'message_body sent' : 'message_body received']"
+           v-for="(msg, index) in messages"
            :key="index">
         <vs-avatar class="left-avatar" v-if="msg.type === 'received'" color="success" text="AI"></vs-avatar>
         <template v-if="loading && index === messages.length">
           <span class="flash_cursor"></span>
         </template>
         <template v-else>
-          <div :class="[msg.type==='sent' ? 'text_container text_container_sent' : 'text_container text_container_received']"><pre :id="'markdown'+index">{{ msg.type === 'sent' ? msg.text : '' }}</pre></div>
+          <div
+              :class="[msg.type==='sent' ? 'text_container text_container_sent' : 'text_container text_container_received']">
+            <pre :id="'markdown'+index">{{ msg.type === 'sent' ? msg.text : '' }}</pre>
+          </div>
         </template>
         <vs-avatar class="right-avatar" v-if="msg.type === 'sent'" color="primary"></vs-avatar>
       </div>
-<!--      <div :class="[msg.type === 'sent' ? 'message sent' : 'message received']" v-for="(msg, index) in messages"-->
-<!--           :key="index">-->
-<!--        <template v-if="loading && index === messages.length">-->
-<!--          <span class="flash_cursor"></span>-->
-<!--        </template>-->
-<!--        <template v-else>-->
-<!--          <pre :id="'markdown'+index">{{ msg.type === 'sent' ? msg.text : '' }}</pre>-->
-<!--        </template>-->
-<!--      </div>-->
+      <!--      <div :class="[msg.type === 'sent' ? 'message sent' : 'message received']" v-for="(msg, index) in messages"-->
+      <!--           :key="index">-->
+      <!--        <template v-if="loading && index === messages.length">-->
+      <!--          <span class="flash_cursor"></span>-->
+      <!--        </template>-->
+      <!--        <template v-else>-->
+      <!--          <pre :id="'markdown'+index">{{ msg.type === 'sent' ? msg.text : '' }}</pre>-->
+      <!--        </template>-->
+      <!--      </div>-->
     </div>
     <div class="input-container">
       <vs-input class="input_box" :disabled="loading" @keyup.enter="getJsonData" placeholder="输入您的问题："
@@ -45,8 +49,7 @@ export default {
   data() {
     return {
       userMessage: '',
-      messages: [
-      ],
+      messages: [],
       loading: false,
       // prompt: {
       //   "model": "qwen:4b",

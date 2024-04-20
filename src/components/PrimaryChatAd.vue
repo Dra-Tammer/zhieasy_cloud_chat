@@ -46,7 +46,7 @@
           <vs-card>
             <div slot="header" class="h2Title">
               <h2>
-                个人AI助手
+                AI 助手
               </h2>
             </div>
             <div class="cardMainContainer">
