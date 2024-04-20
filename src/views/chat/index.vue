@@ -4,15 +4,26 @@
       <div class="adContainer" v-if="messages.length === 0">
         <primary-chat-ad></primary-chat-ad>
       </div>
-      <div :class="[msg.type === 'sent' ? 'message sent' : 'message received']" v-for="(msg, index) in messages"
+      <div :class="[msg.type === 'sent' ? 'message_body sent' : 'message_body received']" v-for="(msg, index) in messages"
            :key="index">
+        <vs-avatar class="left-avatar" v-if="msg.type === 'received'" color="success" text="AI"></vs-avatar>
         <template v-if="loading && index === messages.length">
           <span class="flash_cursor"></span>
         </template>
         <template v-else>
-          <pre :id="'markdown'+index">{{ msg.type === 'sent' ? msg.text : '' }}</pre>
+          <div :class="[msg.type==='sent' ? 'text_container text_container_sent' : 'text_container text_container_received']"><pre :id="'markdown'+index">{{ msg.type === 'sent' ? msg.text : '' }}</pre></div>
         </template>
+        <vs-avatar class="right-avatar" v-if="msg.type === 'sent'" color="primary"></vs-avatar>
       </div>
+<!--      <div :class="[msg.type === 'sent' ? 'message sent' : 'message received']" v-for="(msg, index) in messages"-->
+<!--           :key="index">-->
+<!--        <template v-if="loading && index === messages.length">-->
+<!--          <span class="flash_cursor"></span>-->
+<!--        </template>-->
+<!--        <template v-else>-->
+<!--          <pre :id="'markdown'+index">{{ msg.type === 'sent' ? msg.text : '' }}</pre>-->
+<!--        </template>-->
+<!--      </div>-->
     </div>
     <div class="input-container">
       <vs-input class="input_box" :disabled="loading" @keyup.enter="getJsonData" placeholder="输入您的问题："
@@ -34,7 +45,8 @@ export default {
   data() {
     return {
       userMessage: '',
-      messages: [],
+      messages: [
+      ],
       loading: false,
       // prompt: {
       //   "model": "qwen:4b",
@@ -162,6 +174,43 @@ export default {
   -ms-overflow-style: none;
 }
 
+.message_body {
+  display: flex;
+  margin-bottom: 20px;
+  padding: 10px 15px;
+  border-radius: 10px;
+  max-width: 80%;
+  line-height: 20px;
+}
+
+.left-avatar {
+  width: 34px;
+  height: 34px;
+  margin-right: 20px;
+}
+
+.right-avatar {
+  width: 34px;
+  height: 34px;
+  margin-left: 20px;
+}
+
+.text_container {
+  border-radius: 10px;
+  word-wrap: break-word;
+  padding: 12px;
+}
+
+.text_container_sent {
+  background-color: rgb(99, 159, 255);
+  color: white;
+}
+
+.text_container_received {
+  background-color: #f3f3f3;
+  color: #333;
+}
+
 .message {
   font-size: 16px;
   margin-bottom: 20px;
@@ -173,15 +222,11 @@ export default {
 }
 
 .sent {
-  background-color: rgb(99, 159, 255);
   align-self: flex-end;
-  color: white;
 }
 
 .received {
-  background-color: #f3f3f3;
   align-self: flex-start;
-  color: #333;
 }
 
 .input-container {
