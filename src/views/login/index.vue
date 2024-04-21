@@ -121,11 +121,11 @@ export default {
           localStorage.setItem('sessionId', res.data.data.sessionId)
           localStorage.setItem('user', this.form.username)
           this.login_randomCenter();
-          this.$vs.loading().end()
+          this.$vs.loading.close()
           this.$router.push({path: '/chat'})
         } else {
           this.login_reject_randomCenter();
-          this.$vs.loading().end()
+          this.$vs.loading.close()
         }
       })
     },
