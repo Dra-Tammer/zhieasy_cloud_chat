@@ -15,7 +15,7 @@
           <vs-avatar color="rgb(31, 116, 255)" text-color="white"/>
           <vs-dropdown-menu>
             <vs-dropdown-item style="width: 60px;" @click="logout">
-              退出
+              退出了
             </vs-dropdown-item>
           </vs-dropdown-menu>
         </vs-dropdown>
