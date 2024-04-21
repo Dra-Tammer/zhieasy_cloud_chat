@@ -114,15 +114,18 @@ export default {
     acceptLogin() {
       let username = this.form.username;
       let password = this.form.password;
+      this.$vs.loading()
       userLogin(username, password).then((res) => {
         if (res.data.code === 200) {
           localStorage.setItem('token', res.data.data.token);
           localStorage.setItem('sessionId', res.data.data.sessionId)
           localStorage.setItem('user', this.form.username)
           this.login_randomCenter();
+          this.$vs.loading().end()
           this.$router.push({path: '/chat'})
         } else {
           this.login_reject_randomCenter();
+          this.$vs.loading().end()
         }
       })
     },

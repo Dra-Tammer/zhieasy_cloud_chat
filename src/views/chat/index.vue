@@ -7,7 +7,9 @@
       <div :class="[msg.type === 'sent' ? 'message_body sent' : 'message_body received']"
            v-for="(msg, index) in messages"
            :key="index">
-        <vs-avatar class="left-avatar" v-if="msg.type === 'received'" color="success" text="AI"></vs-avatar>
+        <div class="left-avatar">
+          <vs-avatar class="left-avatar" v-if="msg.type === 'received'" color="success" text="AI"></vs-avatar>
+        </div>
         <template v-if="loading && index === messages.length">
           <span class="flash_cursor"></span>
         </template>
@@ -17,7 +19,9 @@
             <pre :id="'markdown'+index">{{ msg.type === 'sent' ? msg.text : '' }}</pre>
           </div>
         </template>
-        <vs-avatar class="right-avatar" v-if="msg.type === 'sent'" color="primary"></vs-avatar>
+        <div class="right-avatar">
+          <vs-avatar v-if="msg.type === 'sent'" color="primary"></vs-avatar>
+        </div>
       </div>
       <!--      <div :class="[msg.type === 'sent' ? 'message sent' : 'message received']" v-for="(msg, index) in messages"-->
       <!--           :key="index">-->
@@ -127,6 +131,13 @@ export default {
           });
           var {value, done} = await reader.read()
           if (done) break;
+          // console.log(value)
+          // let str = value
+          // let arr  = str.split('}')
+          // for(var i = 0; i < arr.length; i++) {
+          //   arr[i] += '}'
+          // }
+          // console.log(arr)
           typewriter.add(JSON.parse(value).data)
         }
         typewriter.done()
@@ -195,7 +206,7 @@ export default {
 .right-avatar {
   width: 34px;
   height: 34px;
-  margin-left: 20px;
+  margin-left: 10px;
 }
 
 .text_container {
