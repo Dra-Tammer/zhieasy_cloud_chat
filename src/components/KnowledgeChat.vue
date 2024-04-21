@@ -2,6 +2,9 @@
   <div class="KnowledgeChatContainer">
     <div class="knowledgeTopEmptyBox">
     </div>
+    <div class="knowledge_base_chat_ad" v-if="chatIds.length === 0">
+      <KnowledgeBaseChatAd></KnowledgeBaseChatAd>
+    </div>
     <div class="charBoxContainer" id="chat-container" ref="chatContainer">
 
       <div class="chatBox" v-for="(item,index) in chatIds" :key="index">
@@ -41,9 +44,6 @@
           </div>
         </div>
       </div>
-      <div class="noMoreFile">没有更多了</div>
-
-
     </div>
     <div class="bottomInputBox">
       <div class="contentBox">
@@ -64,10 +64,11 @@ import CiteFile from "@/components/citeFile.vue";
 import {createTypewriter} from "@/utils/typeWriter";
 import {getTimeNow} from "@/utils/getTimeNow";
 import {marked} from "marked";
+import KnowledgeBaseChatAd from "@/components/KnowledgeBaseChatAd.vue";
 
 export default {
   name: 'KnowledgeChat',
-  components: {CiteFile},
+  components: {KnowledgeBaseChatAd, CiteFile},
   data() {
     return {
       knowledgeId: '',
@@ -340,13 +341,9 @@ pre {
   line-height: 30px;
 }
 
-.noMoreFile {
-  margin-top: 20px;
-  margin-bottom: 20px;
-  display: flex;
-  justify-content: center;
-  font-size: 14px;
-  color: gray;
+.knowledge_base_chat_ad {
+  width: 90%;
+  height: 80%;
+  margin: auto;
 }
-
 </style>
