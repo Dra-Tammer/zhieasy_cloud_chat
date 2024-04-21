@@ -27,7 +27,7 @@
             <div class="chatBoxResponseRightContainer">
               <div class="chatResponseFromKnowledge">
                 <!--                <div id="markdown">{{ responseArray[item.index] }}</div>-->
-                <div :id="'markdown'+index"></div>
+                <pre :id="'markdown'+index"></pre>
               </div>
             </div>
           </div>
@@ -159,24 +159,62 @@ export default {
           });
           var {value, done} = await reader.read()
           if (done) break;
-          let resData = JSON.parse(value)
-          if (resData.code === 200) {
-            if (!resData.data.isSummary) typewriter.add(JSON.parse(value).data.reply)
-            else if (resData.data.isSummary) {
-              this.summaryArray.push(resData.data.summary)
+          if(value === '') continue;
+          // let startIndex = value.indexOf('{')
+          let arr = value.split("data: ")
+          for(let i = 0; i < arr.length; i++) {
+            if(arr[i] === '') continue;
+            let resData = JSON.parse(arr[i])
+            if (resData.code === 200) {
+              if (!resData.data.isSummary) {
+                // if(JSON.parse(value).data.reply === '') continue;
+                typewriter.add(resData.data.reply)
+              }
+              else if (resData.data.isSummary) {
+                this.summaryArray.push(resData.data.summary)
+              }
+            } else {
+              this.$vs.notify({
+                color: 'warning',
+                title: '错误',
+                text: `${resData.msg}`,
+                position: 'top-center'
+              })
+              this.responseArray.pop()
+              this.questionsArray.pop()
+              this.chatIds.pop()
+              this.loading = false
             }
-          } else {
-            this.$vs.notify({
-              color: 'warning',
-              title: '错误',
-              text: `${resData.msg}`,
-              position: 'top-center'
-            })
-            this.responseArray.pop()
-            this.questionsArray.pop()
-            this.chatIds.pop()
-            this.loading = false
+            // if (!resData.data.isSummary) {
+            //   // if(JSON.parse(value).data.reply === '') continue;
+            //   // typewriter.add(JSON.parse(value).data.reply)
+            // }
+            // else if (resData.data.isSummary) {
+            //   this.summaryArray.push(resData.data.summary)
+            // }
           }
+          // if(startIndex !== -1) value = value.substring(startIndex)
+          // let resData = JSON.parse(value)
+          // if (resData.code === 200) {
+          //   if (!resData.data.isSummary) {
+          //     // if(JSON.parse(value).data.reply === '') continue;
+          //     // typewriter.add(JSON.parse(value).data.reply)
+          //   }
+          //   else if (resData.data.isSummary) {
+          //     this.summaryArray.push(resData.data.summary)
+          //   }
+          // } else {
+          //   this.$vs.notify({
+          //     color: 'warning',
+          //     title: '错误',
+          //     text: `${resData.msg}`,
+          //     position: 'top-center'
+          //   })
+          //   this.responseArray.pop()
+          //   this.questionsArray.pop()
+          //   this.chatIds.pop()
+          //   this.loading = false
+          // }
         }
         typewriter.done()
         this.loading = false

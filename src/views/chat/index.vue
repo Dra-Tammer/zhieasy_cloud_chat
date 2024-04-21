@@ -101,10 +101,38 @@ export default {
         this.prompt.query = this.userMessage
         this.prompt.sessionId = localStorage.getItem('sessionId')
         this.userMessage = ''
+        // this.messages.push({text: '', type: 'received'})
+        // typewriter.start()
+        // const ctrl = new AbortController();
+        // await fetchEventSource(URL, {
+        //   method: "POST",
+        //   openWhenHidden: true,
+        //   signal: ctrl.signal,
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //     "token": localStorage.getItem('token')
+        //   },
+        //   body: JSON.stringify(this.prompt),
+        //   onmessage(event) {
+        //     console.log('e: ', JSON.parse(event.data).data)
+        //     typewriter.add(JSON.parse(event.data).data)
+        //   },
+        //   onerror(event) {
+        //     ctrl.abort();
+        //     console.log('服务异常', event)
+        //   },
+        //   onclose() {
+        //     typewriter.done()
+        //     this.loading = false
+        //     console.log('服务关闭')
+        //   }
+        // });
+
+
         const res = await fetch(URL, {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
+            "content-type": "application/json",
             "token": localStorage.getItem('token')
           },
           body: JSON.stringify(this.prompt),
@@ -131,14 +159,17 @@ export default {
           });
           var {value, done} = await reader.read()
           if (done) break;
-          // console.log(value)
+          if(value === '') continue;
+          let startIndex = value.indexOf('{')
+          if(startIndex !== -1) value = value.substring(startIndex)
           // let str = value
-          // let arr  = str.split('}')
-          // for(var i = 0; i < arr.length; i++) {
-          //   arr[i] += '}'
+          // let arr = str.split('}')
+          // for (let i = 0; i < arr.length; i++) {
+          //   if (arr[i] !== '') {
+          //     // typewriter.add(JSON.parse(arr[i] + '}').data);
+          //   }
           // }
-          // console.log(arr)
-          typewriter.add(JSON.parse(value).data)
+          typewriter.add(JSON.parse(value).data);
         }
         typewriter.done()
         this.loading = false

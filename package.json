@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@brugarolas/vuesax": "^3.12.2-patch-8",
+    "@microsoft/fetch-event-source": "^2.0.1",
     "axios": "^1.6.7",
     "core-js": "^3.8.3",
     "highlight.js": "^11.9.0",
