@@ -1,17 +1,14 @@
-const parsePack = (str) => {
-    const pattern = /data:\s*({.*?})\s*\n/g;
-    const result = [];
+const multipleAction = (str) => {
+    const dataArray = []
+    const regex = /data:\s*({[^}]+})/g;
     let match;
-    while ((match = pattern.exec(str)) !== null) {
-        const jsonStr = match[1];
-        try {
-            const json = JSON.parse(jsonStr);
-            result.push(json);
-        } catch (e) {
-            console.log(e);
-        }
+
+    while ((match = regex.exec(str)) !== null) {
+        const dataObject = match[1];
+        dataArray.push(JSON.parse(dataObject));
     }
-    return result;
+
+    return dataArray;
 };
 
-module.exports = parsePack;
+module.exports = multipleAction;
