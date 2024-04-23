@@ -160,11 +160,11 @@ export default {
           });
           var {value, done} = await reader.read()
           if (done) break;
-          console.log('value before act: ')
-          console.log(value)
+          // console.log('value before act: ')
+          // console.log(value)
           if (value === '') continue;
           let resArr = this.multipleParseWrongJSONData(value)
-          console.log(resArr)
+          // console.log(resArr)
 
           // let startIndex = value.indexOf('{')
           // if (startIndex !== -1) value = value.substring(startIndex)
@@ -204,8 +204,8 @@ export default {
 
       while ((match = regex.exec(str)) !== null) {
         const dataObject = match[1];
-        console.log('data: ')
-        console.log(dataObject)
+        // console.log('data: ')
+        // console.log(dataObject)
         dataArray.push(JSON.parse(dataObject));
       }
       return dataArray;
