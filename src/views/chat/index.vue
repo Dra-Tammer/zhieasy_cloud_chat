@@ -1,7 +1,7 @@
 <template>
   <div class="main_container">
     <div id="chat-container" ref="chatContainer">
-<!--      <vs-button @click="demoFunc">测试按钮</vs-button>-->
+      <vs-button @click="demoFunc">测试按钮</vs-button>
       <div class="adContainer" v-if="messages.length === 0">
         <primary-chat-ad></primary-chat-ad>
       </div>
@@ -163,13 +163,25 @@ export default {
           // console.log('value before act: ')
           // console.log(value)
           if (value === '') continue;
-          let resArr = this.multipleParseWrongJSONData(value)
+          let arr = value.split("data: ")
+          for(let i = 0; i < arr.length; i++) {
+            console.log('data before act : ', arr[i])
+            if (arr[i] === '') continue;
+            let res = arr[i].replace(/\\n/g,"\\\\n")
+            console.log('data after act : ', res)
+            let data = JSON.parse(res).data
+            console.log('data for show : ', data)
+            typewriter.add(data)
+          }
+          // let resArr = this.multipleParseWrongJSONData(value)
           // console.log(resArr)
 
           // let startIndex = value.indexOf('{')
+          //
           // if (startIndex !== -1) value = value.substring(startIndex)
           // console.log('value after act: ')
           // console.log(value)
+          //
           // let str = value
           // let arr = str.split('}')
           // for (let i = 0; i < arr.length; i++) {
@@ -177,10 +189,10 @@ export default {
           //     // typewriter.add(JSON.parse(arr[i] + '}').data);
           //   }
           // }
-
-          for (let i = 0; i < resArr.length; i++) {
-            typewriter.add(resArr[i].data);
-          }
+          //
+          // for (let i = 0; i < resArr.length; i++) {
+          //   typewriter.add(resArr[i].data);
+          // }
         }
         typewriter.done()
         this.loading = false
@@ -204,18 +216,25 @@ export default {
 
       while ((match = regex.exec(str)) !== null) {
         const dataObject = match[1];
-        // console.log('data: ')
-        // console.log(dataObject)
+        console.log('data: ')
+        console.log(dataObject)
         dataArray.push(JSON.parse(dataObject));
       }
       return dataArray;
     },
-    // demoFunc() {
-    //   let str = 'data: {"code": 200, "msg": "ok", "data": "    }\\n}\\n\\nint main() {\\n   "}data: {"code": 200, "msg": "ok", "data": "    }\\n}\\n\\nint main() {\\n   "}data: {"code": 200, "msg": "ok", "data": "    }\\n}\\n\\nint main() {\\n   "}'
-    //   console.log('index:')
-    //   console.log(str.split("data: "))
-    //   console.log(this.multipleParseWrongJSONData(str))
-    // }
+    demoFunc() {
+      let str = 'data: {"code": 200, "msg": "ok", "data": "    }\\n}\\n\\nint main() {\\n   "}data: {"code": 200, "msg": "ok", "data": "    }\\n}\\n\\nint main() {\\n   "}data: {"code": 200, "msg": "ok", "data": "    }\\n}\\n\\nint main() {\\n   "}'
+      // let str = '{"code": 200, "msg": "ok", "data": " }\n}\\n\\nint main() {\\n "}'
+      // console.log(JSON.parse(str))
+      let arr = str.split("data: ")
+      for(let i = 0; i < arr.length; i ++) {
+        if(arr[i] === '') continue;
+        let res = arr[i].replace(/\\n/g, "\\\\n")
+        console.log('转换之后的')
+        console.log(res)
+        console.log(JSON.parse(res).data)
+      }
+    }
   },
 }
 </script>
